@@ -12,4 +12,4 @@ sh Checkjs.sh
 ```
 
 ##感谢
-Javon(基于他的母版改写)
+Javon(基于他的模板改写)
