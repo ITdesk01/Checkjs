@@ -89,7 +89,7 @@ init_data() {
 }
 
 diff_cron() {
-	#首次次运行需要创建oldfile
+	#首次运行需要创建oldfile
 	if [ -f "$File_path/$Oldfile" ]; then
 		echo ""
 	else 
