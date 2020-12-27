@@ -140,7 +140,7 @@ sendMessage() {
 	
 	#如果没有更新或者删除就不推送
 	if [ $content = "no_update" ]; then
-		echo ""
+		echo "$Script_name没有更新也没有删除，一切风平浪静"
 	else
 		if [ $SCKEY = "" ]; then
 			echo "Server酱的key为空，脚本停止运行，获取key办法：http://sc.ftqq.com/3.version，将获取到的key填入SCKEY.txt，重新运行脚本"
