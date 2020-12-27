@@ -17,13 +17,10 @@ jd_scripts() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	if [ -d "$Script_name" ]; then
-		cd $File_path
-		git_pull
-		init_data
-		diff_cron
-		sendMessage
+		tongyong_config
 	else
 		git clone -b master https://github.com/lxk0301/jd_scripts.git
+		tongyong_config
 	fi
 }
 
@@ -35,13 +32,10 @@ Quantumult_X() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	if [ -d "$Script_name" ]; then
-		cd $File_path
-		git_pull
-		init_data
-		diff_cron
-		sendMessage
+		tongyong_config
 	else
 		git clone https://github.com/799953468/Quantumult-X.git
+		tongyong_config
 	fi
 }
 
@@ -52,13 +46,10 @@ hundun() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	if [ -d "$Script_name" ]; then
-		cd $File_path
-		git_pull
-		init_data
-		diff_cron
-		sendMessage
+		tongyong_config
 	else
 		git clone https://github.com/whyour/hundun.git
+		tongyong_config
 	fi
 
 
@@ -71,16 +62,20 @@ MoPoQAQ_Script() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	if [ -d "$Script_name" ]; then
-		cd $File_path
-		git_pull
-		init_data
-		diff_cron
-		sendMessage
+		tongyong_config
 	else
 		git clone https://github.com/MoPoQAQ/Script.git MoPoQAQ_Script
+		tongyong_config
 	fi
 }
 
+tongyong_config() {
+	cd $File_path
+	git_pull
+	init_data
+	diff_cron
+	sendMessage
+}
 
 
 git_pull() {
