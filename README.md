@@ -8,7 +8,7 @@ openwrt X86 （基于x86测试）
 ```sh
 git clone https://github.com/ITdesk01/Checkjs.git /usr/share/Checkjs
 cd /usr/share/Checkjs && chmod 777 checkjs.sh
-sh Checkjs.sh
+sh checkjs.sh
 ```
 
 ##感谢
