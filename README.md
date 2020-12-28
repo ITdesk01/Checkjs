@@ -7,7 +7,7 @@ openwrt X86 （基于x86测试）
 ## Usage 使用方法
 ```sh
 git clone https://github.com/ITdesk01/Checkjs.git /usr/share/Checkjs
-cd /usr/share/Checkjs && chmod 777 Checkjs.sh
+cd /usr/share/Checkjs && chmod 777 checkjs.sh
 sh Checkjs.sh
 ```
 
