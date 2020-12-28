@@ -152,6 +152,13 @@ sendMessage() {
 	
 }
 
+update_script() {
+	cd $Script_file
+	branch="main"
+	git_pull
+}
+
+
 description_if() {
 	if [ -f $Script_file/SCKEY.txt ]; then
 		SCKEY=$(cat $Script_file/SCKEY.txt)
@@ -198,5 +205,21 @@ menu() {
 	MoPoQAQ_Script
 }
 
-menu
+
+action1="$1"
+if [ -z $action1 ]; then
+	menu
+else
+	case "$action1" in
+			update_script)
+			$action1
+			;;
+			*)
+			echo "请不要乱输，我是不会执行的。。。"
+			exit
+			;;
+esac
+fi
+
+
 
