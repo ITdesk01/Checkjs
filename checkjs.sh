@@ -130,11 +130,16 @@ diff_cron() {
 
 sendMessage() {
 	#检查有没有脚本新增
+	cat_add=$(cat $ListJs_add | wc -l)
+	cat_delete=$(cat $ListJs_drop | wc -l )
 	if [ $Add_if = "1" ] && [ $Delete_if = "1" ]; then
+		num="新增$cat_add脚本删除$cat_delete脚本"
 		content="新增脚本有:$Wrap$Add删除脚本有:$Wrap$Delete"
 	elif [ $Add_if = "1" ]; then 
+		num="新增$cat_add脚本"
 		content="新增脚本有:$Wrap$Add"
 	elif [ $Delete_if = "1" ]; then 
+		num="删除$cat_delete脚本"
 		content="删除脚本有:$Wrap$Delete"
 	else
 		content="no_update"
@@ -142,12 +147,12 @@ sendMessage() {
 	
 	#如果没有新增或者删除就不推送
 	if [ $content = "no_update" ]; then
-		echo -e "$green$Script_name$white没有新增也没有删除脚本，一切风平浪静"
+		echo -e "$green[$Script_name] $white$yellow没有新增也没有删除脚本，一切风平浪静$white"
 		echo "**********************************************"
 	else
-		echo -e "$green$Script_name有新增或者删除脚本，已推送到你的接收设备$white"
+		echo -e "$green[$Script_name] 新增$cat_add脚本,删除$cat_delete脚本，已推送到你的接收设备$white"
 		echo "**********************************************"
-		curl "http://sc.ftqq.com/$SCKEY.send?text=$Script_name&desp=$content" >/dev/null 2>&1 &
+		curl "http://sc.ftqq.com/$SCKEY.send?text=$Script_name$num&desp=$content" >/dev/null 2>&1 &
 	fi 
 	
 }
