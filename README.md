@@ -11,5 +11,11 @@ cd /usr/share/Checkjs && chmod 777 checkjs.sh
 sh checkjs.sh
 ```
 
+## 定时任务（需要手动复制过去）
+```sh
+15 10,18,21 * * * /usr/share/Checkjs/checkjs.sh >/tmp/checkjs.log 2>&1
+30 21 * * * /usr/share/Checkjs/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1
+```
+
 ##感谢
 Javon(基于他的模板改写)

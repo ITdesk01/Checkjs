@@ -204,6 +204,7 @@ menu() {
 	echo "----------------------------------------------"
 	echo -e "$green Checkjs $version开始检查脚本新增或删除情况$white"
 	echo "----------------------------------------------"
+	echo -e "$green 当前时间：$white`date "+%Y-%m-%d %H:%M"`"
 	jd_scripts
 	Quantumult_X
 	hundun
