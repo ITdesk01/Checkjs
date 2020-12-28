@@ -3,12 +3,16 @@
 #set -x
 #set -u
 
-version="1.0"
+version="1.1"
 Script_file="/usr/share/Checkjs"
 ListJs_add="ListJs_add.txt"
 ListJs_drop="ListJs_drop.txt"
-SCKEY=$(cat SCKEY.txt)
 Wrap="%0D%0A%0D%0A%0D%0A%0D%0A" #Server酱换行
+
+red="\033[31m"
+green="\033[32m"
+yellow="\033[33m"
+white="\033[0m"
 
 jd_scripts() {
 	cd $Script_file
@@ -16,6 +20,7 @@ jd_scripts() {
 	File_path="$Script_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
+	branch="master"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -31,6 +36,7 @@ Quantumult_X() {
 	File_path="$Script_file/$Script_name/Scripts/JD"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
+	branch="master"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -45,14 +51,13 @@ hundun() {
 	File_path="$Script_file/$Script_name/quanx"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
+	branch="master"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
 		git clone https://github.com/whyour/hundun.git
 		tongyong_config
 	fi
-
-
 }
 
 MoPoQAQ_Script() {
@@ -61,6 +66,7 @@ MoPoQAQ_Script() {
 	File_path="$Script_file/$Script_name/Me"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
+	branch="main"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -70,6 +76,7 @@ MoPoQAQ_Script() {
 }
 
 tongyong_config() {
+	echo ""
 	cd $File_path
 	git_pull
 	init_data
@@ -80,7 +87,7 @@ tongyong_config() {
 
 git_pull() {
 	git fetch --all
-	git reset --hard origin/master	
+	git reset --hard origin/$branch
 }
 
 init_data() {
@@ -93,11 +100,11 @@ diff_cron() {
 	if [ -f "$File_path/$Oldfile" ]; then
 		echo ""
 	else 
-		ls ./ | grep -E "^j[dr]_.+\.js" | sort > $Oldfile
+		ls ./ | grep -E "^j" | sort > $Oldfile
 	fi
 
 	#新文件与旧文件对比
-	ls ./ | grep -E "^j[dr]_.+\.js" | sort > $Newfile
+	ls ./ | grep -E "^j" | sort > $Newfile
 	grep -vwf $Newfile $Oldfile > $ListJs_add
 	
 	if [ $(cat $ListJs_add | wc -l) = "0" ]; then
@@ -111,7 +118,7 @@ diff_cron() {
 
 	#用旧文件与新文件对比
 	grep -vwf $Oldfile $Newfile > $ListJs_drop
-	ls ./ | grep -E "^j[dr]_.+\.js" | sort > $Oldfile
+	ls ./ | grep -E "^j" | sort > $Oldfile
 	if [ $(cat $ListJs_drop | wc -l) = "0" ]; then
 		Delete_if="0"
 	else
@@ -122,37 +129,42 @@ diff_cron() {
 }
 
 sendMessage() {
-	#检查有没有脚本更新
-	if [ $Add_if = "1" ] || [ $Delete = "1" ]; then
-		content="更新脚本有:$Wrap$Add删除脚本有:$Wrap$Delete"
+	#检查有没有脚本新增
+	if [ $Add_if = "1" ] && [ $Delete_if = "1" ]; then
+		content="新增脚本有:$Wrap$Add删除脚本有:$Wrap$Delete"
 	elif [ $Add_if = "1" ]; then 
-		content="更新脚本有:$Wrap$Add"
+		content="新增脚本有:$Wrap$Add"
 	elif [ $Delete_if = "1" ]; then 
 		content="删除脚本有:$Wrap$Delete"
 	else
 		content="no_update"
 	fi
 	
-	#如果没有更新或者删除就不推送
+	#如果没有新增或者删除就不推送
 	if [ $content = "no_update" ]; then
-		echo "$Script_name没有更新也没有删除，一切风平浪静"
+		echo -e "$green$Script_name$white没有新增也没有删除脚本，一切风平浪静"
+		echo "**********************************************"
 	else
-		if [ $SCKEY = "" ]; then
-			echo "Server酱的key为空，脚本停止运行，获取key办法：http://sc.ftqq.com/3.version，将获取到的key填入SCKEY.txt，重新运行脚本"
-		else
-			curl "http://sc.ftqq.com/$SCKEY.send?text=$Script_name&desp=$content" >/dev/null 2>&1 & 
-		fi
-		
+		echo -e "$green$Script_name有新增或者删除脚本，已推送到你的接收设备$white"
+		echo "**********************************************"
+		curl "http://sc.ftqq.com/$SCKEY.send?text=$Script_name&desp=$content" >/dev/null 2>&1 &
 	fi 
 	
 }
 
 description_if() {
 	if [ -f $Script_file/SCKEY.txt ]; then
-		echo ""
+		SCKEY=$(cat $Script_file/SCKEY.txt)
+		if [ ! $SCKEY ]; then
+			echo ""
+			echo -e "$red Server酱的key为空$white，脚本停止运行，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$Script_file/SCKEY.txt，$white重新运行脚本"
+			echo ""
+			exit
+		fi
 	else
 		echo > $Script_file/SCKEY.txt
 	fi
+
 
 	#添加系统变量
 	checkjs_path=$(cat /etc/profile | grep -o checkjs.sh | wc -l)
@@ -169,13 +181,17 @@ description_if() {
 		read a
 		reboot	
 	else
-		
-
+		echo ""
+	fi
+	clear
 }
 
 
 menu() {
 	description_if
+	echo "----------------------------------------------"
+	echo -e "$green Checkjs $version开始检查脚本新增或删除情况$white"
+	echo "----------------------------------------------"
 	jd_scripts
 	Quantumult_X
 	hundun
