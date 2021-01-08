@@ -161,6 +161,7 @@ update_script() {
 	cd $Script_file
 	branch="main"
 	git_pull
+	chmod 755 checkjs.sh
 }
 
 
