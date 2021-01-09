@@ -158,6 +158,7 @@ sendMessage() {
 }
 
 update_script() {
+	echo -e "$green 开始更新checkjs，当前时间：$white`date "+%Y-%m-%d %H:%M"`"
 	cd $Script_file
 	branch="main"
 	git_pull
