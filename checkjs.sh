@@ -179,6 +179,15 @@ description_if() {
 		echo > $Script_file/SCKEY.txt
 	fi
 
+	cron_if=$(cat /etc/crontabs/root | grep "checkjs.sh" |wc -l)
+	if [ $cron_if  = "2" ]; then
+		echo ""
+	else
+		echo "15 10,18,21 * * * /usr/share/Checkjs/checkjs.sh >/tmp/checkjs.log 2>&1" >>/etc/crontabs/root
+		echo "30 21 * * * /usr/share/Checkjs/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1" >>/etc/crontabs/root
+		/etc/init.d/cron restart
+	fi
+
 	system_variable
 
 	clear
