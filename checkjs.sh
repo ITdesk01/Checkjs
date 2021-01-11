@@ -105,7 +105,7 @@ diff_cron() {
 
 	#新文件与旧文件对比
 	ls ./ | grep -E "^j" | sort > $Newfile
-	grep -vwf $Newfile $Oldfile > $ListJs_add
+	grep -vwf $Oldfile $Newfile > $ListJs_add
 	
 	if [ $(cat $ListJs_add | wc -l) = "0" ]; then
 		Add_if="0"
@@ -117,7 +117,7 @@ diff_cron() {
 	
 
 	#用旧文件与新文件对比
-	grep -vwf $Oldfile $Newfile > $ListJs_drop
+	grep -vwf $Newfile $Oldfile > $ListJs_drop
 	ls ./ | grep -E "^j" | sort > $Oldfile
 	if [ $(cat $ListJs_drop | wc -l) = "0" ]; then
 		Delete_if="0"
