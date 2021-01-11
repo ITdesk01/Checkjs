@@ -179,7 +179,12 @@ description_if() {
 		echo > $Script_file/SCKEY.txt
 	fi
 
+	system_variable
 
+	clear
+}
+
+system_variable() {
 	#添加系统变量
 	checkjs_path=$(cat /etc/profile | grep -o checkjs.sh | wc -l)
 	if [ "$checkjs_path" == "0" ]; then
@@ -190,14 +195,11 @@ description_if() {
 		echo -e "$green添加checkjs变量成功,重启系统以后无论在那个目录输入 sh \$checkjs 都可以运行脚本$white"
 		echo ""
 		echo ""
-		echo -e "          $green直接回车会重启你的系统!!!，如果不需要马上重启ctrl+c取消$white"
+		echo -e "          $green重启以后就可以看到效果了$white"
 		echo "-----------------------------------------------------------------------"
-		read a
-		reboot	
 	else
 		echo ""
 	fi
-	clear
 }
 
 
@@ -219,7 +221,7 @@ if [ -z $action1 ]; then
 	menu
 else
 	case "$action1" in
-			update_script)
+			update_script|system_variable|menu)
 			$action1
 			;;
 			*)
