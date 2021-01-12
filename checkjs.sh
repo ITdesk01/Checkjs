@@ -4,7 +4,14 @@
 #set -u
 
 version="1.1"
-Script_file="/usr/share/Checkjs"
+#获取当前脚本目录copy脚本之家
+Source="$0"
+while [ -h "$Source"  ]; do
+    dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
+    Source="$(readlink "$Source")"
+    [[ $Source != /*  ]] && Source="$dir_file/$Source"
+done
+dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
 ListJs_add="ListJs_add.txt"
 ListJs_drop="ListJs_drop.txt"
 Wrap="%0D%0A%0D%0A%0D%0A%0D%0A" #Server酱换行
@@ -15,9 +22,9 @@ yellow="\033[33m"
 white="\033[0m"
 
 jd_scripts() {
-	cd $Script_file
+	cd $dir_file
 	Script_name="jd_scripts"
-	File_path="$Script_file/$Script_name"
+	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
@@ -31,9 +38,9 @@ jd_scripts() {
 
 
 Quantumult_X() {
-	cd $Script_file	
+	cd $dir_file
 	Script_name="Quantumult-X"
-	File_path="$Script_file/$Script_name/Scripts/JD"
+	File_path="$dir_file/$Script_name/Scripts/JD"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
@@ -46,9 +53,9 @@ Quantumult_X() {
 }
 
 hundun() {
-	cd $Script_file
+	cd $dir_file
 	Script_name="hundun"
-	File_path="$Script_file/$Script_name/quanx"
+	File_path="$dir_file/$Script_name/quanx"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
@@ -61,9 +68,9 @@ hundun() {
 }
 
 MoPoQAQ_Script() {
-	cd $Script_file
+	cd $dir_file
 	Script_name="MoPoQAQ_Script"
-	File_path="$Script_file/$Script_name/Me"
+	File_path="$dir_file/$Script_name/Me"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
@@ -159,32 +166,31 @@ sendMessage() {
 
 update_script() {
 	echo -e "$green 开始更新checkjs，当前时间：$white`date "+%Y-%m-%d %H:%M"`"
-	cd $Script_file
+	cd $dir_file
 	branch="main"
 	git_pull
-	chmod 755 checkjs.sh
 }
 
 
 description_if() {
-	if [ -f $Script_file/SCKEY.txt ]; then
-		SCKEY=$(cat $Script_file/SCKEY.txt)
+	if [ -f $dir_file/SCKEY.txt ]; then
+		SCKEY=$(cat $dir_file/SCKEY.txt)
 		if [ ! $SCKEY ]; then
 			echo ""
-			echo -e "$red Server酱的key为空$white，脚本停止运行，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$Script_file/SCKEY.txt，$white重新运行脚本"
+			echo -e "$red Server酱的key为空$white，脚本停止运行，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$dir_file/SCKEY.txt，$white重新运行脚本"
 			echo ""
 			exit
 		fi
 	else
-		echo > $Script_file/SCKEY.txt
+		echo > $dir_file/SCKEY.txt
 	fi
 
 	cron_if=$(cat /etc/crontabs/root | grep "checkjs.sh" |wc -l)
 	if [ $cron_if  = "2" ]; then
 		echo ""
 	else
-		echo "15 10,18,21 * * * /usr/share/Checkjs/checkjs.sh >/tmp/checkjs.log 2>&1" >>/etc/crontabs/root
-		echo "30 21 * * * /usr/share/Checkjs/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1" >>/etc/crontabs/root
+		echo "15 10,18,21 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1" >>/etc/crontabs/root
+		echo "30 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1" >>/etc/crontabs/root
 		/etc/init.d/cron restart
 	fi
 
@@ -197,8 +203,8 @@ system_variable() {
 	#添加系统变量
 	checkjs_path=$(cat /etc/profile | grep -o checkjs.sh | wc -l)
 	if [ "$checkjs_path" == "0" ]; then
-		echo "export checkjs_file=/usr/share/Checkjs" |  tee -a /etc/profile
-		echo "export checkjs=/usr/share/Checkjs/checkjs.sh" |  tee -a /etc/profile
+		echo "export checkjs_file=$dir_file" |  tee -a /etc/profile
+		echo "export checkjs=$dir_file/checkjs.sh" |  tee -a /etc/profile
 		echo "-----------------------------------------------------------------------"
 		echo ""
 		echo -e "$green添加checkjs变量成功,重启系统以后无论在那个目录输入 sh \$checkjs 都可以运行脚本$white"
