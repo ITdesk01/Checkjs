@@ -192,12 +192,12 @@ description_if() {
 
 task() {
 	cron_version="1.0"
-	if [ `grep -o "checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
+	if [ `grep -o "checkjs的定时任务$cron_version" /etc/crontabs/root |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
 		task_add
 		echo "计划任务设置完成"
-	elif [ `grep -o "checkjs的定时任务$cron_version" $cron_file |wc -l` == "1" ]; then
+	elif [ `grep -o "checkjs的定时任务$cron_version" /etc/crontabs/root |wc -l` == "1" ]; then
 			echo "计划任务与设定一致，不做改变"
 	fi
 
