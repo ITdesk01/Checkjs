@@ -185,19 +185,46 @@ description_if() {
 		echo > $dir_file/SCKEY.txt
 	fi
 
-	cron_if=$(cat /etc/crontabs/root | grep "checkjs.sh" |wc -l)
-	if [ $cron_if  = "2" ]; then
-		echo ""
-	else
-		echo "15 10,18,21 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1" >>/etc/crontabs/root
-		echo "30 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1" >>/etc/crontabs/root
-		/etc/init.d/cron restart
-	fi
-
+	task
 	system_variable
-
 	clear
 }
+
+task() {
+	cron_version="1.0"
+	if [ `grep -o "checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
+		echo "不存在计划任务开始设置"
+		task_delete
+		task_add
+		echo "计划任务设置完成"
+	elif [ `grep -o "checkjs的定时任务$cron_version" $cron_file |wc -l` == "1" ]; then
+			echo "计划任务与设定一致，不做改变"
+	fi
+
+}
+task_add() {
+cat >>/etc/crontabs/root <<EOF
+###########这里是checkjs的定时任务$cron_version版本###########
+15 10,18,21 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1
+30 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1
+###########102##########请将其他定时任务放到底下###############
+EOF
+/etc/init.d/cron restart
+}
+task_delete() {
+	sed -i '/checkjs/d' /etc/crontabs/root >/dev/null 2>&1
+	sed -i '/####/d' /etc/crontabs/root >/dev/null 2>&1
+}
+
+ds_setup() {
+	echo "checkjs删除定时任务设置"
+	task_delete
+	echo "checkjs删除全局变量"
+	sed -i '/checkjs/d' /etc/profile >/dev/null 2>&1
+	. /etc/profile
+	echo "checkjs定时任务和全局变量删除完成，脚本不会自动运行了"
+}
+
 
 system_variable() {
 	#添加系统变量
@@ -205,15 +232,7 @@ system_variable() {
 	if [ "$checkjs_path" == "0" ]; then
 		echo "export checkjs_file=$dir_file" |  tee -a /etc/profile
 		echo "export checkjs=$dir_file/checkjs.sh" |  tee -a /etc/profile
-		echo "-----------------------------------------------------------------------"
-		echo ""
-		echo -e "$green添加checkjs变量成功,重启系统以后无论在那个目录输入 sh \$checkjs 都可以运行脚本$white"
-		echo ""
-		echo ""
-		echo -e "          $green重启以后就可以看到效果了$white"
-		echo "-----------------------------------------------------------------------"
-	else
-		echo ""
+		. /etc/profile
 	fi
 }
 
