@@ -94,7 +94,7 @@ shylocks_Script() {
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		https://github.com/shylocks/Loon.git shylocks_Script
+		git clone https://github.com/shylocks/Loon.git shylocks_Script
 		tongyong_config
 	fi
 }
