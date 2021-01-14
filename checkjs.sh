@@ -84,6 +84,21 @@ MoPoQAQ_Script() {
 	fi
 }
 
+shylocks_Script() {
+	cd $dir_file
+	Script_name="shylocks_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		https://github.com/shylocks/Loon.git shylocks_Script
+		tongyong_config
+	fi
+}
+
 tongyong_config() {
 	echo ""
 	cd $File_path
@@ -193,7 +208,7 @@ description_if() {
 }
 
 task() {
-	cron_version="1.2"
+	cron_version="1.3"
 	if [ `grep -o "checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -207,7 +222,7 @@ task() {
 task_add() {
 cat >>/etc/crontabs/root <<EOF
 #**********这里是checkjs的定时任务$cron_version版本**********#
-15 10,18,21 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1
+15 6,10,18,21 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1
 30 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1
 ###########102##########请将其他定时任务放到底下###############
 EOF
@@ -249,6 +264,7 @@ menu() {
 	Quantumult_X
 	hundun
 	#MoPoQAQ_Script
+	shylocks_Script
 }
 
 
