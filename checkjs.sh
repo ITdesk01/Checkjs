@@ -193,7 +193,7 @@ description_if() {
 }
 
 task() {
-	cron_version="1.1"
+	cron_version="1.2"
 	if [ `grep -o "checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -215,7 +215,7 @@ EOF
 }
 task_delete() {
 	sed -i '/checkjs/d' /etc/crontabs/root >/dev/null 2>&1
-	sed -i '/####/d' /etc/crontabs/root >/dev/null 2>&1
+	sed -i '/#102#/d' /etc/crontabs/root >/dev/null 2>&1
 }
 
 ds_setup() {
