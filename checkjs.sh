@@ -32,7 +32,8 @@ jd_scripts() {
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone -b master https://github.com/lxk0301/jd_scripts.git
+		#git clone -b master https://github.com/lxk0301/jd_scripts.git
+		git clone -b master https://gitee.com/lxk0301/jd_scripts.git
 		tongyong_config
 	fi
 }
