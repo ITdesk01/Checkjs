@@ -248,7 +248,7 @@ menu() {
 	jd_scripts
 	Quantumult_X
 	hundun
-	MoPoQAQ_Script
+	#MoPoQAQ_Script
 }
 
 
