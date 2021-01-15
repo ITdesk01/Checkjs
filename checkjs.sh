@@ -208,7 +208,7 @@ description_if() {
 }
 
 task() {
-	cron_version="1.3"
+	cron_version="1.4"
 	if [ `grep -o "checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -222,8 +222,8 @@ task() {
 task_add() {
 cat >>/etc/crontabs/root <<EOF
 #**********这里是checkjs的定时任务$cron_version版本**********#
-15 6,10,18,21 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1
-30 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1
+15 */4 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1
+45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1
 ###########102##########请将其他定时任务放到底下###############
 EOF
 /etc/init.d/cron restart
@@ -260,6 +260,11 @@ menu() {
 	echo -e "$green Checkjs $version开始检查脚本新增或删除情况$white"
 	echo "----------------------------------------------"
 	echo -e "$green 当前时间：$white`date "+%Y-%m-%d %H:%M"`"
+	if [ ! -x $dir_file/checkjs.sh ];then
+		echo "添加权限"
+		chmod 755 $dir_file/checkjs.sh
+		sh $dir_file/checkjs.sh
+	fi
 	jd_scripts
 	Quantumult_X
 	hundun
