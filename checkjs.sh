@@ -99,6 +99,21 @@ shylocks_Script() {
 	fi
 }
 
+ZhiYi_Script() {
+	cd $dir_file
+	Script_name="ZhiYi_Script"
+	File_path="$dir_file/$Script_name/Scripts"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/ZhiYi-N/Private-Script.git ZhiYi_Script
+		tongyong_config
+	fi
+}
+
 tongyong_config() {
 	echo ""
 	cd $File_path
