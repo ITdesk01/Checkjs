@@ -285,6 +285,7 @@ menu() {
 	hundun
 	#MoPoQAQ_Script
 	shylocks_Script
+	ZhiYi_Script
 }
 
 
