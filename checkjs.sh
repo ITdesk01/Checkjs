@@ -32,8 +32,22 @@ jd_scripts() {
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		#git clone -b master https://github.com/lxk0301/jd_scripts.git
-		git clone -b master https://gitee.com/lxk0301/jd_scripts.git
+		git clone -b master https://github.com/LXK9301/jd_scripts.git jd_scripts
+		tongyong_config
+	fi
+}
+
+jd_scripts_gitee() {
+	cd $dir_file
+	Script_name="jd_scripts"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone -b master https://gitee.com/lxk0301/jd_scripts.git jd_scripts_gitee
 		tongyong_config
 	fi
 }
