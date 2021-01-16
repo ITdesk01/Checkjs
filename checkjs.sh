@@ -183,6 +183,14 @@ sendMessage() {
 	else
 		content="no_update"
 	fi
+
+	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
+	if [ ! $SCKEY ]; then
+		echo ""
+		echo -e "$red Server酱的key为空$white，脚本无法推送，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$dir_file/Checkjs_Sckey.txt，$white重新运行脚本"
+		echo ""
+		exit 0
+	fi
 	
 	#如果没有新增或者删除就不推送
 	if [ $content = "no_update" ]; then
@@ -205,16 +213,23 @@ update_script() {
 
 
 description_if() {
-	if [ -f $dir_file/SCKEY.txt ]; then
-		SCKEY=$(cat $dir_file/SCKEY.txt)
-		if [ ! $SCKEY ]; then
-			echo ""
-			echo -e "$red Server酱的key为空$white，脚本停止运行，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$dir_file/SCKEY.txt，$white重新运行脚本"
-			echo ""
-			exit
+	install_script="/usr/share/Install_script"
+	install_script_config="/usr/share/Install_script/script_config"
+	if [ "$dir_file" == "$install_script/Checkjs" ];then
+		if [ ! -f "$install_script_config/Checkjs_Sckey.txt" ]; then
+			rm -rf $dir_file/Checkjs_Sckey.txt #用于删除旧的链接
+			ln -s $install_script_config/Checkjs_Sckey.txt $dir_file/Checkjs_Sckey.txt
 		fi
+
+		#用于升级以后恢复链接
+		if [ ! -f "$dir_file/Checkjs_Sckey.txt" ]; then
+			ln -s $install_script_config/Checkjs_Sckey.txt $dir_file/Checkjs_Sckey.txt
+		fi
+
 	else
-		echo > $dir_file/SCKEY.txt
+		if [ ! -f $dir_file/Checkjs_Sckey.txt ]; then
+			echo > $dir_file/Checkjs_Sckey.txt
+		fi
 	fi
 
 	task
