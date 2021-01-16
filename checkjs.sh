@@ -260,7 +260,7 @@ EOF
 /etc/init.d/cron restart
 }
 task_delete() {
-	sed -i '/checkjs/d' /etc/crontabs/root >/dev/null 2>&1
+	sed -i '/Checkjs/d' /etc/crontabs/root >/dev/null 2>&1
 	sed -i '/#102#/d' /etc/crontabs/root >/dev/null 2>&1
 }
 
