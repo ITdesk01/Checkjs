@@ -217,6 +217,7 @@ description_if() {
 	install_script_config="/usr/share/Install_script/script_config"
 	if [ "$dir_file" == "$install_script/Checkjs" ];then
 		if [ ! -f "$install_script_config/Checkjs_Sckey.txt" ]; then
+			echo > $dir_file/Checkjs_Sckey.txt
 			rm -rf $dir_file/Checkjs_Sckey.txt #用于删除旧的链接
 			ln -s $install_script_config/Checkjs_Sckey.txt $dir_file/Checkjs_Sckey.txt
 		fi
@@ -251,7 +252,7 @@ task() {
 }
 task_add() {
 cat >>/etc/crontabs/root <<EOF
-#**********这里是checkjs的定时任务$cron_version版本**********#
+#**********这里是Checkjs的定时任务$cron_version版本**********#
 15 */4 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1
 45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1
 ###########102##########请将其他定时任务放到底下###############
