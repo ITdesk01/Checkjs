@@ -253,8 +253,8 @@ description_if() {
 }
 
 task() {
-	cron_version="1.8"
-	if [ `grep -o "checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
+	cron_version="1.9"
+	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
 		task_add
