@@ -128,6 +128,46 @@ ZhiYi_Script() {
 	fi
 }
 
+checklog() {
+	cd /tmp
+	rm -rf check.log
+	rm -rf eeror.log
+	ls ./ | grep -E "^j" | sort >check.log
+	for i in `cat check.log`
+	do
+		grep -lrn  "错误" $i >> eeror.log
+	done
+
+	cat_log=$(cat eeror.log | wc -l)
+	if [ $(cat eeror.log | wc -l) -ge "1" ];then
+		sed -i "s/log/log$Wrap/g" eeror.log
+		sort_log=$(sed ':t;N;s/\n//;b t' eeror.log)
+		num="发现$cat_log个日志有错误信息"
+		content="包含错误日志的文件为:$Wrap$sort_log请及时查看处理"
+	else
+		content="no_eeror"
+	fi
+
+	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
+	if [ ! $SCKEY ]; then
+		echo ""
+		echo -e "$red Server酱的key为空$white，脚本无法推送，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$dir_file/Checkjs_Sckey.txt，$white重新运行脚本"
+		echo ""
+		exit 0
+	fi
+
+	if [ $content = "no_eeror" ]; then
+		echo "**********************************************"
+		echo -e "$green log日志没有发现错误，一切风平浪静$white"
+		echo "**********************************************"
+	else
+		echo "**********************************************"
+		echo -e "$yellow检测$cat_log个包含错误的日志，已推送到你的接收设备$white"
+		echo "**********************************************"
+		curl "http://sc.ftqq.com/$SCKEY.send?text=$num&desp=$content" >/dev/null 2>&1 &
+	fi
+}
+
 tongyong_config() {
 	echo ""
 	cd $File_path
@@ -253,7 +293,7 @@ description_if() {
 }
 
 task() {
-	cron_version="1.9"
+	cron_version="2.0"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -269,6 +309,7 @@ cat >>/etc/crontabs/root <<EOF
 #**********这里是Checkjs的定时任务$cron_version版本**********#
 0 */2 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1
 45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1
+05 10 * * * $dir_file/checkjs.sh checklog  >/tmp/checkjs_checklog.log 2>&1
 ######102##########请将其他定时任务放到底下########
 EOF
 /etc/init.d/cron restart
@@ -324,7 +365,7 @@ if [ -z $action1 ]; then
 	menu
 else
 	case "$action1" in
-			update_script|system_variable|menu)
+			update_script|system_variable|menu|checklog)
 			$action1
 			;;
 			*)
