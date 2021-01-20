@@ -130,7 +130,6 @@ ZhiYi_Script() {
 
 checklog() {
 	cd /tmp
-	rm -rf check.log
 	rm -rf eeror.log
 	ls ./ | grep -E "^j" | sort >check.log
 	for i in `cat check.log`
@@ -166,6 +165,7 @@ checklog() {
 		echo "**********************************************"
 		curl "http://sc.ftqq.com/$SCKEY.send?text=$num&desp=$content" >/dev/null 2>&1 &
 	fi
+	rm -rf check.log
 }
 
 tongyong_config() {
@@ -287,6 +287,29 @@ description_if() {
 		fi
 	fi
 
+	echo "稍等一下，正在取回远端脚本源码，用于比较现在脚本源码，速度看你网络"
+	cd $dir_file
+	git fetch
+	if [[ $? -eq 0 ]]; then
+		echo ""
+	else
+		echo -e "$red>> 取回分支没有成功，重新执行代码$white"
+		description_if
+	fi
+	clear
+	git_branch=$(git branch -v | grep -o behind )
+	if [[ "$git_branch" == "behind" ]]; then
+		Script_status="$red建议更新$white (可以运行$green sh \$jd update_script && sh \$jd update && sh \$jd $white更新 )"
+	else
+		Script_status="$green最新$white"
+	fi
+
+	if [ ! -x $dir_file/checkjs.sh ];then
+		echo "添加权限"
+		chmod 755 $dir_file/checkjs.sh
+		sh $dir_file/checkjs.sh
+	fi
+
 	task
 	system_variable
 	clear
@@ -346,11 +369,7 @@ menu() {
 	echo -e "$green Checkjs $version开始检查脚本新增或删除情况$white"
 	echo "----------------------------------------------"
 	echo -e "$green 当前时间：$white`date "+%Y-%m-%d %H:%M"`"
-	if [ ! -x $dir_file/checkjs.sh ];then
-		echo "添加权限"
-		chmod 755 $dir_file/checkjs.sh
-		sh $dir_file/checkjs.sh
-	fi
+	echo -e "$yellow 检测脚本是否最新:$white $Script_status "
 	jd_scripts
 	Quantumult_X
 	hundun
