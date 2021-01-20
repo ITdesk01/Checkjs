@@ -15,6 +15,7 @@ done
 dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
 ListJs_add="ListJs_add.txt"
 ListJs_drop="ListJs_drop.txt"
+SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
 Wrap="%0D%0A%0D%0A%0D%0A%0D%0A" #Server酱换行
 
 red="\033[31m"
@@ -129,31 +130,41 @@ ZhiYi_Script() {
 }
 
 checklog() {
-	cd /tmp
-	rm -rf eeror.log
-	ls ./ | grep -E "^j" | sort >check.log
-	for i in `cat check.log`
-	do
-		grep -lrn  "错误" $i >> eeror.log
-	done
+	log1="checkjs_jd.log" #用来查看tmp有多少jd log文件
+	log2="checkjs_jd_eeror.log" #筛选jd log 里面有几个是带错误的
+	log3="checkjs_jd_eeror_detailed.log" #将错误的都输出在这里
 
-	cat_log=$(cat eeror.log | wc -l)
-	if [ $(cat eeror.log | wc -l) -ge "1" ];then
-		sed -i "s/log/log$Wrap/g" eeror.log
-		sort_log=$(sed ':t;N;s/\n//;b t' eeror.log)
+	cd /tmp
+	rm -rf $log2
+	rm -rf $log3
+
+	#用来查看tmp有多少jd log文件
+	ls ./ | grep -E "^j" | sort >$log1
+
+	#筛选jd log 里面有几个是带错误的
+	for i in `cat $log1`
+	do
+		grep -lrn  "错误" $i >> $log2
+	done
+	cat_log=$(cat $log2 | wc -l)
+	if [ $cat_log -ge "1" ];then
+		sed -i "s/log/log$Wrap/g" $log2
+		sort_log=$(sed ':t;N;s/\n//;b t' $log2)
 		num="发现$cat_log个日志有错误信息"
 		content="包含错误日志的文件为:$Wrap$sort_log请及时查看处理"
 	else
 		content="no_eeror"
 	fi
 
-	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
-	if [ ! $SCKEY ]; then
-		echo ""
-		echo -e "$red Server酱的key为空$white，脚本无法推送，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$dir_file/Checkjs_Sckey.txt，$white重新运行脚本"
-		echo ""
-		exit 0
-	fi
+	#将详细错误信息输出log3
+	sed -i "s/log$Wrap/log/g" $log2
+	for i in `cat $log2`
+	do
+		grep  "错误" $i  >> $log3
+	done
+	num3="$Wrap《日志文件内详细的错误信息》$Wrap"
+	sort_log3=$(sed 's/$/%0D%0A%0D%0A%0D%0A%0D%0A/' $log3 | sed 's/ /_/g' | sed ':t;N;s/\n//;b t')
+
 
 	if [ $content = "no_eeror" ]; then
 		echo "**********************************************"
@@ -163,9 +174,10 @@ checklog() {
 		echo "**********************************************"
 		echo -e "$yellow检测$cat_log个包含错误的日志，已推送到你的接收设备$white"
 		echo "**********************************************"
-		curl "http://sc.ftqq.com/$SCKEY.send?text=$num&desp=$content" >/dev/null 2>&1 &
+		curl "http://sc.ftqq.com/$SCKEY.send?text=$num&desp=${content}${num3}${sort_log3}" >/dev/null 2>&1 &
 	fi
-	rm -rf check.log
+
+	rm -rf $log1
 }
 
 tongyong_config() {
@@ -237,14 +249,6 @@ sendMessage() {
 	else
 		content="no_update"
 	fi
-
-	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
-	if [ ! $SCKEY ]; then
-		echo ""
-		echo -e "$red Server酱的key为空$white，脚本无法推送，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$dir_file/Checkjs_Sckey.txt，$white重新运行脚本"
-		echo ""
-		exit 0
-	fi
 	
 	#如果没有新增或者删除就不推送
 	if [ $content = "no_update" ]; then
@@ -287,6 +291,14 @@ description_if() {
 		fi
 	fi
 
+
+	if [ ! $SCKEY ]; then
+		echo ""
+		echo -e "$red Server酱的key为空$white，脚本无法推送，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$dir_file/Checkjs_Sckey.txt，$white重新运行脚本"
+		echo ""
+		exit 0
+	fi
+
 	echo "稍等一下，正在取回远端脚本源码，用于比较现在脚本源码，速度看你网络"
 	cd $dir_file
 	git fetch
@@ -299,7 +311,7 @@ description_if() {
 	clear
 	git_branch=$(git branch -v | grep -o behind )
 	if [[ "$git_branch" == "behind" ]]; then
-		Script_status="$red建议更新$white (可以运行$green sh \$jd update_script && sh \$jd update && sh \$jd $white更新 )"
+		Script_status="$red建议更新$white (可以运行$green sh \$checkjs update_script $white更新 )"
 	else
 		Script_status="$green最新$white"
 	fi
