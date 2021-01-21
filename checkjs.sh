@@ -163,7 +163,7 @@ checklog() {
 		grep  "错误" $i  >> $log3
 	done
 	num3="$Wrap《日志文件内详细的错误信息》$Wrap"
-	sort_log3=$(sed 's/$/%0D%0A%0D%0A%0D%0A%0D%0A/' $log3 | sed 's/ /_/g' | sed ':t;N;s/\n//;b t')
+	sort_log3=$(sed "s/\[//g" $log3  | sed "s/\]//g" | sort -u | sed 's/$/%0D%0A%0D%0A%0D%0A%0D%0A/' | sed 's/ /_/g' | sed ':t;N;s/\n//;b t')
 
 
 	if [ $content = "no_eeror" ]; then
