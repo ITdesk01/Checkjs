@@ -129,57 +129,6 @@ ZhiYi_Script() {
 	fi
 }
 
-checklog() {
-	log1="checkjs_jd.log" #用来查看tmp有多少jd log文件
-	log2="checkjs_jd_eeror.log" #筛选jd log 里面有几个是带错误的
-	log3="checkjs_jd_eeror_detailed.log" #将错误的都输出在这里
-
-	cd /tmp
-	rm -rf $log2
-	rm -rf $log3
-
-	#用来查看tmp有多少jd log文件
-	ls ./ | grep -E "^j" | sort >$log1
-
-	#筛选jd log 里面有几个是带错误的
-	for i in `cat $log1`
-	do
-		grep -lrn  "错误" $i >> $log2
-	done
-	cat_log=$(cat $log2 | wc -l)
-	if [ $cat_log -ge "1" ];then
-		sed -i "s/log/log$Wrap/g" $log2
-		sort_log=$(sed ':t;N;s/\n//;b t' $log2)
-		num="发现$cat_log个日志有错误信息"
-		content="包含错误日志的文件为:$Wrap$sort_log请及时查看处理"
-	else
-		content="no_eeror"
-	fi
-
-	#将详细错误信息输出log3
-	sed -i "s/log$Wrap/log/g" $log2
-	for i in `cat $log2`
-	do
-		grep  "错误" $i  >> $log3
-	done
-	num3="$Wrap《日志文件内详细的错误信息》$Wrap"
-	sort_log3=$(sed "s/\[//g" $log3  | sed "s/\]//g" | sort -u | sed 's/$/%0D%0A%0D%0A%0D%0A%0D%0A/' | sed 's/ /_/g' | sed ':t;N;s/\n//;b t')
-
-
-	if [ $content = "no_eeror" ]; then
-		echo "**********************************************"
-		echo -e "$green log日志没有发现错误，一切风平浪静$white"
-		echo "**********************************************"
-	else
-		echo "**********************************************"
-		echo -e "$yellow检测$cat_log个包含错误的日志，已推送到你的接收设备$white"
-		echo "**********************************************"
-		curl "http://sc.ftqq.com/$SCKEY.send?text=$num&desp=${content}${num3}${sort_log3}" >/dev/null 2>&1 &
-	fi
-
-	rm -rf $log1
-}
-
 tongyong_config() {
 	echo ""
 	cd $File_path
@@ -328,7 +277,7 @@ description_if() {
 }
 
 task() {
-	cron_version="2.1"
+	cron_version="2.2"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -344,7 +293,6 @@ cat >>/etc/crontabs/root <<EOF
 #**********这里是Checkjs的定时任务$cron_version版本**********#
 0 */2 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1
 45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1
-00 10 * * * $dir_file/checkjs.sh checklog  >/tmp/checkjs_checklog.log 2>&1
 ######102##########请将其他定时任务放到底下########
 EOF
 /etc/init.d/cron restart
