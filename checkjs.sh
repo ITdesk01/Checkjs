@@ -16,12 +16,19 @@ dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
 ListJs_add="ListJs_add.txt"
 ListJs_drop="ListJs_drop.txt"
 SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
-Wrap="%0D%0A%0D%0A%0D%0A%0D%0A" #Server酱换行
+wrap="%0D%0A%0D%0A" #Server酱换行
+wrap_tab="     "
+current_time=$(date +"%Y-%m-%d")
+
+#推送log日志到server酱的时间
+push_server_time="22"
+
 
 red="\033[31m"
 green="\033[32m"
 yellow="\033[33m"
 white="\033[0m"
+
 
 jd_scripts() {
 	cd $dir_file
@@ -49,6 +56,22 @@ jd_scripts_gitee() {
 		tongyong_config
 	else
 		git clone -b master https://gitee.com/lxk0301/jd_scripts.git jd_scripts_gitee
+		tongyong_config
+	fi
+
+}
+
+shylocks_Script() {
+	cd $dir_file
+	Script_name="shylocks_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/shylocks/Loon.git shylocks_Script
 		tongyong_config
 	fi
 }
@@ -99,21 +122,6 @@ MoPoQAQ_Script() {
 	fi
 }
 
-shylocks_Script() {
-	cd $dir_file
-	Script_name="shylocks_Script"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="main"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/shylocks/Loon.git shylocks_Script
-		tongyong_config
-	fi
-}
-
 ZhiYi_Script() {
 	cd $dir_file
 	Script_name="ZhiYi_Script"
@@ -127,6 +135,7 @@ ZhiYi_Script() {
 		git clone https://github.com/ZhiYi-N/Private-Script.git ZhiYi_Script
 		tongyong_config
 	fi
+
 }
 
 tongyong_config() {
@@ -136,6 +145,7 @@ tongyong_config() {
 	init_data
 	diff_cron
 	sendMessage
+	That_day
 }
 
 
@@ -164,7 +174,7 @@ diff_cron() {
 	if [ $(cat $ListJs_add | wc -l) = "0" ]; then
 		Add_if="0"
 	else
-		sed -i "s/js/js$Wrap/g" $ListJs_add
+		sed -i "s/js/js$wrap/g" $ListJs_add
 		Add=$(sed ':t;N;s/\n//;b t' $ListJs_add)
 		Add_if="1"
 	fi 
@@ -176,7 +186,7 @@ diff_cron() {
 	if [ $(cat $ListJs_drop | wc -l) = "0" ]; then
 		Delete_if="0"
 	else
-		sed -i "s/js/js$Wrap/g" $ListJs_drop
+		sed -i "s/js/js$wrap/g" $ListJs_drop
 		Delete=$(sed ':t;N;s/\n//;b t' $ListJs_drop)
 		Delete_if="1"
 	fi 
@@ -188,13 +198,13 @@ sendMessage() {
 	cat_delete=$(cat $ListJs_drop | wc -l )
 	if [ $Add_if = "1" ] && [ $Delete_if = "1" ]; then
 		num="新增$cat_add脚本删除$cat_delete脚本"
-		content="新增脚本有:$Wrap$Add删除脚本有:$Wrap$Delete"
+		content="新增脚本有:$wrap$Add删除脚本有:$wrap$Delete"
 	elif [ $Add_if = "1" ]; then 
 		num="新增$cat_add脚本"
-		content="新增脚本有:$Wrap$Add"
+		content="新增脚本有:$wrap$Add"
 	elif [ $Delete_if = "1" ]; then 
 		num="删除$cat_delete脚本"
-		content="删除脚本有:$Wrap$Delete"
+		content="删除脚本有:$wrap$Delete"
 	else
 		content="no_update"
 	fi
@@ -210,6 +220,30 @@ sendMessage() {
 	fi 
 	
 }
+
+#检测当天更新情况并推送
+That_day() {
+	git_log=$(git log --format=format:"%ai %an %s" --since="$current_time 00:00:00" --before="$current_time 23:59:59" | sed "s/+0800//g" | sed "s/+0000/时区0000/g" | sed "s/$current_time //g" | sed "s/ /+/g")
+	if [ $(date +%H) -ge "$push_server_time" ];then
+		if [ ! $git_log  ];then
+			echo "#### 《$Script_name+$current_time》" >>$dir_file/git_log/${current_time}.log
+			echo "没有任何更新" >>$dir_file/git_log/${current_time}.log
+		else
+			echo "#### 《$Script_name+$current_time+更新日志》" >> $dir_file/git_log/${current_time}.log
+			echo "  时间     +作者    +操作" >> $dir_file/git_log/${current_time}.log
+			echo "$git_log" >> $dir_file/git_log/${current_time}.log
+		fi
+	fi
+
+}
+
+That_day_sendMessage() {
+	echo "22点开始推送今天的github更新记录"
+	log_sort=$(cat  $dir_file/git_log/${current_time}.log  | sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
+	curl -s "http://sc.ftqq.com/$SCKEY.send?text=Checkjs检测仓库状态" -d "&desp=$log_sort" >/dev/null 2>&1
+}
+
+
 
 update_script() {
 	echo -e "$green 开始更新checkjs，当前时间：$white`date "+%Y-%m-%d %H:%M"`"
@@ -240,6 +274,9 @@ description_if() {
 		fi
 	fi
 
+	if [ ! -d $dir_file/git_log ];then
+		mkdir 	$dir_file/git_log
+	fi
 
 	if [ ! $SCKEY ]; then
 		echo ""
@@ -330,12 +367,16 @@ menu() {
 	echo "----------------------------------------------"
 	echo -e "$green 当前时间：$white`date "+%Y-%m-%d %H:%M"`"
 	echo -e "$yellow 检测脚本是否最新:$white $Script_status "
+	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts
+	shylocks_Script
 	Quantumult_X
 	hundun
 	#MoPoQAQ_Script
-	shylocks_Script
 	ZhiYi_Script
+	if [ $(date +%H) -ge "$push_server_time" ];then
+		That_day_sendMessage
+	fi
 }
 
 
