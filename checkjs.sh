@@ -19,6 +19,7 @@ SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
 wrap="%0D%0A%0D%0A" #Server酱换行
 wrap_tab="     "
 current_time=$(date +"%Y-%m-%d")
+by="#### 脚本仓库地址:https://github.com/ITdesk01/Checkjs"
 
 #推送log日志到server酱的时间
 push_server_time="22"
@@ -238,7 +239,8 @@ That_day() {
 That_day_sendMessage() {
 	echo "22点开始推送今天的github更新记录"
 	log_sort=$(cat  $dir_file/git_log/${current_time}.log  | sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
-	curl -s "http://sc.ftqq.com/$SCKEY.send?text=Checkjs检测仓库状态" -d "&desp=$log_sort" >/dev/null 2>&1
+	log_sort1=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
+	curl -s "http://sc.ftqq.com/$SCKEY.send?text=Checkjs检测仓库状态" -d "&desp=$log_sort1" >/dev/null 2>&1
 }
 
 
