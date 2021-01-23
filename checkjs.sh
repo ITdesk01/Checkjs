@@ -174,8 +174,7 @@ diff_cron() {
 	if [ $(cat $ListJs_add | wc -l) = "0" ]; then
 		Add_if="0"
 	else
-		sed -i "s/js/js$wrap/g" $ListJs_add
-		Add=$(sed ':t;N;s/\n//;b t' $ListJs_add)
+		Add=$(sed "s/$/$wrap$wrap_tab/" $ListJs_add | sed ':t;N;s/\n//;b t' )
 		Add_if="1"
 	fi 
 	
@@ -186,8 +185,7 @@ diff_cron() {
 	if [ $(cat $ListJs_drop | wc -l) = "0" ]; then
 		Delete_if="0"
 	else
-		sed -i "s/js/js$wrap/g" $ListJs_drop
-		Delete=$(sed ':t;N;s/\n//;b t' $ListJs_drop)
+		Delete=$(sed "s/$/$wrap$wrap_tab/" $ListJs_drop | sed ':t;N;s/\n//;b t' )
 		Delete_if="1"
 	fi 
 }
@@ -198,13 +196,13 @@ sendMessage() {
 	cat_delete=$(cat $ListJs_drop | wc -l )
 	if [ $Add_if = "1" ] && [ $Delete_if = "1" ]; then
 		num="新增$cat_add脚本删除$cat_delete脚本"
-		content="新增脚本有:$wrap$Add删除脚本有:$wrap$Delete"
+		content=$(echo "#### 新增脚本有:$wrap$wrap_tab$Add#### 删除脚本有:$wrap$wrap_tab$Delete" | sed "s/$wrap_tab####/####/g")
 	elif [ $Add_if = "1" ]; then 
 		num="新增$cat_add脚本"
-		content="新增脚本有:$wrap$Add"
+		content="#### 新增脚本有:$wrap$wrap_tab$Add"
 	elif [ $Delete_if = "1" ]; then 
 		num="删除$cat_delete脚本"
-		content="删除脚本有:$wrap$Delete"
+		content="#### 删除脚本有:$wrap$wrap_tab$Delete"
 	else
 		content="no_update"
 	fi
@@ -216,7 +214,7 @@ sendMessage() {
 	else
 		echo -e "$green[$Script_name] 新增$cat_add脚本,删除$cat_delete脚本，已推送到你的接收设备$white"
 		echo "**********************************************"
-		curl "http://sc.ftqq.com/$SCKEY.send?text=$Script_name$num&desp=$content" >/dev/null 2>&1 &
+		curl -s "http://sc.ftqq.com/$SCKEY.send?text=$Script_name$num" -d "&desp=$content" >/dev/null 2>&1
 	fi 
 	
 }
