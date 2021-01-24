@@ -223,24 +223,32 @@ sendMessage() {
 #检测当天更新情况并推送
 That_day() {
 	git_log=$(git log --format=format:"%ai %an %s" --since="$current_time 00:00:00" --before="$current_time 23:59:59" | sed "s/+0800//g" | sed "s/+0000/时区0000/g" | sed "s/$current_time //g" | sed "s/ /+/g")
-	if [ $(date +%H) -ge "$push_server_time" ];then
-		if [ ! $git_log  ];then
-			echo "#### 《$Script_name+$current_time》" >>$dir_file/git_log/${current_time}.log
-			echo "没有任何更新" >>$dir_file/git_log/${current_time}.log
-		else
-			echo "#### 《$Script_name+$current_time+更新日志》" >> $dir_file/git_log/${current_time}.log
-			echo "  时间     +作者    +操作" >> $dir_file/git_log/${current_time}.log
-			echo "$git_log" >> $dir_file/git_log/${current_time}.log
-		fi
+	if [ ! $git_log  ];then
+		echo "#### 《$Script_name+$current_time》" >>$dir_file/git_log/${current_time}.log
+		echo "没有任何更新" >>$dir_file/git_log/${current_time}.log
+	else
+		echo "#### 《$Script_name+$current_time+更新日志》" >> $dir_file/git_log/${current_time}.log
+		echo "  时间     +作者    +操作" >> $dir_file/git_log/${current_time}.log
+		echo "$git_log" >> $dir_file/git_log/${current_time}.log
 	fi
 
 }
 
 That_day_sendMessage() {
-	echo "22点开始推送今天的github更新记录"
 	log_sort=$(cat  $dir_file/git_log/${current_time}.log  | sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
 	log_sort1=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
-	curl -s "http://sc.ftqq.com/$SCKEY.send?text=Checkjs检测仓库状态" -d "&desp=$log_sort1" >/dev/null 2>&1
+	if [ ! $SCKEY ];then
+			echo "没找到Server酱key不做操作"
+	else
+		if [ ! $log_sort1 ];then
+			echo -e "$red 推送失败$white，请检查 $dir_file/git_log/${current_time}.log是否存在"
+		else
+			echo -e "$green 开始推送Checkjs检测仓库状态$white"
+			curl -s "http://sc.ftqq.com/$SCKEY.send?text=Checkjs检测仓库状态" -d "&desp=$log_sort1" >/dev/null 2>&1
+			sleep 3
+			echo -e "$green 推送完成$white"
+		fi
+	fi
 }
 
 
@@ -374,7 +382,11 @@ menu() {
 	hundun
 	#MoPoQAQ_Script
 	ZhiYi_Script
-	if [ $(date +%H) -ge "$push_server_time" ];then
+	if [ $(date +%H) == "12" ];then
+		echo "12点开始推送今天的github更新记录"
+		That_day_sendMessage
+	elif [ $(date +%H) == "22" ];then
+		echo "22点开始推送今天的github更新记录"
 		That_day_sendMessage
 	fi
 }
