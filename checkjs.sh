@@ -252,6 +252,13 @@ That_day_sendMessage() {
 }
 
 
+that_day_push() {
+	menu
+	echo -e "$green无视时间规则开始推送$white"
+	That_day_sendMessage
+}
+
+
 
 update_script() {
 	echo -e "$green 开始更新checkjs，当前时间：$white`date "+%Y-%m-%d %H:%M"`"
@@ -397,7 +404,7 @@ if [ -z $action1 ]; then
 	menu
 else
 	case "$action1" in
-			update_script|system_variable|menu|checklog)
+			update_script|system_variable|menu|that_day_push)
 			$action1
 			;;
 			*)
