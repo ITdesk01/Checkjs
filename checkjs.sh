@@ -384,7 +384,7 @@ menu() {
 	echo -e "$yellow 检测脚本是否最新:$white $Script_status "
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts
-	shylocks_Script
+	#shylocks_Script
 	Quantumult_X
 	hundun
 	#MoPoQAQ_Script
