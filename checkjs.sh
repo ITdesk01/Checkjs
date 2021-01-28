@@ -48,7 +48,7 @@ jd_scripts() {
 
 jd_scripts_gitee() {
 	cd $dir_file
-	Script_name="jd_scripts"
+	Script_name="jd_scripts_gitee"
 	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
