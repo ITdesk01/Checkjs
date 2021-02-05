@@ -394,6 +394,8 @@ menu() {
 	description_if
 	echo "----------------------------------------------"
 	echo -e "$green Checkjs $version开始检查脚本新增或删除情况$white"
+	echo ""
+	echo "无视时间规则直接推送：sh \$checkjs that_day_push"
 	echo "----------------------------------------------"
 	echo -e "$green 当前时间：$white`date "+%Y-%m-%d %H:%M"`"
 	echo -e "$yellow 检测脚本是否最新:$white $Script_status "
