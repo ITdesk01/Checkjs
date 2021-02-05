@@ -77,6 +77,21 @@ shylocks_Script() {
 	fi
 }
 
+shylocks_Script_gitee() {
+	cd $dir_file
+	Script_name="shylocks_Script_gitee"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://gitee.com/shylocks/updateTeam.git shylocks_Script_gitee
+		tongyong_config
+	fi
+}
+
 
 Quantumult_X() {
 	cd $dir_file
@@ -384,10 +399,9 @@ menu() {
 	echo -e "$yellow 检测脚本是否最新:$white $Script_status "
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
-	#shylocks_Script
+	shylocks_Script_gitee
 	Quantumult_X
 	hundun
-	#MoPoQAQ_Script
 	ZhiYi_Script
 	if [ $(date +%H) == "12" ];then
 		echo "12点开始推送今天的github更新记录"
