@@ -31,21 +31,6 @@ yellow="\033[33m"
 white="\033[0m"
 
 
-jd_scripts() {
-	cd $dir_file
-	Script_name="jd_scripts"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="master"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone -b master https://github.com/LXK9301/jd_scripts.git jd_scripts
-		tongyong_config
-	fi
-}
-
 jd_scripts_gitee() {
 	cd $dir_file
 	Script_name="jd_scripts_gitee"
@@ -60,21 +45,6 @@ jd_scripts_gitee() {
 		tongyong_config
 	fi
 
-}
-
-shylocks_Script() {
-	cd $dir_file
-	Script_name="shylocks_Script"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="main"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/shylocks/Loon.git shylocks_Script
-		tongyong_config
-	fi
 }
 
 shylocks_Script_gitee() {
@@ -92,6 +62,20 @@ shylocks_Script_gitee() {
 	fi
 }
 
+ZCY01_Script() {
+	cd $dir_file
+	Script_name="ZCY01_Script"
+	File_path="$dir_file/$Script_name/jd"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/ZCY01/daily_scripts.git ZCY01_Script
+		tongyong_config
+	fi
+}
 
 Quantumult_X() {
 	cd $dir_file
@@ -402,6 +386,7 @@ menu() {
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
 	shylocks_Script_gitee
+	ZCY01_Script
 	Quantumult_X
 	hundun
 	ZhiYi_Script
