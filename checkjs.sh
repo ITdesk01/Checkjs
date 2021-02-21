@@ -141,7 +141,8 @@ tongyong_config() {
 		sendMessage
 		That_day
 	else
-		echo -e "$red无法下载仓库文件，暂时不更新,可能是网络问题或者上游仓库被封，建议查看上游仓库是否正常，测试仓库是否正常：$url_test$white"
+		echo -e "$green[$Script_name]$red无法下载仓库文件，暂时不更新,可能是网络问题或者上游仓库被封，建议查看上游仓库是否正常，测试仓库是否正常：$url_test$white"
+		echo "**********************************************"
 	fi
 }
 
@@ -380,6 +381,7 @@ menu() {
 	echo "----------------------------------------------"
 	echo -e "$green 当前时间：$white`date "+%Y-%m-%d %H:%M"`"
 	echo -e "$yellow 检测脚本是否最新:$white $Script_status "
+	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
 	shylocks_Script_gitee
