@@ -38,6 +38,7 @@ jd_scripts_gitee() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
+	url_test="https://gitee.com/lxk0301/jd_scripts/raw/master/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -54,6 +55,7 @@ shylocks_Script_gitee() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
+	url_test="https://gitee.com/shylocks/updateTeam/raw/main/package.json"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -69,6 +71,7 @@ ZCY01_Script() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
+	url_test="https://raw.githubusercontent.com/ZCY01/daily_scripts/main/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -84,6 +87,7 @@ Quantumult_X() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
+	url_test="https://raw.githubusercontent.com/799953468/Quantumult-X/master/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -99,25 +103,11 @@ hundun() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
+	url_test="https://raw.githubusercontent.com/whyour/hundun/master/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
 		git clone https://github.com/whyour/hundun.git
-		tongyong_config
-	fi
-}
-
-MoPoQAQ_Script() {
-	cd $dir_file
-	Script_name="MoPoQAQ_Script"
-	File_path="$dir_file/$Script_name/Me"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="main"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/MoPoQAQ/Script.git MoPoQAQ_Script
 		tongyong_config
 	fi
 }
@@ -129,6 +119,7 @@ ZhiYi_Script() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
+	url_test="https://raw.githubusercontent.com/ZhiYi-N/Private-Script/master/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -140,12 +131,18 @@ ZhiYi_Script() {
 
 tongyong_config() {
 	echo ""
-	cd $File_path
-	git_pull
-	init_data
-	diff_cron
-	sendMessage
-	That_day
+	wget --spider -nv  $url_test -o /tmp/wget_test.log
+	wget_test=$( cat /tmp/wget_test.log | grep -o "200 OK")
+	if [ "$wget_test" == "200 OK" ];then
+		cd $File_path
+		git_pull
+		init_data
+		diff_cron
+		sendMessage
+		That_day
+	else
+		echo -e "$red无法下载仓库文件，暂时不更新,可能是网络问题或者上游仓库被封，建议查看上游仓库是否正常，测试仓库是否正常：$url_test$white"
+	fi
 }
 
 
