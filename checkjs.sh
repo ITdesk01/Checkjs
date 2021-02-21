@@ -38,14 +38,19 @@ jd_scripts_gitee() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
-	url_test="https://gitee.com/lxk0301/jd_scripts/raw/master/README.md"
+	#url_test="https://gitee.com/lxk0301/jd_scripts/raw/master/README.md"
 	if [ -d "$Script_name" ]; then
-		tongyong_config
+		#tongyong_config
+		cd $File_path
+		git_pull
+		init_data
+		diff_cron
+		sendMessage
+		That_day
 	else
-		git clone -b master https://gitee.com/lxk0301/jd_scripts.git jd_scripts_gitee
-		tongyong_config
+		git clone -b master git://gitee.com/lxk0301/jd_scripts.git jd_scripts_gitee
+		#tongyong_config
 	fi
-
 }
 
 shylocks_Script_gitee() {
