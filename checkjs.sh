@@ -141,7 +141,10 @@ tongyong_config() {
 		sendMessage
 		That_day
 	else
-		echo -e "$green[$Script_name]$red无法下载仓库文件，暂时不更新,可能是网络问题或者上游仓库被封，建议查看上游仓库是否正常，测试仓库是否正常：$url_test$white"
+		echo "#### 《$Script_name+$current_time》" >>$dir_file/git_log/${current_time}.log
+		wget_error="$green[$Script_name]$red无法下载仓库文件，暂时不更新,可能是网络问题或者上游仓库被封，建议查看上游仓库是否正常，测试仓库是否正常：$url_test$white"
+		echo -e "$wget_error"
+		echo "$wget_error" | sed -e "s/\\\//g" -e "s/\[//g" -e "s/033//g" -e "s/0m//g" -e "s/31m//g" -e "s/32m//g" -e "s/可能/$wrap$wrap_tab可能/g" -e "s/建议/$wrap$wrap_tab建议/g"  >>$dir_file/git_log/${current_time}.log
 		echo "**********************************************"
 	fi
 }
