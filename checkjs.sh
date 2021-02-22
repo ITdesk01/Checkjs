@@ -85,6 +85,22 @@ ZCY01_Script() {
 	fi
 }
 
+ichenzhe_Script() {
+	cd $dir_file
+	Script_name="ichenzhe_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	url_test="https://raw.githubusercontent.com/i-chenzhe/qx/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/i-chenzhe/qx.git ichenzhe_Script
+		tongyong_config
+	fi
+}
+
 Quantumult_X() {
 	cd $dir_file
 	Script_name="Quantumult-X"
@@ -392,11 +408,13 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
-	shylocks_Script_gitee
+	ichenzhe_Script
 	ZCY01_Script
 	Quantumult_X
 	hundun
 	ZhiYi_Script
+	shylocks_Script_gitee
+
 	if [ $(date +%H) == "12" ];then
 		echo "12点开始推送今天的github更新记录"
 		That_day_sendMessage
