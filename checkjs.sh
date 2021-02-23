@@ -48,7 +48,7 @@ jd_scripts_gitee() {
 		sendMessage
 		That_day
 	else
-		git clone -b master git://gitee.com/lxk0301/jd_scripts.git jd_scripts_gitee
+		git clone -b master git@gitee.com:lxk0301/jd_scripts.git jd_scripts_gitee
 		#tongyong_config
 	fi
 }
