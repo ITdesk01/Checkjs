@@ -256,7 +256,7 @@ That_day() {
 }
 
 That_day_sendMessage() {
-	log_sort=$(cat  $dir_file/git_log/${current_time}.log  | sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
+	log_sort=$(cat  $dir_file/git_log/${current_time}.log | sed "s/&/+/g" | sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
 	log_sort1=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
 	if [ ! $SCKEY ];then
 			echo "没找到Server酱key不做操作"
