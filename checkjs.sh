@@ -13,9 +13,18 @@ while [ -h "$Source"  ]; do
     [[ $Source != /*  ]] && Source="$dir_file/$Source"
 done
 dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
+
+
+if [ "$dir_file" == "/usr/share/jd_openwrt_script/Checkjs" ];then
+	SCKEY=$(grep "let SCKEY" /usr/share/jd_openwrt_script/script_config/sendNotify.js  | awk -F "'" '{print $2}')
+else
+	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
+fi
+
+
 ListJs_add="ListJs_add.txt"
 ListJs_drop="ListJs_drop.txt"
-SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
+
 wrap="%0D%0A%0D%0A" #Server酱换行
 wrap_tab="     "
 current_time=$(date +"%Y-%m-%d")
