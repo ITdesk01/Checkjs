@@ -117,7 +117,7 @@ Quantumult_X() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
-	url_test="https://raw.githubusercontent.com/799953468/Quantumult-X/master/README.md"
+	url_test="https://raw.githubusercontent.com/799953468/Quantumult-X/master/script/JD/jdCookie.js"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
