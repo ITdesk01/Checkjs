@@ -142,18 +142,18 @@ hundun() {
 	fi
 }
 
-ZhiYi_Script() {
+monk_coder() {
 	cd $dir_file
-	Script_name="ZhiYi_Script"
-	File_path="$dir_file/$Script_name/Scripts"
+	Script_name="monk_coder"
+	File_path="$dir_file/$Script_name/i-chenzhe"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
-	url_test="https://raw.githubusercontent.com/ZhiYi-N/Private-Script/master/README.md"
+	url_test="https://raw.githubusercontent.com/monk-coder/dust/dust/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/ZhiYi-N/Private-Script.git ZhiYi_Script
+		git clone https://github.com/monk-coder/dust.git monk_coder
 		tongyong_config
 	fi
 
@@ -421,7 +421,7 @@ menu() {
 	ZCY01_Script
 	Quantumult_X
 	hundun
-	ZhiYi_Script
+	monk_coder
 	shylocks_Script_gitee
 
 	if [ $(date +%H) == "12" ];then
