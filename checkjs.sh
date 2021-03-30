@@ -100,7 +100,7 @@ monk_coder() {
 	File_path="$dir_file/$Script_name/i-chenzhe"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
-	branch="main"
+	branch="dust"
 	url_test="https://raw.githubusercontent.com/monk-coder/dust/dust/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
