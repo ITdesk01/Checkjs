@@ -94,20 +94,21 @@ ZCY01_Script() {
 	fi
 }
 
-ichenzhe_Script() {
+monk_coder() {
 	cd $dir_file
-	Script_name="ichenzhe_Script"
-	File_path="$dir_file/$Script_name"
+	Script_name="monk_coder"
+	File_path="$dir_file/$Script_name/i-chenzhe"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
-	branch="main"
-	url_test="https://raw.githubusercontent.com/i-chenzhe/qx/main/README.md"
+	branch="master"
+	url_test="https://raw.githubusercontent.com/monk-coder/dust/dust/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/i-chenzhe/qx.git ichenzhe_Script
+		git clone https://github.com/monk-coder/dust.git monk_coder
 		tongyong_config
 	fi
+
 }
 
 Quantumult_X() {
@@ -142,18 +143,18 @@ hundun() {
 	fi
 }
 
-monk_coder() {
+ZhiYi_Script() {
 	cd $dir_file
-	Script_name="monk_coder"
-	File_path="$dir_file/$Script_name/i-chenzhe"
+	Script_name="ZhiYi_Script"
+	File_path="$dir_file/$Script_name/Scripts"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
-	url_test="https://raw.githubusercontent.com/monk-coder/dust/dust/README.md"
+	url_test="https://raw.githubusercontent.com/ZhiYi-N/Private-Script/master/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/monk-coder/dust.git monk_coder
+		git clone https://github.com/ZhiYi-N/Private-Script.git ZhiYi_Script
 		tongyong_config
 	fi
 
@@ -417,11 +418,11 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
-	ichenzhe_Script
+	monk_coder
 	ZCY01_Script
 	Quantumult_X
 	hundun
-	monk_coder
+	ZhiYi_Script
 	shylocks_Script_gitee
 
 	if [ $(date +%H) == "12" ];then
