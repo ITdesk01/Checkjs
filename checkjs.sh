@@ -94,10 +94,27 @@ ZCY01_Script() {
 	fi
 }
 
+i_chenzhe() {
+	cd $dir_file
+	Script_name="i_chenzhe"
+	File_path="$dir_file/$Script_name/i-chenzhe"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="dust"
+	url_test="https://raw.githubusercontent.com/monk-coder/dust/dust/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/monk-coder/dust.git i_chenzhe
+		tongyong_config
+	fi
+
+}
+
 monk_coder() {
 	cd $dir_file
 	Script_name="monk_coder"
-	File_path="$dir_file/$Script_name/i-chenzhe"
+	File_path="$dir_file/$Script_name/normal"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="dust"
@@ -418,6 +435,7 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
+	i_chenzhe
 	monk_coder
 	ZCY01_Script
 	Quantumult_X
