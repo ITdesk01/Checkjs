@@ -234,7 +234,7 @@ diff_cron() {
 	fi
 	#.*表示多个任意字符
 	#新文件与旧文件对比
-	ls ./ | grep -E "^j.*js$|^z.*js$" | sort > $Newfile
+	ls ./ | grep -E "js$" | sort > $Newfile
 	grep -vwf $Oldfile $Newfile > $ListJs_add
 	
 	if [ $(cat $ListJs_add | wc -l) = "0" ]; then
@@ -247,7 +247,7 @@ diff_cron() {
 
 	#用旧文件与新文件对比
 	grep -vwf $Newfile $Oldfile > $ListJs_drop
-	ls ./ | grep -E "^j.*js$|^z.*js$" | sort > $Oldfile
+	ls ./ | grep -E "js$" | sort > $Oldfile
 	if [ $(cat $ListJs_drop | wc -l) = "0" ]; then
 		Delete_if="0"
 	else
@@ -453,8 +453,8 @@ menu() {
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
 	nianyuguai
-	i_chenzhe
-	monk_coder
+	#i_chenzhe
+	#monk_coder
 	ZCY01_Script
 	Quantumult_X
 	hundun
