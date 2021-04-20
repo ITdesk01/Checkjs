@@ -62,22 +62,6 @@ jd_scripts_gitee() {
 	fi
 }
 
-shylocks_Script_gitee() {
-	cd $dir_file
-	Script_name="shylocks_Script_gitee"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="main"
-	url_test="https://gitee.com/shylocks/updateTeam/raw/main/package.json"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://gitee.com/shylocks/updateTeam.git shylocks_Script_gitee
-		tongyong_config
-	fi
-}
-
 ZCY01_Script() {
 	cd $dir_file
 	Script_name="ZCY01_Script"
@@ -459,7 +443,7 @@ menu() {
 	Quantumult_X
 	hundun
 	ZhiYi_Script
-	shylocks_Script_gitee
+	rm -rf $dir_file/shylocks_Script_gitee
 
 	if [ $(date +%H) == "12" ];then
 		echo "12点开始推送今天的github更新记录"
