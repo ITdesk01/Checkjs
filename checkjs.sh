@@ -128,6 +128,23 @@ monk_coder() {
 
 }
 
+nianyuguai() {
+	cd $dir_file
+	Script_name="nianyuguai"
+	File_path="$dir_file/$Script_name/qx"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	url_test="https://raw.githubusercontent.com/nianyuguai/longzhuzhu/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/nianyuguai/longzhuzhu.git nianyuguai
+		tongyong_config
+	fi
+
+}
+
 Quantumult_X() {
 	cd $dir_file
 	Script_name="Quantumult-X"
@@ -435,6 +452,7 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
+	nianyuguai
 	i_chenzhe
 	monk_coder
 	ZCY01_Script
