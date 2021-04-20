@@ -230,7 +230,7 @@ diff_cron() {
 	if [ -f "$File_path/$Oldfile" ]; then
 		echo ""
 	else 
-		ls ./ | grep -E "^j.*js$|^z.*js$" | sort > $Oldfile
+		ls ./ | grep -E "js$" | sort > $Oldfile
 	fi
 	#.*表示多个任意字符
 	#新文件与旧文件对比
