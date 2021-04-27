@@ -126,7 +126,22 @@ nianyuguai() {
 		git clone https://github.com/nianyuguai/longzhuzhu.git nianyuguai
 		tongyong_config
 	fi
+}
 
+passerby() {
+	cd $dir_file
+	Script_name="passerby"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	url_test="https://raw.githubusercontent.com/passerby-b/JDDJ/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/passerby-b/JDDJ.git passerby
+		tongyong_config
+	fi
 }
 
 Quantumult_X() {
@@ -437,6 +452,7 @@ menu() {
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
 	nianyuguai
+	passerby
 	#i_chenzhe
 	#monk_coder
 	ZCY01_Script
