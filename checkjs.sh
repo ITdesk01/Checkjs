@@ -261,7 +261,7 @@ for_diff_cron() {
 			if [ -d $i ];then
 				ls $i | grep -E "js$" | sort >> $File_path/$Oldfile
 			else
-				echo ""
+				echo "" >/dev/null 2>&1
 			fi
 		done
 	fi
