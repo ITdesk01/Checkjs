@@ -78,23 +78,6 @@ ZCY01_Script() {
 	fi
 }
 
-i_chenzhe() {
-	cd $dir_file
-	Script_name="i_chenzhe"
-	File_path="$dir_file/$Script_name/i-chenzhe"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="dust"
-	url_test="https://raw.githubusercontent.com/monk-coder/dust/dust/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/monk-coder/dust.git i_chenzhe
-		tongyong_config
-	fi
-
-}
-
 monk_coder() {
 	cd $dir_file
 	Script_name="monk_coder"
@@ -102,6 +85,7 @@ monk_coder() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="dust"
+	for_diff="1"
 	url_test="https://raw.githubusercontent.com/monk-coder/dust/dust/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
@@ -201,7 +185,11 @@ tongyong_config() {
 		cd $File_path
 		git_pull
 		init_data
-		diff_cron
+		if [ ! $for_diff ];then
+			for_diff_cron
+		else
+			diff_cron
+		fi
 		sendMessage
 		That_day
 	else
@@ -253,6 +241,63 @@ diff_cron() {
 		Delete=$(sed "s/$/$wrap$wrap_tab/" $ListJs_drop | sed ':t;N;s/\n//;b t' )
 		Delete_if="1"
 	fi 
+}
+
+for_dirr_cron() {
+	#首次运行需要创建oldfile
+	if [ -f "$File_path/$Oldfile" ]; then
+		echo ""
+	else
+		ls ./ | grep -E "js$" | sort > $File_path/$Oldfile
+		for i in `ls | grep -v "backup"`
+		do
+			if [ -d $i ];then
+				ls $i | grep -E "js$" | sort >> $File_path/$Oldfile
+			else
+				echo ""
+			fi
+		done
+	fi
+
+	#.*表示多个任意字符
+	#新文件与旧文件对比
+	ls ./ | grep -E "js$" | sort > $File_path/$Newfile
+	for i in `ls | grep -v "backup"`
+	do
+		if [ -d $i ];then
+			ls $i | grep -E "js$" | sort >> $File_path/$Newfile
+		else
+			echo ""
+		fi
+	done
+
+	grep -vwf $Oldfile $Newfile > $ListJs_add
+
+	if [ $(cat $ListJs_add | wc -l) = "0" ]; then
+		Add_if="0"
+	else
+		Add=$(sed "s/$/$wrap$wrap_tab/" $ListJs_add | sed ':t;N;s/\n//;b t' )
+		Add_if="1"
+	fi
+
+	#用旧文件与新文件对比
+	grep -vwf $Newfile $Oldfile > $ListJs_drop
+	ls ./ | grep -E "js$" | sort > $File_path/$Oldfile
+	for i in `ls | grep -v "backup"`
+	do
+		if [ -d $i ];then
+			ls $i | grep -E "js$" | sort >> $File_path/$Oldfile
+		else
+			echo ""
+		fi
+	done
+
+	if [ $(cat $ListJs_drop | wc -l) = "0" ]; then
+		Delete_if="0"
+	else
+		Delete=$(sed "s/$/$wrap$wrap_tab/" $ListJs_drop | sed ':t;N;s/\n//;b t' )
+		Delete_if="1"
+	fi
 }
 
 sendMessage() {
@@ -453,8 +498,7 @@ menu() {
 	jd_scripts_gitee
 	nianyuguai
 	passerby
-	#i_chenzhe
-	#monk_coder
+	monk_coder
 	ZCY01_Script
 	Quantumult_X
 	hundun
