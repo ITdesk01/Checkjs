@@ -243,7 +243,7 @@ diff_cron() {
 	fi 
 }
 
-for_dirr_cron() {
+for_diff_cron() {
 	#首次运行需要创建oldfile
 	if [ -f "$File_path/$Oldfile" ]; then
 		echo ""
