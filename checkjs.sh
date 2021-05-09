@@ -47,6 +47,7 @@ jd_scripts_gitee() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
+	for_diff="0"
 	#url_test="https://gitee.com/lxk0301/jd_scripts/raw/master/README.md"
 	if [ -d "$Script_name" ]; then
 		#tongyong_config
@@ -69,6 +70,7 @@ ZCY01_Script() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
+	for_diff="0"
 	url_test="https://raw.githubusercontent.com/ZCY01/daily_scripts/main/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
@@ -103,6 +105,7 @@ nianyuguai() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
+	for_diff="0"
 	url_test="https://raw.githubusercontent.com/nianyuguai/longzhuzhu/main/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
@@ -119,6 +122,7 @@ passerby() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
+	for_diff="0"
 	url_test="https://raw.githubusercontent.com/passerby-b/JDDJ/main/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
@@ -135,6 +139,7 @@ Quantumult_X() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
+	for_diff="0"
 	url_test="https://raw.githubusercontent.com/799953468/Quantumult-X/master/script/JD/jdCookie.js"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
@@ -151,6 +156,7 @@ hundun() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
+	for_diff="0"
 	url_test="https://raw.githubusercontent.com/whyour/hundun/master/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
@@ -167,6 +173,7 @@ ZhiYi_Script() {
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
+	for_diff="0"
 	url_test="https://raw.githubusercontent.com/ZhiYi-N/Private-Script/master/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
@@ -185,7 +192,7 @@ tongyong_config() {
 		cd $File_path
 		git_pull
 		init_data
-		if [ ! $for_diff ];then
+		if [ $for_diff == "1" ];then
 			diff_cron
 		else
 			for_diff_cron
