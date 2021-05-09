@@ -83,7 +83,7 @@ ZCY01_Script() {
 monk_coder() {
 	cd $dir_file
 	Script_name="monk_coder"
-	File_path="$dir_file/$Script_name/normal"
+	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="dust"
