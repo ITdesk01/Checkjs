@@ -193,9 +193,9 @@ tongyong_config() {
 		git_pull
 		init_data
 		if [ $for_diff == "1" ];then
-			diff_cron
-		else
 			for_diff_cron
+		else
+			diff_cron
 		fi
 		sendMessage
 		That_day
