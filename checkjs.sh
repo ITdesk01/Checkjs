@@ -135,12 +135,12 @@ passerby() {
 Quantumult_X() {
 	cd $dir_file
 	Script_name="Quantumult-X"
-	File_path="$dir_file/$Script_name/Scripts/JD"
+	File_path="$dir_file/$Script_name/script/JD"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
-	url_test="https://raw.githubusercontent.com/799953468/Quantumult-X/master/script/JD/jdCookie.js"
+	url_test="https://raw.githubusercontent.com/799953468/Quantumult-X/master/script/JD/jd_bean_change.js"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
