@@ -132,6 +132,23 @@ passerby() {
 	fi
 }
 
+fangpidedongsun() {
+	cd $dir_file
+	Script_name="fangpidedongsun"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/fangpidedongsun/jd_scripts2/master/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/fangpidedongsun/jd_scripts2.git fangpidedongsun
+		tongyong_config
+	fi
+}
+
 Quantumult_X() {
 	cd $dir_file
 	Script_name="Quantumult-X"
@@ -506,6 +523,7 @@ menu() {
 	nianyuguai
 	passerby
 	monk_coder
+	fangpidedongsun
 	ZCY01_Script
 	Quantumult_X
 	hundun
