@@ -149,6 +149,23 @@ fangpidedongsun() {
 	fi
 }
 
+yangtingxiao() {
+	cd $dir_file
+	Script_name="yangtingxiao"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/yangtingxiao/QuantumultX.git yangtingxiao
+		tongyong_config
+	fi
+}
+
 Quantumult_X() {
 	cd $dir_file
 	Script_name="Quantumult-X"
@@ -524,6 +541,7 @@ menu() {
 	passerby
 	monk_coder
 	fangpidedongsun
+	yangtingxiao
 	ZCY01_Script
 	Quantumult_X
 	hundun
