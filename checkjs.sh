@@ -132,6 +132,24 @@ passerby() {
 	fi
 }
 
+Wenmoux() {
+	cd $dir_file
+	Script_name="Wenmoux"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/superBrand.js"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/Wenmoux/scripts.git Wenmoux
+		tongyong_config
+	fi
+}
+
+
 fangpidedongsun() {
 	cd $dir_file
 	Script_name="fangpidedongsun"
@@ -541,6 +559,7 @@ menu() {
 	passerby
 	monk_coder
 	fangpidedongsun
+	Wenmoux
 	yangtingxiao
 	ZCY01_Script
 	Quantumult_X
