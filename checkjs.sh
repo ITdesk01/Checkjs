@@ -591,7 +591,10 @@ menu() {
 
 help() {
 	clear
-	echo "Checkjs用法"
+	echo "----------------------------"
+	echo "		Checkjs用法"
+	echo "----------------------------"
+	echo ""
 	echo "1.更新脚本"
 	echo " sh \$checkjs update_script"
 	echo ""
