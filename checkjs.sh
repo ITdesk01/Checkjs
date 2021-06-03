@@ -592,7 +592,7 @@ menu() {
 help() {
 	clear
 	echo "----------------------------"
-	echo "		Checkjs用法"
+	echo "      Checkjs用法"
 	echo "----------------------------"
 	echo ""
 	echo "1.更新脚本"
