@@ -500,7 +500,7 @@ description_if() {
 }
 
 task() {
-	cron_version="2.2"
+	cron_version="2.3"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -521,8 +521,11 @@ EOF
 /etc/init.d/cron restart
 }
 task_delete() {
+	echo "开始删除定时任务"
 	sed -i '/Checkjs/d' /etc/crontabs/root >/dev/null 2>&1
 	sed -i '/#102#/d' /etc/crontabs/root >/dev/null 2>&1
+	sleep 5
+	echo "删除完成，如果需要重新跑，执行sh \$checkjs"
 }
 
 ds_setup() {
@@ -587,6 +590,7 @@ menu() {
 }
 
 help() {
+	clear
 	echo "Checkjs用法"
 	echo "1.更新脚本"
 	echo " sh \$checkjs update_script"
@@ -599,6 +603,7 @@ help() {
 	echo ""
 	echo "4.删除这个脚本所有创建的文件，包括脚本自己"
 	echo "sh \$checkjs ds_setup"
+	echo ""
 }
 
 
