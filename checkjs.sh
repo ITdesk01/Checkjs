@@ -17,6 +17,9 @@ dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
 
 if [ "$dir_file" == "/usr/share/jd_openwrt_script/Checkjs" ];then
 	SCKEY=$(grep "let SCKEY" /usr/share/jd_openwrt_script/script_config/sendNotify.js  | awk -F "'" '{print $2}')
+	if [ ! $SCKEY ];then
+		SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
+	fi
 else
 	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
 fi
