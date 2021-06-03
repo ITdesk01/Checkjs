@@ -555,9 +555,9 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
-	nianyuguai
+	#nianyuguai
 	passerby
-	monk_coder
+	#monk_coder
 	fangpidedongsun
 	Wenmoux
 	yangtingxiao
