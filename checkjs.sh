@@ -513,10 +513,10 @@ task() {
 }
 task_add() {
 cat >>/etc/crontabs/root <<EOF
-#**********这里是Checkjs的定时任务$cron_version版本**********#
-0 */2 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1
-45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1
-######102##########请将其他定时任务放到底下########
+#**********这里是Checkjs的定时任务$cron_version版本**********#102#
+0 */2 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
+45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1 #102#
+###################请将其他定时任务放到底下#########102#
 EOF
 /etc/init.d/cron restart
 }
@@ -526,11 +526,18 @@ task_delete() {
 }
 
 ds_setup() {
+	clear
+	echo "十秒钟以后开始删除，ctrl+c停止"
+	sleep 10
 	echo "checkjs删除定时任务设置"
 	task_delete
+	sleep 5
 	echo "checkjs删除全局变量"
 	sed -i '/checkjs/d' /etc/profile >/dev/null 2>&1
 	. /etc/profile
+	sleep 5
+	echo "删除整个脚本文件目录"
+	rm -rf $dir_file
 	echo "checkjs定时任务和全局变量删除完成，脚本不会自动运行了"
 }
 
@@ -579,18 +586,32 @@ menu() {
 	fi
 }
 
+help() {
+	echo "Checkjs用法"
+	echo "1.更新脚本"
+	echo " sh \$checkjs update_script"
+	echo ""
+	echo "2.无视当前时间规则推送"
+	echo " sh \$checkjs that_day_push"
+	echo ""
+	echo "3.删除当前的定时任务，暂时停止脚本"
+	echo " sh \$checkjs task_delete"
+	echo ""
+	echo "4.删除这个脚本所有创建的文件，包括脚本自己"
+	echo "sh \$checkjs ds_setup"
+}
+
 
 action1="$1"
 if [ -z $action1 ]; then
 	menu
 else
 	case "$action1" in
-			update_script|system_variable|menu|that_day_push)
+			update_script|system_variable|menu|that_day_push|help|task_delete|ds_setup)
 			$action1
 			;;
 			*)
-			echo "请不要乱输，我是不会执行的。。。"
-			exit
+			help
 			;;
 esac
 fi
