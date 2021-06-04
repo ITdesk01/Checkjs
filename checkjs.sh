@@ -143,7 +143,7 @@ Wenmoux() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
-	url_test="https://raw.githubusercontent.com/Wenmoux/scripts/master/readme.md"
+	url_test="https://raw.githubusercontent.com/Wenmoux/scripts/master/REAMDE.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
