@@ -516,7 +516,10 @@ description_if() {
 	clear
 	git_branch=$(git branch -v | grep -o behind )
 	if [[ "$git_branch" == "behind" ]]; then
-		Script_status="$red建议更新$white (可以运行$green sh \$checkjs update_script $white更新 )"
+		echo "$green 检测到有更新，开始自动更新。。"
+		update_script
+		sleep 2
+		description_if
 	else
 		Script_status="$green最新$white"
 	fi
