@@ -101,6 +101,24 @@ monk_coder() {
 
 }
 
+JDHelloWorld() {
+	cd $dir_file
+	Script_name="JDHelloWorld"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	for_diff="1"
+	url_test="https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/JDHelloWorld/jd_scripts.git JDHelloWorld
+		tongyong_config
+	fi
+
+}
+
 nianyuguai() {
 	cd $dir_file
 	Script_name="nianyuguai"
@@ -606,6 +624,7 @@ menu() {
 	jd_scripts_gitee
 	#nianyuguai
 	passerby
+	JDHelloWorld
 	#monk_coder
 	zooPanda
 	panghu999
