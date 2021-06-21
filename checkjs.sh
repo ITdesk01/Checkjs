@@ -83,24 +83,6 @@ ZCY01_Script() {
 	fi
 }
 
-monk_coder() {
-	cd $dir_file
-	Script_name="monk_coder"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="dust"
-	for_diff="1"
-	url_test="https://raw.githubusercontent.com/monk-coder/dust/dust/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/monk-coder/dust.git monk_coder
-		tongyong_config
-	fi
-
-}
-
 JDHelloWorld() {
 	cd $dir_file
 	Script_name="JDHelloWorld"
@@ -127,11 +109,11 @@ nianyuguai() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
-	url_test="https://raw.githubusercontent.com/nianyuguai/longzhuzhu/main/README.md"
+	url_test="https://raw.githubusercontent.com/longzhuzhu/nianyu/main/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/nianyuguai/longzhuzhu.git nianyuguai
+		git clone https://github.com/longzhuzhu/nianyu.git nianyuguai
 		tongyong_config
 	fi
 }
@@ -159,9 +141,9 @@ Wenmoux() {
 	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
-	branch="master"
+	branch="wen"
 	for_diff="0"
-	url_test="https://raw.githubusercontent.com/Wenmoux/scripts/master/REAMDE.md"
+	url_test="https://raw.githubusercontent.com/Wenmoux/scripts/wen/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -200,6 +182,23 @@ panghu999() {
 		tongyong_config
 	else
 		git clone https://github.com/panghu999/panghu.git panghu999
+		tongyong_config
+	fi
+}
+
+panghu999_jd() {
+	cd $dir_file
+	Script_name="panghu999_jd"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/panghu999/jd_scripts/master/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/panghu999/jd_scripts.git panghu999_jd
 		tongyong_config
 	fi
 }
@@ -622,12 +621,12 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
-	#nianyuguai
+	nianyuguai
 	passerby
 	JDHelloWorld
-	#monk_coder
 	zooPanda
 	panghu999
+	panghu999_jd
 	fangpidedongsun
 	Wenmoux
 	yangtingxiao
