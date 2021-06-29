@@ -66,6 +66,23 @@ jd_scripts_gitee() {
 	fi
 }
 
+curtinlv_script() {
+	cd $dir_file
+	Script_name="curtinlv_script"
+	File_path="$dir_file/$Script_name/jd"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	for_diff="1"
+	url_test="https://raw.githubusercontent.com/curtinlv/JD-Script/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/curtinlv/JD-Script.git curtinlv_script
+		tongyong_config
+	fi
+}
+
 ZCY01_Script() {
 	cd $dir_file
 	Script_name="ZCY01_Script"
@@ -536,7 +553,7 @@ description_if() {
 		echo "$green 检测到有更新，开始自动更新。。"
 		update_script
 		sleep 2
-		description_if
+		sh $dir_file/checkjs.sh
 	else
 		Script_status="$green最新$white"
 	fi
@@ -621,6 +638,7 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	jd_scripts_gitee
+	curtinlv_script
 	nianyuguai
 	passerby
 	JDHelloWorld
