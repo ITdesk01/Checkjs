@@ -69,7 +69,7 @@ jd_scripts_gitee() {
 curtinlv_script() {
 	cd $dir_file
 	Script_name="curtinlv_script"
-	File_path="$dir_file/$Script_name/jd"
+	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
@@ -550,7 +550,7 @@ description_if() {
 	clear
 	git_branch=$(git branch -v | grep -o behind )
 	if [[ "$git_branch" == "behind" ]]; then
-		echo "$green 检测到有更新，开始自动更新。。"
+		echo -e "$green 检测到有更新，开始自动更新。。"
 		update_script
 		sleep 2
 		sh $dir_file/checkjs.sh
