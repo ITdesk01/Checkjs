@@ -265,6 +265,60 @@ ZhiYi_Script() {
 
 }
 
+smiek2221_Script() {
+	cd $dir_file
+	Script_name="smiek2221_Script"
+	File_path="$dir_file/$Script_name/Scripts"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/smiek2221/scripts/master/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/smiek2221/scripts.git smiek2221_Script
+		tongyong_config
+	fi
+
+}
+
+cdle_Script() {
+	cd $dir_file
+	Script_name="cdle_Script"
+	File_path="$dir_file/$Script_name/Scripts"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	for_diff="1"
+	url_test="https://raw.githubusercontent.com/cdle/jd_study/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/cdle/jd_study.git cdle_Script
+		tongyong_config
+	fi
+
+}
+
+Tsukasa007_Script() {
+	cd $dir_file
+	Script_name="Tsukasa007_Script"
+	File_path="$dir_file/$Script_name/Scripts"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/Tsukasa007/my_script/master/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/Tsukasa007/my_script.git Tsukasa007_Script
+		tongyong_config
+	fi
+
+}
+
 tongyong_config() {
 	echo ""
 	wget --spider -nv  $url_test -o /tmp/wget_test.log
@@ -597,9 +651,12 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	curtinlv_script
+	smiek2221_Script
+	cdle_Script
+	Tsukasa007_Script
+	JDHelloWorld
 	nianyuguai
 	passerby
-	JDHelloWorld
 	panghu999
 	panghu999_jd
 	fangpidedongsun
