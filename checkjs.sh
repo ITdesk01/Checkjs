@@ -145,23 +145,6 @@ Wenmoux() {
 	fi
 }
 
-zooPanda() {
-	cd $dir_file
-	Script_name="zooPanda"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="dev"
-	for_diff="0"
-	url_test="https://raw.githubusercontent.com/zooPanda/zoo/dev/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/zooPanda/zoo.git zooPanda
-		tongyong_config
-	fi
-}
-
 panghu999() {
 	cd $dir_file
 	Script_name="panghu999"
@@ -617,7 +600,6 @@ menu() {
 	nianyuguai
 	passerby
 	JDHelloWorld
-	zooPanda
 	panghu999
 	panghu999_jd
 	fangpidedongsun
