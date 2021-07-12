@@ -42,30 +42,6 @@ green="\033[32m"
 yellow="\033[33m"
 white="\033[0m"
 
-
-jd_scripts_gitee() {
-	cd $dir_file
-	Script_name="jd_scripts_gitee"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="master"
-	for_diff="0"
-	#url_test="https://gitee.com/lxk0301/jd_scripts/raw/master/README.md"
-	if [ -d "$Script_name" ]; then
-		#tongyong_config
-		cd $File_path
-		git_pull
-		init_data
-		diff_cron
-		sendMessage
-		That_day
-	else
-		git clone -b master git@gitee.com:lxk0301/jd_scripts.git jd_scripts_gitee
-		#tongyong_config
-	fi
-}
-
 curtinlv_script() {
 	cd $dir_file
 	Script_name="curtinlv_script"
@@ -637,7 +613,6 @@ menu() {
 	echo -e "$yellow 检测脚本是否最新:$white $Script_status "
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
-	jd_scripts_gitee
 	curtinlv_script
 	nianyuguai
 	passerby
