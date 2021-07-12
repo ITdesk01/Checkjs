@@ -268,7 +268,7 @@ ZhiYi_Script() {
 smiek2221_Script() {
 	cd $dir_file
 	Script_name="smiek2221_Script"
-	File_path="$dir_file/$Script_name/Scripts"
+	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
@@ -286,7 +286,7 @@ smiek2221_Script() {
 cdle_Script() {
 	cd $dir_file
 	Script_name="cdle_Script"
-	File_path="$dir_file/$Script_name/Scripts"
+	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
@@ -304,7 +304,7 @@ cdle_Script() {
 Tsukasa007_Script() {
 	cd $dir_file
 	Script_name="Tsukasa007_Script"
-	File_path="$dir_file/$Script_name/Scripts"
+	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
@@ -567,6 +567,7 @@ description_if() {
 		update_script
 		sleep 2
 		sh $dir_file/checkjs.sh
+		exit 0
 	else
 		Script_status="$green最新$white"
 	fi
