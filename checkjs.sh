@@ -566,8 +566,7 @@ description_if() {
 		echo -e "$green 检测到有更新，开始自动更新。。"
 		update_script
 		sleep 2
-		sh $dir_file/checkjs.sh
-		exit 0
+		description_if
 	else
 		Script_status="$green最新$white"
 	fi
