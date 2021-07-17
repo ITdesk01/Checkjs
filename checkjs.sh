@@ -319,6 +319,43 @@ Tsukasa007_Script() {
 
 }
 
+zero205_Script() {
+	cd $dir_file
+	Script_name="zero205_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/zero205/JD_tencent_scf.git zero205_Script
+		tongyong_config
+	fi
+
+}
+
+Aaron_Script() {
+	cd $dir_file
+	Script_name="Aaron_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="jd_scripts"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/Aaron-lv/sync.git Aaron_Script
+		tongyong_config
+	fi
+
+}
+
+
 tongyong_config() {
 	echo ""
 	wget --spider -nv  $url_test -o /tmp/wget_test.log
@@ -655,10 +692,12 @@ menu() {
 	cdle_Script
 	Tsukasa007_Script
 	JDHelloWorld
-	nianyuguai
-	passerby
+	zero205_Script
+	Aaron_Script
 	panghu999
 	panghu999_jd
+	nianyuguai
+	passerby
 	fangpidedongsun
 	Wenmoux
 	yangtingxiao
