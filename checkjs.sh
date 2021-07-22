@@ -131,7 +131,7 @@ passerby() {
 Wenmoux() {
 	cd $dir_file
 	Script_name="Wenmoux"
-	File_path="$dir_file/$Script_name"
+	File_path="$dir_file/$Script_name/jd"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
 	branch="wen"
