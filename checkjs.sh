@@ -42,6 +42,42 @@ green="\033[32m"
 yellow="\033[33m"
 white="\033[0m"
 
+asd920() {
+	cd $dir_file
+	Script_name="asd920"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/asd920/Auto-jd/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/asd920/Auto-jd.git asd920
+		tongyong_config
+	fi
+
+}
+
+yuannian1112() {
+	cd $dir_file
+	Script_name="yuannian1112"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/yuannian1112/jd_scripts.git yuannian1112
+		tongyong_config
+	fi
+
+}
+
 curtinlv_script() {
 	cd $dir_file
 	Script_name="curtinlv_script"
@@ -691,6 +727,8 @@ menu() {
 	smiek2221_Script
 	cdle_Script
 	Tsukasa007_Script
+	asd920
+	yuannian1112
 	JDHelloWorld
 	zero205_Script
 	Aaron_Script
