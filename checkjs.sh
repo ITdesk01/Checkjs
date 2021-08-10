@@ -14,17 +14,6 @@ while [ -h "$Source"  ]; do
 done
 dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
 
-
-if [ "$dir_file" == "/usr/share/jd_openwrt_script/Checkjs" ];then
-	SCKEY=$(grep "let SCKEY" /usr/share/jd_openwrt_script/script_config/sendNotify.js  | awk -F "'" '{print $2}')
-	if [ ! $SCKEY ];then
-		SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
-	fi
-else
-	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
-fi
-
-
 ListJs_add="ListJs_add.txt"
 ListJs_drop="ListJs_drop.txt"
 
@@ -593,28 +582,17 @@ update_script() {
 
 
 description_if() {
-	install_script="/usr/share/Install_script"
-	install_script_config="/usr/share/Install_script/script_config"
-	if [ "$dir_file" == "$install_script/Checkjs" ];then
-		if [ ! -f "$install_script_config/Checkjs_Sckey.txt" ]; then
-			echo > $dir_file/Checkjs_Sckey.txt
-			rm -rf $dir_file/Checkjs_Sckey.txt #用于删除旧的链接
-			ln -s $install_script_config/Checkjs_Sckey.txt $dir_file/Checkjs_Sckey.txt
-		fi
-
-		#用于升级以后恢复链接
-		if [ ! -f "$dir_file/Checkjs_Sckey.txt" ]; then
-			ln -s $install_script_config/Checkjs_Sckey.txt $dir_file/Checkjs_Sckey.txt
-		fi
-
-	else
-		if [ ! -f $dir_file/Checkjs_Sckey.txt ]; then
-			echo > $dir_file/Checkjs_Sckey.txt
-		fi
-	fi
-
 	if [ ! -d $dir_file/git_log ];then
 		mkdir 	$dir_file/git_log
+	fi
+
+	if [ "$dir_file" == "/usr/share/jd_openwrt_script/Checkjs" ];then
+		SCKEY=$(grep "let SCKEY" /usr/share/jd_openwrt_script/script_config/sendNotify.js  | awk -F "'" '{print $2}')
+		if [ ! $SCKEY ];then
+			SCKEY=$(cat /usr/share/jd_openwrt_script/script_config/Checkjs_Sckey.txt)
+		fi
+	else
+		SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
 	fi
 
 	if [ ! $SCKEY ]; then
