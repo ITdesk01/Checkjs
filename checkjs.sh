@@ -37,7 +37,7 @@ asd920() {
 	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
-	branch="master"
+	branch="main"
 	for_diff="0"
 	url_test="https://raw.githubusercontent.com/asd920/Auto-jd/main/README.md"
 	if [ -d "$Script_name" ]; then
@@ -55,7 +55,7 @@ yuannian1112() {
 	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
-	branch="master"
+	branch="main"
 	for_diff="0"
 	url_test="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main/README.md"
 	if [ -d "$Script_name" ]; then
