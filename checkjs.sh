@@ -634,7 +634,7 @@ description_if() {
 }
 
 task() {
-	cron_version="2.3"
+	cron_version="2.4"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -648,7 +648,7 @@ task() {
 task_add() {
 cat >>/etc/crontabs/root <<EOF
 #**********这里是Checkjs的定时任务$cron_version版本**********#102#
-0 */2 * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
+*/30 * * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
 45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1 #102#
 ###################请将其他定时任务放到底下#########102#
 EOF
