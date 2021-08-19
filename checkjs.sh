@@ -694,13 +694,6 @@ description_if() {
 		SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
 	fi
 
-	if [ ! $SCKEY ]; then
-		echo ""
-		echo -e "$red Server酱的key为空$white，脚本无法推送，$green获取key办法：http://sc.ftqq.com/3.version，$white将获取到的key填入$green$dir_file/Checkjs_Sckey.txt，$white重新运行脚本"
-		echo ""
-		exit 0
-	fi
-
 	echo "稍等一下，正在取回远端脚本源码，用于比较现在脚本源码，速度看你网络"
 	cd $dir_file
 	git fetch
