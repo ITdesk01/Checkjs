@@ -17,6 +17,35 @@ dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
 ListJs_add="ListJs_add.txt"
 ListJs_drop="ListJs_drop.txt"
 
+#检测当前位置
+if [ "$dir_file" == "/usr/share/jd_openwrt_script/Checkjs" ];then
+	openwrt_script="/usr/share/jd_openwrt_script"
+	openwrt_script_config="/usr/share/jd_openwrt_script/script_config"
+else
+	echo ""
+fi
+
+
+if [ ! -f $openwrt_script_config/Checkjs_Sckey.txt ];then
+	echo >$openwrt_script_config/Checkjs_Sckey.txt
+else
+	echo >$dir_file/Checkjs_Sckey.txt
+fi
+
+if [ "$dir_file" == "/usr/share/jd_openwrt_script/Checkjs" ];then
+	SCKEY=$(grep "let SCKEY" $openwrt_script_config/sendNotify.js  | awk -F "'" '{print $2}')
+	if [ ! $SCKEY ];then
+		SCKEY=$(cat $openwrt_script_config/Checkjs_Sckey.txt)
+	fi
+	push_if=$(grep "push_if" $openwrt_script_config/jd_openwrt_script_config.txt | awk -F "'" '{print $2}')
+	weixin2=$(grep "weixin2" $openwrt_script_config/jd_openwrt_script_config.txt | awk -F "'" '{print $2}')
+else
+	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
+fi
+
+#企业微信
+weixin_line="------------------------------------------------"
+
 wrap="%0D%0A%0D%0A" #Server酱换行
 wrap_tab="     "
 current_time=$(date +"%Y-%m-%d")
@@ -170,40 +199,6 @@ Wenmoux() {
 	fi
 }
 
-panghu999() {
-	cd $dir_file
-	Script_name="panghu999"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="master"
-	for_diff="0"
-	url_test="https://github.com/panghu999/panghu/blob/master/jdCookie.js"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/panghu999/panghu.git panghu999
-		tongyong_config
-	fi
-}
-
-panghu999_jd() {
-	cd $dir_file
-	Script_name="panghu999_jd"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="master"
-	for_diff="0"
-	url_test="https://raw.githubusercontent.com/panghu999/jd_scripts/master/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/panghu999/jd_scripts.git panghu999_jd
-		tongyong_config
-	fi
-}
-
 fangpidedongsun() {
 	cd $dir_file
 	Script_name="fangpidedongsun"
@@ -303,24 +298,6 @@ smiek2221_Script() {
 		tongyong_config
 	else
 		git clone https://github.com/smiek2221/scripts.git smiek2221_Script
-		tongyong_config
-	fi
-
-}
-
-cdle_Script() {
-	cd $dir_file
-	Script_name="cdle_Script"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="main"
-	for_diff="1"
-	url_test="https://raw.githubusercontent.com/cdle/jd_study/main/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/cdle/jd_study.git cdle_Script
 		tongyong_config
 	fi
 
@@ -528,7 +505,13 @@ sendMessage() {
 	else
 		echo -e "$green[$Script_name] 新增$cat_add脚本,删除$cat_delete脚本，已推送到你的接收设备$white"
 		echo "**********************************************"
-		curl -s "http://sc.ftqq.com/$SCKEY.send?text=$Script_name$num" -d "&desp=$content" >/dev/null 2>&1
+
+		server_content=$(echo "$content${by}" | sed "s/$wrap_tab####/####/g" )
+		weixin_content_sort=$(echo  "$content" |sed "s/####/<hr\/><b>/g" |sed "s/$wrap$wrap_tab//g" |sed "s/$wrap//g" |sed "s/:/:<hr\/><\/b>/g")
+		weixin_content=$(echo "$weixin_content_sort<br><b>$by")
+		weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
+		title="$Script_name$num"
+		push_menu
 	fi 
 	
 }
@@ -549,19 +532,13 @@ That_day() {
 
 That_day_sendMessage() {
 	log_sort=$(cat  $dir_file/git_log/${current_time}.log | sed "s/&/+/g" | sed "s/$/$wrap$wrap_tab/" | sed ':t;N;s/\n//;b t' | sed "s/$wrap_tab####/####/g")
-	log_sort1=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
-	if [ ! $SCKEY ];then
-			echo "没找到Server酱key不做操作"
-	else
-		if [ ! $log_sort1 ];then
-			echo -e "$red 推送失败$white，请检查 $dir_file/git_log/${current_time}.log是否存在"
-		else
-			echo -e "$green 开始推送Checkjs检测仓库状态$white"
-			curl -s "http://sc.ftqq.com/$SCKEY.send?text=Checkjs检测仓库状态" -d "&desp=$log_sort1" >/dev/null 2>&1
-			sleep 3
-			echo -e "$green 推送完成$white"
-		fi
-	fi
+	server_content=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
+
+	weixin_content_sort=$(echo  "$log_sort" |sed "s/$wrap####/<br><br><hr\/><b>/g" |sed "s/》$wrap/》<hr\/><\/b>/g" |sed "s/$wrap$wrap_tab/<br>/g"|sed "s/+/ /g" |sed "s/<br><br><hr\/><b> 《curtinlv/<hr\/><b> 《curtinlv/g")
+	weixin_content=$(echo "$weixin_content_sort<br><b>$by")
+	weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
+	title="Checkjs检测仓库状态"
+	push_menu
 }
 
 
@@ -571,6 +548,110 @@ that_day_push() {
 	That_day_sendMessage
 }
 
+push_menu() {
+case "$push_if" in
+		0)
+			#server酱和微信同时推送
+			server_push
+			weixin_push
+			push_if="3"
+			weixin_push
+		;;
+		1)
+			#server酱推送
+			server_push
+		;;
+		2)
+			#微信推送
+			weixin_push
+		;;
+		3)
+			#将shell模块检测推送到另外一个小程序上（举个例子，一个企业号，两个小程序，小程序１填到sendNotify.js,这样子js就会推送到哪里，小程序２填写到jd_openwrt_config这样jd.sh写的模块就会推送到小程序2
+			weixin_push
+		;;
+		*)
+			echo -e "$red填写错误，不进行推送$white"
+		;;
+	esac
+
+}
+
+server_push() {
+
+if [ ! $SCKEY ];then
+	echo "没找到Server酱key不做操作"
+else
+	echo -e "$green server酱开始推送$title$white"
+	curl -s "http://sc.ftqq.com/$SCKEY.send?text=$title++`date +%Y-%m-%d`++`date +%H:%M`" -d "&desp=$server_content" >/dev/null 2>&1
+
+	if [[ $? -eq 0 ]]; then
+		echo -e "$green server酱推送完成$white"
+	else
+		echo -e "$red server酱推送失败。请检查报错代码$title$white"
+	fi
+fi
+
+}
+
+weixin_push() {
+current_time=$(date +%s)
+expireTime="7200"
+if [ $push_if == "3" ];then
+	weixinkey=$(grep "weixin2" $openwrt_script_config/jd_openwrt_script_config.txt | awk -F "'" '{print $2}')
+else
+	weixinkey=$(grep "let QYWX_AM" $openwrt_script_config/sendNotify.js | awk -F "'" '{print $2}')
+fi
+
+#企业名
+corpid=$(echo $weixinkey | awk -F "," '{print $1}')
+#自建应用，单独的secret
+corpsecret=$(echo $weixinkey | awk -F "," '{print $2}')
+# 接收者用户名,@all 全体成员
+touser=$(echo $weixinkey | awk -F "," '{print $3}')
+#应用ID
+agentid=$(echo $weixinkey | awk -F "," '{print $4}')
+#图片id
+media_id=$(echo $weixinkey | awk -F "," '{print $5}')
+
+weixin_file="$openwrt_script_config/weixin_token.txt"
+time_before=$(cat $weixin_file |grep "$corpsecret" | awk '{print $4}')
+
+
+if [ ! $time_before ];then
+	#获取access_token
+	access_token=$(curl "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${corpid}&corpsecret=${corpsecret}" | sed "s/,/\n/g" | grep "access_token" | awk -F ":" '{print $2}' | sed "s/\"//g")
+	sed -i "/$corpsecret/d" $weixin_file
+	echo "$corpid $corpsecret $access_token `date +%s`" >> $weixin_file
+	echo ">>>刷新access_token成功<<<"
+else
+	if [ $(($current_time - $time_before)) -gt "$expireTime" ];then
+		#获取access_token
+		access_token=$(curl "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${corpid}&corpsecret=${corpsecret}" | sed "s/,/\n/g" | grep "access_token" | awk -F ":" '{print $2}' | sed "s/\"//g")
+		sed -i "/$corpsecret/d" $weixin_file
+		echo "$corpid $corpsecret $access_token `date +%s`" >>$weixin_file
+		echo ">>>刷新access_token成功<<<"
+	else
+		echo "access_token 还没有过期，继续用旧的"
+		access_token=$(cat $weixin_file |grep "$corpsecret" | awk '{print  $3}')
+	fi
+fi
+
+if [ ! $media_id ];then
+	msg_body="{\"touser\":\"$touser\",\"agentid\":$agentid,\"msgtype\":\"text\",\"text\":{\"content\":\"$title\n$weixin_desp\"}}"
+	curl -s "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=$access_token" -d "$msg_body"
+else
+	msg_body="{\"touser\":\"$touser\",\"agentid\":$agentid,\"msgtype\":\"mpnews\",\"mpnews\":{\"articles\":[{\"title\":\"$title\",\"thumb_media_id\":\"$media_id\",\"content\":\"$weixin_content\",\"digest\":\"$weixin_desp\"}]}}"
+fi
+	echo -e "$green 企业微信开始推送$title$white"
+	curl -s "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=$access_token" -d "$msg_body"
+
+	if [[ $? -eq 0 ]]; then
+		echo -e "$green 企业微信推送成功$title$white"
+	else
+		echo -e "$red 企业微信推送失败。请检查报错代码$title$white"
+	fi
+
+}
 
 
 update_script() {
@@ -703,15 +784,12 @@ menu() {
 	echo > $dir_file/git_log/${current_time}.log
 	curtinlv_script
 	smiek2221_Script
-	cdle_Script
 	Tsukasa007_Script
 	asd920
 	yuannian1112
 	JDHelloWorld
 	zero205_Script
 	Aaron_Script
-	panghu999
-	panghu999_jd
 	nianyuguai
 	passerby
 	fangpidedongsun
