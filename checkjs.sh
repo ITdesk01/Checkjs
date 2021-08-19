@@ -716,7 +716,7 @@ description_if() {
 		echo -e "$green 检测到有更新，开始自动更新。。"
 		update_script
 		sleep 2
-		description_if
+		sh $0
 	else
 		Script_status="$green最新$white"
 	fi
