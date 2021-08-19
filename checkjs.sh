@@ -60,6 +60,24 @@ green="\033[32m"
 yellow="\033[33m"
 white="\033[0m"
 
+star261() {
+	cd $dir_file
+	Script_name="star261"
+	File_path="$dir_file/$Script_name/scripts"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/star261/jd/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/star261/jd.git star261
+		tongyong_config
+	fi
+
+}
+
 asd920() {
 	cd $dir_file
 	Script_name="asd920"
@@ -786,6 +804,7 @@ menu() {
 	smiek2221_Script
 	Tsukasa007_Script
 	asd920
+	star261
 	yuannian1112
 	JDHelloWorld
 	zero205_Script
