@@ -72,7 +72,7 @@ star261() {
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/star261/jd.git star261
+		git clone -b main https://github.com/star261/jd.git star261
 		tongyong_config
 	fi
 
