@@ -200,22 +200,6 @@ passerby() {
 	fi
 }
 
-Wenmoux() {
-	cd $dir_file
-	Script_name="Wenmoux"
-	File_path="$dir_file/$Script_name/jd"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="wen"
-	for_diff="0"
-	url_test="https://raw.githubusercontent.com/Wenmoux/scripts/wen/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/Wenmoux/scripts.git Wenmoux
-		tongyong_config
-	fi
-}
 
 fangpidedongsun() {
 	cd $dir_file
@@ -316,24 +300,6 @@ smiek2221_Script() {
 		tongyong_config
 	else
 		git clone https://github.com/smiek2221/scripts.git smiek2221_Script
-		tongyong_config
-	fi
-
-}
-
-Tsukasa007_Script() {
-	cd $dir_file
-	Script_name="Tsukasa007_Script"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="master"
-	for_diff="0"
-	url_test="https://raw.githubusercontent.com/Tsukasa007/my_script/master/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/Tsukasa007/my_script.git Tsukasa007_Script
 		tongyong_config
 	fi
 
@@ -795,7 +761,6 @@ menu() {
 	echo > $dir_file/git_log/${current_time}.log
 	curtinlv_script
 	smiek2221_Script
-	Tsukasa007_Script
 	asd920
 	star261
 	yuannian1112
@@ -805,7 +770,6 @@ menu() {
 	nianyuguai
 	passerby
 	fangpidedongsun
-	Wenmoux
 	yangtingxiao
 	ZCY01_Script
 	Quantumult_X
