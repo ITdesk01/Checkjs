@@ -382,11 +382,11 @@ diff_cron() {
 	if [ -f "$File_path/$Oldfile" ]; then
 		echo ""
 	else 
-		ls ./ | grep -E "js$/|py$" | sort > $Oldfile
+		ls ./ | grep -E 'js$/|py$' | sort > $Oldfile
 	fi
 	#.*表示多个任意字符
 	#新文件与旧文件对比
-	ls ./ | grep -E "js$/|py$" | sort > $Newfile
+	ls ./ | grep -E 'js$/|py$' | sort > $Newfile
 	grep -vwf $Oldfile $Newfile > $ListJs_add
 	
 	if [ $(cat $ListJs_add | wc -l) = "0" ]; then
@@ -399,7 +399,7 @@ diff_cron() {
 
 	#用旧文件与新文件对比
 	grep -vwf $Newfile $Oldfile > $ListJs_drop
-	ls ./ | grep -E "js$/|py$" | sort > $Oldfile
+	ls ./ | grep -E 'js$/|py$' | sort > $Oldfile
 	if [ $(cat $ListJs_drop | wc -l) = "0" ]; then
 		Delete_if="0"
 	else
@@ -413,11 +413,11 @@ for_diff_cron() {
 	if [ -f "$File_path/$Oldfile" ]; then
 		echo ""
 	else
-		ls ./ | grep -E "js$/|py$" | sort > $File_path/$Oldfile
+		ls ./ | grep -E 'js$/|py$' | sort > $File_path/$Oldfile
 		for i in `ls | grep -v "backup"`
 		do
 			if [ -d $i ];then
-				ls $i | grep -E "js$/|py$" | sort >> $File_path/$Oldfile
+				ls $i | grep -E 'js$/|py$' | sort >> $File_path/$Oldfile
 			else
 				echo "" >/dev/null 2>&1
 			fi
@@ -426,11 +426,11 @@ for_diff_cron() {
 
 	#.*表示多个任意字符
 	#新文件与旧文件对比
-	ls ./ | grep -E "js$/|py$" | sort > $File_path/$Newfile
+	ls ./ | grep -E 'js$/|py$' | sort > $File_path/$Newfile
 	for i in `ls | grep -v "backup"`
 	do
 		if [ -d $i ];then
-			ls $i | grep -E "js$/|py$" | sort >> $File_path/$Newfile
+			ls $i | grep -E 'js$/|py$' | sort >> $File_path/$Newfile
 		else
 			echo "" >/dev/null 2>&1
 		fi
@@ -447,11 +447,11 @@ for_diff_cron() {
 
 	#用旧文件与新文件对比
 	grep -vwf $Newfile $Oldfile > $ListJs_drop
-	ls ./ | grep -E "js$/|py$" | sort > $File_path/$Oldfile
+	ls ./ | grep -E 'js$/|py$' | sort > $File_path/$Oldfile
 	for i in `ls | grep -v "backup"`
 	do
 		if [ -d $i ];then
-			ls $i | grep -E "js$/|py$" | sort >> $File_path/$Oldfile
+			ls $i | grep -E 'js$/|py$' | sort >> $File_path/$Oldfile
 		else
 			echo "" >/dev/null 2>&1
 		fi
