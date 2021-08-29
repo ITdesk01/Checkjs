@@ -417,7 +417,7 @@ for_diff_cron() {
 		for i in `ls | grep -v "backup"`
 		do
 			if [ -d $i ];then
-				ls $i | grep -E "js$" | sort >> $File_path/$Oldfile
+				ls $i | grep -E "js$/|py$" | sort >> $File_path/$Oldfile
 			else
 				echo "" >/dev/null 2>&1
 			fi
@@ -430,7 +430,7 @@ for_diff_cron() {
 	for i in `ls | grep -v "backup"`
 	do
 		if [ -d $i ];then
-			ls $i | grep -E "js$" | sort >> $File_path/$Newfile
+			ls $i | grep -E "js$/|py$" | sort >> $File_path/$Newfile
 		else
 			echo "" >/dev/null 2>&1
 		fi
@@ -451,7 +451,7 @@ for_diff_cron() {
 	for i in `ls | grep -v "backup"`
 	do
 		if [ -d $i ];then
-			ls $i | grep -E "js$" | sort >> $File_path/$Oldfile
+			ls $i | grep -E "js$/|py$" | sort >> $File_path/$Oldfile
 		else
 			echo "" >/dev/null 2>&1
 		fi
