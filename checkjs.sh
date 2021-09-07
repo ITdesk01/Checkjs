@@ -60,6 +60,42 @@ green="\033[32m"
 yellow="\033[33m"
 white="\033[0m"
 
+X1a0He() {
+	cd $dir_file
+	Script_name="X1a0He"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/X1a0He/jd_scripts_fixed/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone -b main https://github.com/X1a0He/jd_scripts_fixed.git X1a0He
+		tongyong_config
+	fi
+
+}
+
+ccwav() {
+	cd $dir_file
+	Script_name="ccwav"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/ccwav/QLScript/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone -b main https://github.com/ccwav/QLScript.git ccwav
+		tongyong_config
+	fi
+
+}
+
 star261() {
 	cd $dir_file
 	Script_name="star261"
@@ -714,7 +750,6 @@ EOF
 }
 task_delete() {
 	echo "开始删除定时任务"
-	sed -i '/Checkjs/d' /etc/crontabs/root >/dev/null 2>&1
 	sed -i '/#102#/d' /etc/crontabs/root >/dev/null 2>&1
 	sleep 5
 	echo "删除完成，如果需要重新跑，执行sh \$checkjs"
@@ -761,6 +796,8 @@ menu() {
 	echo > $dir_file/git_log/${current_time}.log
 	curtinlv_script
 	smiek2221_Script
+	ccwav
+	X1a0He
 	asd920
 	star261
 	yuannian1112
