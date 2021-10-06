@@ -86,11 +86,11 @@ ccwav() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
-	url_test="https://raw.githubusercontent.com/ccwav/QLScript/main/README.md"
+	url_test="https://raw.githubusercontent.com/ccwav/QLScript2/main/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone -b main https://github.com/ccwav/QLScript.git ccwav
+		git clone -b main https://github.com/ccwav/QLScript2.git ccwav
 		tongyong_config
 	fi
 
