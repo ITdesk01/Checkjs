@@ -683,6 +683,14 @@ update_script() {
 
 
 description_if() {
+	ping -c 2 github.com > /dev/null 2>&1
+	if [[ $? -eq 0 ]]; then
+		echo -e "$green网络正常，可以ping通github$white"
+	else
+		echo -e "$red请检查你的网络，ping github失败，建议科学上网$white"
+		exit 0
+	fi
+
 	if [ ! -d $dir_file/git_log ];then
 		mkdir 	$dir_file/git_log
 	fi
