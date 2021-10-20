@@ -683,7 +683,7 @@ update_script() {
 
 
 description_if() {
-	wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md > /dev/null 2>&1
+	wget https://raw.githubusercontent.com/ITdesk01/JD_Script/master/README.md -O /tmp/test_README.md
 	if [[ $? -eq 0 ]]; then
 		echo -e "$green网络正常，可以ping通github$white"
 	else
