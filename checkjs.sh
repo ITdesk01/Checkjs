@@ -37,8 +37,8 @@ if [ "$dir_file" == "/usr/share/jd_openwrt_script/Checkjs" ];then
 	if [ ! $SCKEY ];then
 		SCKEY=$(cat $openwrt_script_config/Checkjs_Sckey.txt)
 	fi
-	push_if=$(grep "push_if" $openwrt_script_config/jd_openwrt_script_config.txt | awk -F "'" '{print $2}')
-	weixin2=$(grep "weixin2" $openwrt_script_config/jd_openwrt_script_config.txt | awk -F "'" '{print $2}')
+	push_if=$(grep "push_if=" $openwrt_script_config/jd_openwrt_script_config.txt | awk -F "'" '{print $2}')
+	weixin2=$(grep "weixin2=" $openwrt_script_config/jd_openwrt_script_config.txt | awk -F "'" '{print $2}')
 else
 	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
 fi
