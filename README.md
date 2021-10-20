@@ -9,6 +9,12 @@ openwrt X86 （基于x86测试）
 git clone https://github.com/ITdesk01/Checkjs.git /usr/share/Checkjs
 cd /usr/share/Checkjs && chmod 755 checkjs.sh
 sh checkjs.sh
+
+
+！！！如果你用了我的JD_SCript项目，请按下面git clone
+git clone https://github.com/ITdesk01/Checkjs.git /usr/share/jd_openwrt_script/Checkjs
+cd /usr/share/jd_openwrt_script/Checkjs && chmod 755 checkjs.sh
+sh checkjs.sh
 ```
 
 ##感谢
