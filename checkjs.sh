@@ -60,6 +60,24 @@ green="\033[32m"
 yellow="\033[33m"
 white="\033[0m"
 
+cdle_carry_Script() {
+	cd $dir_file
+	Script_name="cdle_carry_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="main"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/cdle/carry/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/cdle/carry.git cdle_carry_Script
+		tongyong_config
+	fi
+
+}
+
 X1a0He() {
 	cd $dir_file
 	Script_name="X1a0He"
@@ -805,6 +823,7 @@ menu() {
 	curtinlv_script
 	smiek2221_Script
 	ccwav
+	cdle_carry_Script
 	X1a0He
 	asd920
 	star261
