@@ -821,7 +821,7 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	curtinlv_script
-	smiek2221_Script
+	#smiek2221_Script
 	ccwav
 	cdle_carry_Script
 	X1a0He
