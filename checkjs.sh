@@ -72,7 +72,7 @@ Ariszy_Script() {
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/Ariszy/scripts.git Ariszy_Script
+		git clone https://github.com/Ariszy/Private-Script.git Ariszy_Script
 		tongyong_config
 	fi
 
