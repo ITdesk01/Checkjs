@@ -307,23 +307,6 @@ yangtingxiao() {
 	fi
 }
 
-Quantumult_X() {
-	cd $dir_file
-	Script_name="Quantumult-X"
-	File_path="$dir_file/$Script_name/script/JD"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="master"
-	for_diff="0"
-	url_test="https://raw.githubusercontent.com/799953468/Quantumult-X/master/script/JD/jd_bean_change.js"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/799953468/Quantumult-X.git
-		tongyong_config
-	fi
-}
-
 hundun() {
 	cd $dir_file
 	Script_name="hundun"
@@ -855,7 +838,6 @@ menu() {
 	fangpidedongsun
 	yangtingxiao
 	ZCY01_Script
-	Quantumult_X
 	hundun
 	ZhiYi_Script
 	rm -rf $dir_file/shylocks_Script_gitee
