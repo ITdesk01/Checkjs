@@ -60,6 +60,24 @@ green="\033[32m"
 yellow="\033[33m"
 white="\033[0m"
 
+mmnvnmm_Script() {
+	cd $dir_file
+	Script_name="mmnvnmm_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/mmnvnmm/omo/master/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/mmnvnmm/omo.git mmnvnmm_Script
+		tongyong_config
+	fi
+
+}
+
 Ariszy_Script() {
 	cd $dir_file
 	Script_name="Ariszy_Script"
@@ -824,6 +842,7 @@ menu() {
 	curtinlv_script
 	smiek2221_Script
 	ccwav
+	mmnvnmm_Script
 	cdle_carry_Script
 	X1a0He
 	star261
