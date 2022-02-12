@@ -414,6 +414,24 @@ Aaron_Script() {
 
 }
 
+yyds_Script() {
+	cd $dir_file
+	Script_name="yyds_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/okyyds/yyds/master/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone -b $branch https://github.com/okyyds/yyds.git yyds_Script
+		tongyong_config
+	fi
+
+}
+
 
 tongyong_config() {
 	echo ""
@@ -841,6 +859,7 @@ menu() {
 	curtinlv_script
 	smiek2221_Script
 	ccwav
+	yyds_Script
 	mmnvnmm_Script
 	cdle_carry_Script
 	X1a0He
