@@ -60,6 +60,60 @@ green="\033[32m"
 yellow="\033[33m"
 white="\033[0m"
 
+JDWXX_Script() {
+	cd $dir_file
+	Script_name="JDWXX_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/JDWXX/jd_job/master/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/JDWXX/jd_job.git JDWXX_Script
+		tongyong_config
+	fi
+
+}
+
+Github_6dylan6_Script() {
+	cd $dir_file
+	Script_name="Github_6dylan6_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/6dylan6/jdpro/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/6dylan6/jdpro.git Github_6dylan6_Script
+		tongyong_config
+	fi
+
+}
+
+KingRan_Script() {
+	cd $dir_file
+	Script_name="KingRan_Script"
+	File_path="$dir_file/$Script_name"
+	Newfile="new_${Script_name}.txt"
+	Oldfile="old_${Script_name}.txt"
+	branch="master"
+	for_diff="0"
+	url_test="https://raw.githubusercontent.com/KingRan/KR/main/README.md"
+	if [ -d "$Script_name" ]; then
+		tongyong_config
+	else
+		git clone https://github.com/KingRan/KR.git KingRan_Script
+		tongyong_config
+	fi
+
+}
+
 mmnvnmm_Script() {
 	cd $dir_file
 	Script_name="mmnvnmm_Script"
@@ -860,6 +914,9 @@ menu() {
 	smiek2221_Script
 	ccwav
 	yyds_Script
+	KingRan_Script
+	JDWXX_Script
+	Github_6dylan6_Script
 	mmnvnmm_Script
 	cdle_carry_Script
 	X1a0He
