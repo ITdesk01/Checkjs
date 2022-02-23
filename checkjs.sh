@@ -102,31 +102,13 @@ KingRan_Script() {
 	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
-	branch="master"
+	branch="main"
 	for_diff="0"
 	url_test="https://raw.githubusercontent.com/KingRan/KR/main/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
 		git clone https://github.com/KingRan/KR.git KingRan_Script
-		tongyong_config
-	fi
-
-}
-
-mmnvnmm_Script() {
-	cd $dir_file
-	Script_name="mmnvnmm_Script"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="master"
-	for_diff="0"
-	url_test="https://raw.githubusercontent.com/mmnvnmm/omo/master/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/mmnvnmm/omo.git mmnvnmm_Script
 		tongyong_config
 	fi
 
@@ -327,24 +309,6 @@ nianyuguai() {
 	fi
 }
 
-passerby() {
-	cd $dir_file
-	Script_name="passerby"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="main"
-	for_diff="0"
-	url_test="https://raw.githubusercontent.com/passerby-b/JDDJ/main/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/passerby-b/JDDJ.git passerby
-		tongyong_config
-	fi
-}
-
-
 fangpidedongsun() {
 	cd $dir_file
 	Script_name="fangpidedongsun"
@@ -476,7 +440,7 @@ yyds_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
-	url_test="https://raw.githubusercontent.com/okyyds/yyds/master/README.md"
+	url_test="https://raw.githubusercontent.com/okyyds/yyds/master/jdCookie.js"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -917,7 +881,6 @@ menu() {
 	KingRan_Script
 	JDWXX_Script
 	Github_6dylan6_Script
-	mmnvnmm_Script
 	cdle_carry_Script
 	X1a0He
 	star261
@@ -928,7 +891,6 @@ menu() {
 	JDHelloWorld
 	Aaron_Script
 	nianyuguai
-	passerby
 	fangpidedongsun
 	yangtingxiao
 	ZCY01_Script
