@@ -84,7 +84,7 @@ Github_6dylan6_Script() {
 	File_path="$dir_file/$Script_name"
 	Newfile="new_${Script_name}.txt"
 	Oldfile="old_${Script_name}.txt"
-	branch="master"
+	branch="main"
 	for_diff="0"
 	url_test="https://raw.githubusercontent.com/6dylan6/jdpro/main/README.md"
 	if [ -d "$Script_name" ]; then
