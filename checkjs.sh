@@ -459,8 +459,10 @@ tongyong_config() {
 	wget_test=$( cat /tmp/wget_test.log | grep -o "200 OK")
 	if [ "$wget_test" == "200 OK" ];then
 		cd $File_path
-		git fetch --all
-		git reset --hard origin/$branch
+		git pull
+		#这里不要强制更新，不利于测试，如果对方删库，强制更新也会删除
+		#git fetch --all
+		#git reset --hard origin/$branch
 		init_data
 		if [ $for_diff == "1" ];then
 			for_diff_cron
@@ -942,14 +944,14 @@ run_script_if() {
 	else
 		if [ "$script_ifname" == "" ];then
 			echo "script_ifname为空"
-		elif [ "$script_ifname" == "*"];then
+		elif [ "$script_ifname" == "*" ];then
 			auto_run="(全部自动运行)"
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
 				wget ${url}${i} ${script_dir}/${i}
 				$node ${script_dir}/${i} &
 			done
-		else
+		elif [ `echo ${script_ifname} | grep -o "|" |sort -u | wc -l` == "1" ];then
 			auto_run="(个别自动运行，按你设置的)"
 			url=$(echo $url_test | sed "s/README.md//g")
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
@@ -961,6 +963,8 @@ run_script_if() {
 					echo
 				fi
 			done
+		else
+			echo "未能识别script_ifname的字符：$script_ifname"
 		fi
 	fi
 }
@@ -1010,6 +1014,7 @@ else
 			;;
 esac
 fi
+
 
 
 
