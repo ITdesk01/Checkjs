@@ -62,24 +62,6 @@ green="\033[32m"
 yellow="\033[33m"
 white="\033[0m"
 
-SuperManito_Script() {
-	cd $dir_file
-	Script_name="SuperManito_Script"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="master"
-	for_diff="0"
-	url_test="https://gitee.com/SuperManito/scripts/raw/master/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://gitee.com/SuperManito/scripts.git SuperManito_Script
-		tongyong_config
-	fi
-
-}
-
 JDWXX_Script() {
 	cd $dir_file
 	Script_name="JDWXX_Script"
@@ -477,7 +459,8 @@ tongyong_config() {
 	wget_test=$( cat /tmp/wget_test.log | grep -o "200 OK")
 	if [ "$wget_test" == "200 OK" ];then
 		cd $File_path
-		git_pull
+		git fetch --all
+		git reset --hard origin/$branch
 		init_data
 		if [ $for_diff == "1" ];then
 			for_diff_cron
@@ -618,48 +601,16 @@ sendMessage() {
 	else
 		echo -e "$green[$Script_name] 新增$cat_add脚本,删除$cat_delete脚本，已推送到你的接收设备$white"
 		echo "**********************************************"
-
+		run_script_if
 		server_content=$(echo "$content${by}" | sed "s/$wrap_tab####/####/g" )
 		weixin_content_sort=$(echo  "$content" |sed "s/####/<hr\/><b>/g" |sed "s/$wrap$wrap_tab/<br>/g" |sed "s/$wrap/<br>/g" |sed "s/:/:<hr\/><\/b>/g" )
 		weixin_content=$(echo "$weixin_content_sort<br><b>$by")
 		weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
-		title="$Script_name$num"
+		title="${Script_name}${num}${auto_run}"
 		push_menu
 	fi 
 	
 }
-
-#判断是否自动运行新增脚本
-run_script_if() {
-
-	script_if=$(grep "script_if=" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
-	script_ifname=$(grep "script_ifname" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g" | sed "s/,/|/g")
-	script_dir=$(grep "script_dir" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
-
-	if [ "$script_if" == "no" ];then
-		echo ""
-	else
-		if [ "$script_ifname" == "*"];then
-			for i in `echo $Add`
-			do
-				wget ${url}${i} ${script_dir}/${i}
-				$node ${script_dir}/${i} &
-			done
-		else
-			url=$(echo $url_test | sed "s/README.md//g")
-			for i in `echo $Add`
-			do
-				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
-					wget ${url}${i} ${script_dir}/${i}
-					$node ${script_dir}/${i} &
-				else
-					echo
-				fi
-			done
-		fi
-	fi
-}
-
 
 #检测当天更新情况并推送
 That_day() {
@@ -927,9 +878,8 @@ menu() {
 	echo -e "$yellow 检测脚本是否最新:$white $Script_status "
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
-	SuperManito_Script
-	curtinlv_script
 	smiek2221_Script
+	curtinlv_script
 	ccwav
 	yyds_Script
 	KingRan_Script
@@ -981,13 +931,45 @@ help() {
 	echo ""
 }
 
+#判断是否自动运行新增脚本
+run_script_if() {
+	script_if=$(grep "script_if=" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
+	script_ifname=$(grep "script_ifname" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g" | sed "s/,/|/g")
+	script_dir=$(grep "script_dir" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
+
+	if [ "$script_if" == "no" ];then
+		echo ""
+	else
+		if [ "$script_ifname" == "*"];then
+			auto_run="(全部自动运行)"
+			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
+			do
+				wget ${url}${i} ${script_dir}/${i}
+				$node ${script_dir}/${i} &
+			done
+		else
+			auto_run="(个别自动运行，按你设置的)"
+			url=$(echo $url_test | sed "s/README.md//g")
+			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
+			do
+				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
+					wget ${url}${i} ${script_dir}/${i}
+					$node ${script_dir}/${i} &
+				else
+					echo
+				fi
+			done
+		fi
+	fi
+}
+
 checkjs_config_if() {
 	checkjs_config_version="1.0"
 	if [ ! -f $dir_file/config.txt ];then
 		checkjs_config
 	fi
 
-	if [ `cat $dir_file/config.txt` == "$checkjs_config_version" ];then
+	if [ `grep -o "$checkjs_config_version" $dir_file/config.txt` == "$checkjs_config_version" ];then
 		echo ""
 	else
 		date_num=$(date +%Y_%m_%d)
