@@ -940,7 +940,9 @@ run_script_if() {
 	if [ "$script_if" == "no" ];then
 		echo ""
 	else
-		if [ "$script_ifname" == "*"];then
+		if [ "$script_ifname" == "" ];then
+			echo "script_ifname为空"
+		elif [ "$script_ifname" == "*"];then
 			auto_run="(全部自动运行)"
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
