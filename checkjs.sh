@@ -952,11 +952,11 @@ run_script_if() {
 				$node ${script_dir}/${i} &
 			done
 		elif [ `echo ${script_ifname} | grep -o "|" |sort -u | wc -l` == "1" ];then
-			auto_run="(个别自动运行，按你设置的)"
 			url=$(echo $url_test | sed "s/README.md//g")
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
 				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
+					auto_run="(个别自动运行，按你设置的)"
 					wget ${url}${i} ${script_dir}/${i}
 					$node ${script_dir}/${i} &
 				else
