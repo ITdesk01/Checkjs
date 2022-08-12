@@ -14,6 +14,8 @@ while [ -h "$Source"  ]; do
 done
 dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
 
+node="/usr/bin/node"
+
 ListJs_add="ListJs_add.txt"
 ListJs_drop="ListJs_drop.txt"
 
@@ -458,7 +460,7 @@ yyds_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
-	url_test="https://raw.githubusercontent.com/okyyds/yyds/master/jdCookie.js"
+	url_test="https://raw.githubusercontent.com/okyyds/yyds/master/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
@@ -626,6 +628,38 @@ sendMessage() {
 	fi 
 	
 }
+
+#判断是否自动运行新增脚本
+run_script_if() {
+
+	script_if=$(grep "script_if=" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
+	script_ifname=$(grep "script_ifname" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g" | sed "s/,/|/g")
+	script_dir=$(grep "script_dir" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
+
+	if [ "$script_if" == "no" ];then
+		echo ""
+	else
+		if [ "$script_ifname" == "*"];then
+			for i in `echo $Add`
+			do
+				wget ${url}${i} ${script_dir}/${i}
+				$node ${script_dir}/${i} &
+			done
+		else
+			url=$(echo $url_test | sed "s/README.md//g")
+			for i in `echo $Add`
+			do
+				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
+					wget ${url}${i} ${script_dir}/${i}
+					$node ${script_dir}/${i} &
+				else
+					echo
+				fi
+			done
+		fi
+	fi
+}
+
 
 #检测当天更新情况并推送
 That_day() {
@@ -883,6 +917,7 @@ system_variable() {
 
 menu() {
 	description_if
+	checkjs_config_if
 	echo "----------------------------------------------"
 	echo -e "$green Checkjs $version开始检查脚本新增或删除情况$white"
 	echo ""
@@ -944,6 +979,37 @@ help() {
 	echo "4.删除这个脚本所有创建的文件，包括脚本自己"
 	echo "sh \$checkjs ds_setup"
 	echo ""
+}
+
+checkjs_config_if() {
+	checkjs_config_version="1.0"
+	if [ ! -f $dir_file/config.txt ];then
+		checkjs_config
+	fi
+
+	if [ `cat $dir_file/config.txt` == "$checkjs_config_version" ];then
+		echo ""
+	else
+		date_num=$(date +%Y_%m_%d)
+		cat $dir_file/config.txt >$dir_file/config_${date_num}.txt
+		checkjs_config
+	fi
+}
+
+checkjs_config() {
+cat > $dir_file/config.txt <<EOF
+++++++++++++++++++++++++++++Checkjs ${checkjs_config_version}配置+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#是否自动跑新增的脚本(默认no，跑yes)
+script_if="no"
+
+#脚本名判断(* 代表无论新增什么脚本都跑，你可以这里填关键字用，隔开，如填opencard,gua  这样脚本含有这两个字符的就会开始跑)
+script_ifname=""
+
+#脚本下载到那个路径并执行
+script_dir="/usr/share/jd_openwrt_script/JD_Script"
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+EOF
 }
 
 
