@@ -955,20 +955,20 @@ run_script_if() {
 			seq_date=$(seq $script_date_min $script_date_max)
 			echo "$seq_date" | grep -o "$current_time"
 			if [[ $? -eq 0 ]]; then
-				echo -e "${green}当前时间：$current_time点，符合你的设置${white}"
+				echo -e "${green}》》当前时间：$current_time点，符合你的设置${white}"
 				run_script
 			else
-				echo -e "${yellow}当前时间：$current_time点，不符合你的设置，不自动运行脚本${white}"
+				echo -e "${yellow}》》当前时间：$current_time点，不符合你的设置，不自动运行脚本${white}"
 				auto_run="(有合适脚本,但时间不符合不跑)"
 			fi
 		elif [ `echo "$script_date" | grep -o "," | sort -u` == "," ];then
 			script_date_convert=$(echo "$script_date" | sed "s/,/ /g")
 			echo "$script_date_convert" | grep -o "$current_time"
 			if [[ $? -eq 0 ]]; then
-				echo -e "${green}当前时间：$current_time点，可以自动跑${white}"
+				echo -e "${green}》》当前时间：$current_time点，可以自动跑${white}"
 				run_script
 			else
-				echo -e "${yellow}当前时间：$current_time点，不符合你的设置，不自动运行脚本${white}"
+				echo -e "${yellow}》》当前时间：$current_time点，不符合你的设置，不自动运行脚本${white}"
 				auto_run="(有合适脚本,但时间不符合不跑)"
 			fi
 		else
