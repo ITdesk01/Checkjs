@@ -953,22 +953,23 @@ run_script_if() {
 			script_date_min=$(echo "$script_date" | awk -F "-" '{print $1}')
 			script_date_max=$(echo "$script_date" | awk -F "-" '{print $2}')
 			seq_date=$(seq $script_date_min $script_date_max)
-
-			if [ `echo "$seq_date" | grep -o "$current_time"` == "$current_time" ];then
+			echo "$seq_date" | grep -o "$current_time"
+			if [[ $? -eq 0 ]]; then
 				echo "当前时间：$current_time点，符合你的设置"
 				run_script
 			else
 				echo "当前时间：$current_time点，不符合你的设置，不自动运行脚本"
-				auto_run="(时间不符合不跑)"
+				auto_run="(有合适脚本,但时间不符合不跑)"
 			fi
 		elif [ `echo "$script_date" | grep -o "," | sort -u` == "," ];then
 			script_date_convert=$(echo "$script_date" | sed "s/,/ /g")
-			if [ `echo "$script_date_convert" | grep -o "$script_date"` == "" ];then
+			echo "$script_date_convert" | grep -o "$current_time"
+			if [[ $? -eq 0 ]]; then
 				echo "当前时间：$current_time点，可以自动跑"
 				run_script
 			else
 				echo "当前时间：$current_time点，不符合你的设置，不自动运行脚本"
-				auto_run="(时间不符合不跑)"
+				auto_run="(有合适脚本,但时间不符合不跑)"
 			fi
 		else
 			echo "未能识别script_date的字符：$script_date"
