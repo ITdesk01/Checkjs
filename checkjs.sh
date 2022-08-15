@@ -948,7 +948,7 @@ run_script_if() {
 			auto_run="(全部自动运行)"
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
-				wget ${url}${i} ${script_dir}/${i}
+				wget ${url}${i} -O ${script_dir}/${i}
 				$node ${script_dir}/${i} &
 			done
 		elif [ `echo ${script_ifname} | grep -o "|" |sort -u | wc -l` == "1" ];then
@@ -957,7 +957,7 @@ run_script_if() {
 			do
 				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
 					auto_run="(个别自动运行，按你设置的)"
-					wget ${url}${i} ${script_dir}/${i}
+					wget ${url}${i} -O ${script_dir}/${i}
 					$node ${script_dir}/${i} &
 				else
 					echo
