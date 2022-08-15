@@ -70,12 +70,13 @@ JDWXX_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
+	git_clone_url="https://github.com/JDWXX/jd_job.git"
 	url_test="https://raw.githubusercontent.com/JDWXX/jd_job/master/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/JDWXX/jd_job.git JDWXX_Script
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -88,12 +89,13 @@ Github_6dylan6_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
+	git_clone_url="https://github.com/6dylan6/jdpro.git"
 	url_test="https://raw.githubusercontent.com/6dylan6/jdpro/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/6dylan6/jdpro.git Github_6dylan6_Script
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -106,12 +108,13 @@ KingRan_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
+	git_clone_url="https://github.com/KingRan/KR.git"
 	url_test="https://raw.githubusercontent.com/KingRan/KR/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/KingRan/KR.git KingRan_Script
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -124,12 +127,13 @@ Ariszy_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
+	git_clone_url="https://github.com/Ariszy/Private-Script.git"
 	url_test="https://raw.githubusercontent.com/Ariszy/Private-Script/master/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/Ariszy/Private-Script.git Ariszy_Script
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -142,12 +146,13 @@ cdle_carry_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
+	git_clone_url="https://github.com/cdle/carry.git"
 	url_test="https://raw.githubusercontent.com/cdle/carry/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/cdle/carry.git cdle_carry_Script
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -160,12 +165,13 @@ X1a0He() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
+	git_clone_url="https://github.com/X1a0He/jd_scripts_fixed.git"
 	url_test="https://raw.githubusercontent.com/X1a0He/jd_scripts_fixed/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone -b main https://github.com/X1a0He/jd_scripts_fixed.git X1a0He
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -178,12 +184,12 @@ ccwav() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
+	git_clone_url="https://github.com/ccwav/QLScript2.git"
 	url_test="https://raw.githubusercontent.com/ccwav/QLScript2/main/README.md"
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone -b main https://github.com/ccwav/QLScript2.git ccwav
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -196,12 +202,13 @@ yuannian1112() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
+	git_clone_url="https://github.com/yuannian1112/jd_scripts.git"
 	url_test="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/yuannian1112/jd_scripts.git yuannian1112
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -214,12 +221,13 @@ curtinlv_script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="1"
+	git_clone_url="https://github.com/curtinlv/JD-Script.git"
 	url_test="https://raw.githubusercontent.com/curtinlv/JD-Script/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/curtinlv/JD-Script.git curtinlv_script
-		tongyong_config
+		git_if
 	fi
 }
 
@@ -231,12 +239,13 @@ ZCY01_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
+	git_clone_url="https://github.com/ZCY01/daily_scripts.git"
 	url_test="https://raw.githubusercontent.com/ZCY01/daily_scripts/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/ZCY01/daily_scripts.git ZCY01_Script
-		tongyong_config
+		git_if
 	fi
 }
 
@@ -248,12 +257,13 @@ JDHelloWorld() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="1"
+	git_clone_url="https://github.com/JDHelloWorld/jd_scripts.git"
 	url_test="https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/JDHelloWorld/jd_scripts.git JDHelloWorld
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -266,12 +276,13 @@ nianyuguai() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
+	git_clone_url="https://github.com/longzhuzhu/nianyu.git"
 	url_test="https://raw.githubusercontent.com/longzhuzhu/nianyu/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/longzhuzhu/nianyu.git nianyuguai
-		tongyong_config
+		git_if
 	fi
 }
 
@@ -283,12 +294,13 @@ fangpidedongsun() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
+	git_clone_url="https://github.com/fangpidedongsun/jd_scripts2.git"
 	url_test="https://raw.githubusercontent.com/fangpidedongsun/jd_scripts2/master/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/fangpidedongsun/jd_scripts2.git fangpidedongsun
-		tongyong_config
+		git_if
 	fi
 }
 
@@ -300,12 +312,13 @@ yangtingxiao() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
+	git_clone_url="https://github.com/yangtingxiao/QuantumultX.git"
 	url_test="https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/yangtingxiao/QuantumultX.git yangtingxiao
-		tongyong_config
+		git_if
 	fi
 }
 
@@ -317,12 +330,13 @@ hundun() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
+	git_clone_url="https://github.com/whyour/hundun.git"
 	url_test="https://raw.githubusercontent.com/whyour/hundun/master/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/whyour/hundun.git
-		tongyong_config
+		git_if
 	fi
 }
 
@@ -334,12 +348,13 @@ ZhiYi_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
+	git_clone_url="https://github.com/ZhiYi-N/Private-Script.git"
 	url_test="https://raw.githubusercontent.com/ZhiYi-N/Private-Script/master/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/ZhiYi-N/Private-Script.git ZhiYi_Script
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -352,12 +367,13 @@ smiek2221_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
+	git_clone_url="https://github.com/smiek2221/scripts.git"
 	url_test="https://raw.githubusercontent.com/smiek2221/scripts/master/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/smiek2221/scripts.git smiek2221_Script
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -370,12 +386,13 @@ zero205_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="main"
 	for_diff="0"
+	git_clone_url="https://github.com/zero205/JD_tencent_scf.git"
 	url_test="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/zero205/JD_tencent_scf.git zero205_Script
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -388,12 +405,13 @@ Aaron_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="jd_scripts"
 	for_diff="0"
+	git_clone_url="https://github.com/Aaron-lv/sync.git"
 	url_test="https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone https://github.com/Aaron-lv/sync.git Aaron_Script
-		tongyong_config
+		git_if
 	fi
 
 }
@@ -406,16 +424,27 @@ yyds_Script() {
 	Oldfile="old_${Script_name}.txt"
 	branch="master"
 	for_diff="0"
+	git_clone_url="https://github.com/okyyds/yyds.git"
 	url_test="https://raw.githubusercontent.com/okyyds/yyds/master/README.md"
+
 	if [ -d "$Script_name" ]; then
 		tongyong_config
 	else
-		git clone -b $branch https://github.com/okyyds/yyds.git yyds_Script
-		tongyong_config
+		git_if
 	fi
 
 }
 
+git_if() {
+	wget --spider -nv  $url_test -o /tmp/wget_test.log
+	wget_test=$( cat /tmp/wget_test.log | grep -o "200 OK")
+	if [ "$wget_test" == "200 OK" ];then
+		git clone -b $branch $git_clone_url $Script_name
+		tongyong_config
+	else
+		echo -e "${yellow}$Script_name库删除或者测试文件被移位，暂时不做下载操作${white}"
+	fi
+}
 
 tongyong_config() {
 	echo ""
