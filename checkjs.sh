@@ -188,42 +188,6 @@ ccwav() {
 
 }
 
-star261() {
-	cd $dir_file
-	Script_name="star261"
-	File_path="$dir_file/$Script_name/scripts"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="main"
-	for_diff="0"
-	url_test="https://raw.githubusercontent.com/star261/jd/main/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone -b main https://github.com/star261/jd.git star261
-		tongyong_config
-	fi
-
-}
-
-asd920() {
-	cd $dir_file
-	Script_name="asd920"
-	File_path="$dir_file/$Script_name"
-	Newfile="new_${Script_name}.txt"
-	Oldfile="old_${Script_name}.txt"
-	branch="main"
-	for_diff="0"
-	url_test="https://raw.githubusercontent.com/asd920/Auto-jd/main/README.md"
-	if [ -d "$Script_name" ]; then
-		tongyong_config
-	else
-		git clone https://github.com/asd920/Auto-jd.git asd920
-		tongyong_config
-	fi
-
-}
-
 yuannian1112() {
 	cd $dir_file
 	Script_name="yuannian1112"
@@ -889,10 +853,8 @@ menu() {
 	Github_6dylan6_Script
 	cdle_carry_Script
 	X1a0He
-	star261
 	zero205_Script
 	Ariszy_Script
-	asd920
 	yuannian1112
 	JDHelloWorld
 	Aaron_Script
