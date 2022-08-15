@@ -574,14 +574,37 @@ for_diff_cron() {
 
 sendMessage() {
 	#检查有没有脚本新增
+	set -x
 	cat_add=$(cat $ListJs_add | wc -l)
 	cat_delete=$(cat $ListJs_drop | wc -l )
+	url=$(echo $url_test | sed "s/README.md//g" )
+	rm -rf /tmp/down_url.txt
 	if [ $Add_if = "1" ] && [ $Delete_if = "1" ]; then
 		num="新增$cat_add脚本删除$cat_delete脚本"
-		content=$(echo "#### 新增脚本有:$wrap$wrap_tab$Add#### 删除脚本有:$wrap$wrap_tab$Delete" | sed "s/$wrap_tab####/####/g")
+		if [ "$cat_add" == "1" ];then
+			content=$(echo "#### 新增脚本有:$wrap$wrap_tab$Add#### 下载链接:${url}$Add#### 删除脚本有:$wrap$wrap_tab$Delete" | sed "s/$wrap_tab####/####/g")
+		else
+			for i in `echo "$Add"| sed "s/$wrap$wrap_tab/ /g"`
+			do
+				echo "$wrap$wrap_tab${url}${i}$wrap$wrap_tab" >>/tmp/down_url.txt
+			done
+
+			new_add=$(cat /tmp/down_url.txt |sed ':t;N;s/\n//;b t')
+			content=$(echo "#### 新增脚本有:$wrap$wrap_tab$Add#### 下载链接:$new_add#### 删除脚本有:$wrap$wrap_tab$Delete" | sed "s/$wrap_tab####/####/g")
+		fi
 	elif [ $Add_if = "1" ]; then 
 		num="新增$cat_add脚本"
-		content="#### 新增脚本有:$wrap$wrap_tab$Add"
+		if [ "$cat_add" == "1" ];then
+			content="#### 新增脚本有:$wrap$wrap_tab$Add#### 下载链接:${url}$Add "
+		else
+			for i in `echo "$Add"| sed "s/$wrap$wrap_tab/ /g"`
+			do
+				echo "$wrap$wrap_tab${url}${i}$wrap$wrap_tab" >>/tmp/down_url.txt
+			done
+
+			new_add=$(cat /tmp/down_url.txt |sed ':t;N;s/\n//;b t')
+			content="#### 新增脚本有:$wrap$wrap_tab$Add#### 下载链接:$new_add "
+		fi
 	elif [ $Delete_if = "1" ]; then 
 		num="删除$cat_delete脚本"
 		content="#### 删除脚本有:$wrap$wrap_tab$Delete"
@@ -598,8 +621,8 @@ sendMessage() {
 		echo "**********************************************"
 		run_script_if
 		server_content=$(echo "$content${by}" | sed "s/$wrap_tab####/####/g" )
-		weixin_content_sort=$(echo  "$content" |sed "s/####/<hr\/><b>/g" |sed "s/$wrap$wrap_tab/<br>/g" |sed "s/$wrap/<br>/g" |sed "s/:/:<hr\/><\/b>/g" )
-		weixin_content=$(echo "$weixin_content_sort<br><b>$by")
+		weixin_content_sort=$(echo  "$content" |sed "s/####/<hr\/><b>/g" |sed "s/$wrap$wrap_tab/<br>/g" |sed "s/$wrap/<br>/g" |sed "s/:/:<hr\/><\/b>/g"  )
+		weixin_content=$(echo "$weixin_content_sort<br><b>$by" | sed "s/https\:<hr\\/><\\/b>/https:/g" | sed "s/#### /<br><b>/g")
 		weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
 		title="${Script_name}${num}${auto_run}"
 		push_menu
@@ -806,7 +829,7 @@ description_if() {
 }
 
 task() {
-	cron_version="2.5"
+	cron_version="2.6"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -820,7 +843,7 @@ task() {
 task_add() {
 cat >>/etc/crontabs/root <<EOF
 #**********这里是Checkjs的定时任务$cron_version版本**********#102#
-*/10 * * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
+*/5 * * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
 45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1 #102#
 ###################请将其他定时任务放到底下#########102#
 EOF
@@ -874,10 +897,10 @@ menu() {
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
 	smiek2221_Script
+	KingRan_Script
 	curtinlv_script
 	ccwav
 	yyds_Script
-	KingRan_Script
 	JDWXX_Script
 	Github_6dylan6_Script
 	cdle_carry_Script
@@ -983,7 +1006,7 @@ run_script() {
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
 				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
-					auto_run="(个别自动运行，按你设置的)"
+					auto_run="(个别自动运行)"
 					wget ${url}${i} -O ${script_dir}/${i}
 					$node ${script_dir}/${i} &
 				else
