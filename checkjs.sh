@@ -938,10 +938,45 @@ run_script_if() {
 	script_if=$(grep "script_if=" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
 	script_ifname=$(grep "script_ifname" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g" | sed "s/,/|/g")
 	script_dir=$(grep "script_dir" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
+	script_date=$(grep "script_date" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
 
 	if [ "$script_if" == "no" ];then
 		echo ""
 	else
+		#判断当前时间
+		current_time=$(date +%H)
+		if [ "$script_date" == "" ];then
+			echo "script_date为空"
+		elif [ "$script_date" == "*" ];then
+			run_script
+		elif [ `echo "$script_date" | grep -o "-"` == "-" ];then
+			script_date_min=$(echo "$script_date" | awk -F "-" '{print $1}')
+			script_date_max=$(echo "$script_date" | awk -F "-" '{print $2}')
+			seq_date=$(seq $script_date_min $script_date_max)
+
+			if [ `echo "$seq_date" | grep -o "$current_time"` == "$current_time" ];then
+				echo "当前时间：$current_time点，符合你的设置"
+				run_script
+			else
+				echo "当前时间：$current_time点，不符合你的设置，不自动运行脚本"
+				auto_run="(时间不符合不跑)"
+			fi
+		elif [ `echo "$script_date" | grep -o "," | sort -u` == "," ];then
+			script_date_convert=$(echo "$script_date" | sed "s/,/ /g")
+			if [ `echo "$script_date_convert" | grep -o "$script_date"` == "" ];then
+				echo "当前时间：$current_time点，可以自动跑"
+				run_script
+			else
+				echo "当前时间：$current_time点，不符合你的设置，不自动运行脚本"
+				auto_run="(时间不符合不跑)"
+			fi
+		else
+			echo "未能识别script_date的字符：$script_date"
+		fi
+	fi
+}
+
+run_script() {
 		if [ "$script_ifname" == "" ];then
 			echo "script_ifname为空"
 		elif [ "$script_ifname" == "*" ];then
@@ -966,11 +1001,11 @@ run_script_if() {
 		else
 			echo "未能识别script_ifname的字符：$script_ifname"
 		fi
-	fi
+
 }
 
 checkjs_config_if() {
-	checkjs_config_version="1.0"
+	checkjs_config_version="1.1"
 	if [ ! -f $dir_file/config.txt ];then
 		checkjs_config
 	fi
@@ -991,10 +1026,13 @@ cat > $dir_file/config.txt <<EOF
 script_if="no"
 
 #脚本名判断(* 代表无论新增什么脚本都跑，你可以这里填关键字用，隔开，如填opencard,gua  这样脚本含有这两个字符的就会开始跑)
-script_ifname=""
+script_ifname="opencard,gua"
 
 #脚本下载到那个路径并执行
-script_dir="/usr/share/jd_openwrt_script/JD_Script"
+script_dir="/usr/share/jd_openwrt_script/JD_Script/js"
+
+#脚本在那个时间自动跑(* 代表所有时间 7-18 代表7点到18点有符合的脚本更新就跑 7,9 代表7点 9点才会自己跑)
+script_date="*"
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 EOF
