@@ -946,7 +946,7 @@ run_script_if() {
 		#判断当前时间
 		current_time=$(date +%H)
 		if [ "$script_date" == "" ];then
-			echo "script_date为空"
+			echo -e "${yellow}script_date为空${white}"
 		elif [ "$script_date" == "*" ];then
 			run_script
 		elif [ `echo "$script_date" | grep -o "-"` == "-" ];then
@@ -955,24 +955,24 @@ run_script_if() {
 			seq_date=$(seq $script_date_min $script_date_max)
 			echo "$seq_date" | grep -o "$current_time"
 			if [[ $? -eq 0 ]]; then
-				echo "当前时间：$current_time点，符合你的设置"
+				echo -e "${green}当前时间：$current_time点，符合你的设置${white}"
 				run_script
 			else
-				echo "当前时间：$current_time点，不符合你的设置，不自动运行脚本"
+				echo -e "${yellow}当前时间：$current_time点，不符合你的设置，不自动运行脚本${white}"
 				auto_run="(有合适脚本,但时间不符合不跑)"
 			fi
 		elif [ `echo "$script_date" | grep -o "," | sort -u` == "," ];then
 			script_date_convert=$(echo "$script_date" | sed "s/,/ /g")
 			echo "$script_date_convert" | grep -o "$current_time"
 			if [[ $? -eq 0 ]]; then
-				echo "当前时间：$current_time点，可以自动跑"
+				echo -e "${green}当前时间：$current_time点，可以自动跑${white}"
 				run_script
 			else
-				echo "当前时间：$current_time点，不符合你的设置，不自动运行脚本"
+				echo -e "${yellow}当前时间：$current_time点，不符合你的设置，不自动运行脚本${white}"
 				auto_run="(有合适脚本,但时间不符合不跑)"
 			fi
 		else
-			echo "未能识别script_date的字符：$script_date"
+			echo -e "${red}未能识别script_date的字符：$script_date${white}"
 		fi
 	fi
 }
