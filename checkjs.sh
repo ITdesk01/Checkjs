@@ -574,7 +574,6 @@ for_diff_cron() {
 
 sendMessage() {
 	#检查有没有脚本新增
-	set -x
 	cat_add=$(cat $ListJs_add | wc -l)
 	cat_delete=$(cat $ListJs_drop | wc -l )
 	url=$(echo $url_test | sed "s/README.md//g" )
