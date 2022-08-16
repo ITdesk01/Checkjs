@@ -465,11 +465,29 @@ tongyong_config() {
 		sendMessage
 		That_day
 	else
-		echo "#### 《$Script_name+$current_time》" >>$dir_file/git_log/${current_time}.log
-		wget_error="$green[$Script_name]$red无法下载仓库文件，暂时不更新,可能是网络问题或者上游仓库被封，建议查看上游仓库是否正常，测试仓库是否正常：$url_test$white"
-		echo -e "$wget_error"
-		echo "$wget_error" | sed -e "s/\\\//g" -e "s/\[//g" -e "s/033//g" -e "s/0m//g" -e "s/31m//g" -e "s/32m//g" -e "s/可能/$wrap$wrap_tab可能/g" -e "s/建议/$wrap$wrap_tab建议/g"  >>$dir_file/git_log/${current_time}.log
-		echo "**********************************************"
+		num="1"
+		eeror_num="1"
+		while [[ ${num} -gt 0 ]]; do
+			echo -e "$green>> $Script_name$yellow下载失败,开始尝试第$eeror_num次下载，3次下载失败就不再重试。$white"
+			wget $url_test -O /tmp/wget_test.log
+			if [ $? -eq 0 ]; then
+				num=$(expr $num - 1)
+			else
+				if [ $eeror_num -ge 3 ];then
+					echo -e "$green>> $Script_name$red下载$eeror_num次都失败，跳过这个下载$white"
+					echo ""
+					num=$(expr $num - 1)
+					echo "#### 《$Script_name+$current_time》" >>$dir_file/git_log/${current_time}.log
+					wget_error="$green[$Script_name]$red无法下载仓库文件，暂时不更新,可能是网络问题或者上游仓库被封，建议查看上游仓库是否正常，测试仓库是否正常：$url_test$white"
+					echo -e "$wget_error"
+					echo "$wget_error" | sed -e "s/\\\//g" -e "s/\[//g" -e "s/033//g" -e "s/0m//g" -e "s/31m//g" -e "s/32m//g" -e "s/可能/$wrap$wrap_tab可能/g" -e "s/建议/$wrap$wrap_tab建议/g"  >>$dir_file/git_log/${current_time}.log
+					echo ""
+					echo "**********************************************"
+				else
+						eeror_num=$(expr $eeror_num + 1)
+				fi
+			fi
+		done
 	fi
 }
 
@@ -995,13 +1013,17 @@ run_script_if() {
 				auto_run="(有合适脚本,但时间不符合不跑)"
 			fi
 		else
-			echo -e "${red}未能识别script_date的字符：$script_date${white}"
+			echo -e "script_date的字符：$script_date,进入下级判断"
+			run_script
 		fi
 	fi
 }
 
 run_script() {
 		rm -rf /tmp/run_script_ps.log
+		#复制依赖文件
+		cp -r $checkjs_file/KingRan_Script/function $script_dir
+
 		if [ "$script_ifname" == "" ];then
 			echo "script_ifname为空"
 		elif [ "$script_ifname" == "*" ];then
