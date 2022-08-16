@@ -619,11 +619,18 @@ sendMessage() {
 		echo -e "$green[$Script_name] 新增$cat_add脚本,删除$cat_delete脚本，已推送到你的接收设备$white"
 		echo "**********************************************"
 		run_script_if
+
+		run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
+		if [ -z "$run_script_ps_num"];then
+			ps_num=""
+		else
+			ps_num="进程：$run_script_ps_num"
+		fi
 		server_content=$(echo "$content${by}" | sed "s/$wrap_tab####/####/g" )
 		weixin_content_sort=$(echo  "$content" |sed "s/####/<hr\/><b>/g" |sed "s/$wrap$wrap_tab/<br>/g" |sed "s/$wrap/<br>/g" |sed "s/:/:<hr\/><\/b>/g"  )
 		weixin_content=$(echo "$weixin_content_sort<br><b>$by" | sed "s/https\:<hr\\/><\\/b>/https:/g" | sed "s/#### /<br><b>/g")
 		weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
-		title="${Script_name}${num}${auto_run}"
+		title="${Script_name}${num}${auto_run}${ps_num}"
 		push_menu
 	fi 
 	
@@ -994,6 +1001,7 @@ run_script_if() {
 }
 
 run_script() {
+		rm -rf /tmp/run_script_ps.log
 		if [ "$script_ifname" == "" ];then
 			echo "script_ifname为空"
 		elif [ "$script_ifname" == "*" ];then
@@ -1003,6 +1011,7 @@ run_script() {
 				cp ${File_path}/${i} ${script_dir}/${i}
 				echo "${i}(全部自动运行),当前时间`date`" >>/tmp/run_script.log
 				$node ${script_dir}/${i} >>/tmp/run_script.log &
+				sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
 			done
 		elif [ `echo ${script_ifname} | grep -o "|" |sort -u | wc -l` == "1" ];then
 			url=$(echo $url_test | sed "s/README.md//g")
@@ -1013,6 +1022,7 @@ run_script() {
 					cp ${File_path}/${i} ${script_dir}/${i}
 					echo "${i}(个别自动运行),当前时间`date`" >>/tmp/run_script.log
 					$node ${script_dir}/${i} >>/tmp/run_script.log &
+					sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
 				else
 					echo
 				fi
