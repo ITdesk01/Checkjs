@@ -771,6 +771,9 @@ update_script() {
 	cd $dir_file
 	branch="main"
 	git_pull
+
+	#删掉当天的日志文件
+	rm -rf /tmp/run_script.log
 }
 
 
@@ -948,10 +951,10 @@ help() {
 
 #判断是否自动运行新增脚本
 run_script_if() {
-	script_if=$(grep "script_if=" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
-	script_ifname=$(grep "script_ifname" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g" | sed "s/,/|/g")
-	script_dir=$(grep "script_dir" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
-	script_date=$(grep "script_date" $dir_file/config.txt | awk -F "=" '{print $2}' | sed "s/\"//g")
+	script_if=$(cat $dir_file/config.txt | grep -v "#" | grep "script_if="  | awk -F "=" '{print $2}' | sed "s/\"//g")
+	script_ifname=$(cat $dir_file/config.txt | grep -v "#" | grep "script_ifname" | awk -F "=" '{print $2}' | sed "s/\"//g" | sed "s/,/|/g")
+	script_dir=$(cat $dir_file/config.txt | grep -v "#" | grep "script_dir"  | awk -F "=" '{print $2}' | sed "s/\"//g")
+	script_date=$(cat $dir_file/config.txt | grep -v "#" | grep "script_date" | awk -F "=" '{print $2}' | sed "s/\"//g")
 
 	if [ "$script_if" == "no" ];then
 		echo ""
@@ -997,8 +1000,9 @@ run_script() {
 			auto_run="(全部自动运行)"
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
-				wget ${url}${i} -O ${script_dir}/${i}
-				$node ${script_dir}/${i} &
+				cp ${File_path}/${i} ${script_dir}/${i}
+				echo "${i}(全部自动运行),当前时间`date`" >>/tmp/run_script.log
+				$node ${script_dir}/${i} >>/tmp/run_script.log &
 			done
 		elif [ `echo ${script_ifname} | grep -o "|" |sort -u | wc -l` == "1" ];then
 			url=$(echo $url_test | sed "s/README.md//g")
@@ -1006,8 +1010,9 @@ run_script() {
 			do
 				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
 					auto_run="(个别自动运行)"
-					wget ${url}${i} -O ${script_dir}/${i}
-					$node ${script_dir}/${i} &
+					cp ${File_path}/${i} ${script_dir}/${i}
+					echo "${i}(个别自动运行),当前时间`date`" >>/tmp/run_script.log
+					$node ${script_dir}/${i} >>/tmp/run_script.log &
 				else
 					echo
 				fi
