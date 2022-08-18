@@ -914,6 +914,7 @@ system_variable() {
 menu() {
 	description_if
 	checkjs_config_if
+	opencard_variable
 	echo "----------------------------------------------"
 	echo -e "$green Checkjs $version开始检查脚本新增或删除情况$white"
 	echo ""
@@ -1087,6 +1088,37 @@ script_date="*"
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 EOF
+}
+
+opencard_variable() {
+cat > /tmp/opencard_variable.txt <<EOF
+#yyds
+DY_OPENALL="true"
+
+#gua
+guaopencard_All="true"
+guaopencard_addSku_All="true"
+guaopencardRun_All="true"
+guaopencard_draw="true"
+
+#kr
+opencard_addCart="true"
+opencard_draw="10"
+EOF
+
+for i in `cat /tmp/opencard_variable.txt | grep -v "#" | awk -F "\=" '{print $1}'`
+do
+	opencard_variable_if=$(grep -o "$i" /etc/profile | wc -l )
+	if [ "$opencard_variable_if" == "1" ];then
+		echo "开卡变量：$i，已经存在"
+	else
+		echo "开始导入开卡变量：$i"
+		opencard_variable_num=$(grep "$i" /tmp/opencard_variable.txt)
+		echo "$opencard_variable_num" >>/etc/profile
+	fi
+done
+source /etc/profile
+
 }
 
 
