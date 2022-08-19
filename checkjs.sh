@@ -1111,6 +1111,12 @@ do
 	opencard_variable_if=$(grep -o "$i" /etc/profile | wc -l )
 	if [ "$opencard_variable_if" == "1" ];then
 		echo "开卡变量：$i，已经存在"
+	elif [ "$opencard_variable_if" -gt "1" ];then
+		echo "检测到开卡变量：$i，重复，先删除后添加"
+		sed -i "/$i/d" /etc/profile
+		echo "开始导入开卡变量：$i"
+		opencard_variable_num=$(grep "$i" /tmp/opencard_variable.txt)
+		echo "$opencard_variable_num" >>/etc/profile
 	else
 		echo "开始导入开卡变量：$i"
 		opencard_variable_num=$(grep "$i" /tmp/opencard_variable.txt)
