@@ -1074,7 +1074,7 @@ checkjs_config_if() {
 checkjs_config() {
 cat > $dir_file/config.txt <<EOF
 ++++++++++++++++++++++++++++Checkjs ${checkjs_config_version}配置+++++++++++++++++++++++++++++++++++++++++++++++++++++
-#是否自动跑新增的脚本(默认no，跑yes)
+#是否自动跑新增的脚本(默认no，跑yes)(也可以用export script_if="yes"写到全局变量)
 script_if="no"
 
 #脚本名判断(* 代表无论新增什么脚本都跑，你可以这里填关键字用，隔开，如填opencard,gua  这样脚本含有这两个字符的就会开始跑)
@@ -1085,6 +1085,16 @@ script_dir="/usr/share/jd_openwrt_script/JD_Script/js"
 
 #脚本在那个时间自动跑(* 代表所有时间 7-18 代表7点到18点有符合的脚本更新就跑 7,9 代表7点 9点才会自己跑)
 script_date="*"
+
+
+#tg监控频道变量(也可以用export tg_if="yes"写到全局变量)
+tg_if="no"
+
+#tg_api(必填，不然无法启动监控，获取地址参考https://www.jianshu.com/p/3d047c7516cf')
+tg_api_id=""
+
+#tg_hash(必填，不然无法启动监控，获取地址参考https://www.jianshu.com/p/3d047c7516cf')
+tg_api_hash=""
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 EOF
@@ -1123,6 +1133,68 @@ do
 done
 source /etc/profile
 
+}
+
+tg() {
+	docker_id=$(docker ps | grep "tg" | awk '{print $1}')
+	tg_api_id=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_id" | awk -F "=" '{print $2}' | sed "s/\"//g")
+	tg_api_hash=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_hash" | awk -F "=" '{print $2}' | sed "s/\"//g")
+
+	if [ ! -z "$tg_if" ];then
+		tg_if=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_if" | awk -F "=" '{print $2}' | sed "s/\"//g")
+	fi
+
+	if [ "$tg_if" == "yes" ];then
+		if [ -f $dir_file/tg/tg.py　&& `echo $docker_id|wc -l` == "1" ];then
+			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python tg.py" >>/$dir_file/tg/tg.log
+			cat  /$dir_file/tg/tg.log
+		else
+			mkdir $dir_file/tg
+			docker build -f dockerfile -t tg:0.1 $dir_file/tg
+			docker run -d -i -t -v $dir_file/tg:/usr/share/tg --restart=always tg:0.1
+			sleep 3
+			wget https://raw.githubusercontent.com/ITdesk01/Checkjs/main/tg.py -o $dir_file/tg/tg.py
+			docker_id=$(docker ps | grep "tg" | awk '{print $1}')
+			if [ `echo $tg_api_id |wc -l` == "1" && `echo $tg_api_hash | wc -l` == "1" ];then
+				echo -e "$green请按下面提示输入$white"
+				docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python tg.py"
+			else
+				echo "tg_api_id或tg_api_hash变量没有填"
+			fi
+		fi
+	else
+		echo "tg_if变量异常"
+	fi
+
+	#开始检测变量
+	if [ -f /$dir_file/tg/tg.log ];then
+		tg_oldfile="/$dir_file/tg/tg_oldfile.txt"
+		tg_newfile="/$dir_file/tg/tg_newfile.txt"
+		tg_add="/$dir_file/tg/tg_add.txt"
+		#首次运行需要创建oldfile
+		if [ -f "/$dir_file/$tg_oldfile" ]; then
+			echo ""
+		else
+			cat /$dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort > $tg_oldfile
+		fi
+		#.*表示多个任意字符
+		#新文件与旧文件对比
+		cat /$dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort > $tg_newfile
+		grep -vwf $tg_oldfile $tg_newfile > $tg_add
+
+		if [ $(cat $tg_add | wc -l) = "0" ]; then
+			Add_if="0"
+		else
+			Add=$(sed "s/$/$wrap$wrap_tab/" $ListJs_add | sed ':t;N;s/\n//;b t' )
+			Add_if="1"
+			ListJs_add="$tg_add"
+			echo >/$dir_file/tg/tg_del.txt
+			ListJs_drop="0"
+			sendMessage
+		fi
+	else
+		echo ""
+	fi
 }
 
 
