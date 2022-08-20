@@ -1136,34 +1136,46 @@ source /etc/profile
 }
 
 tg() {
-	docker_id=$(docker ps | grep "tg" | awk '{print $1}')
+	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
 	tg_api_id=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_id" | awk -F "=" '{print $2}' | sed "s/\"//g")
 	tg_api_hash=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_hash" | awk -F "=" '{print $2}' | sed "s/\"//g")
 
-	if [ ! -z "$tg_if" ];then
+	if [ -z "$tg_if" ];then
 		tg_if=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_if" | awk -F "=" '{print $2}' | sed "s/\"//g")
 	fi
 
 	if [ "$tg_if" == "yes" ];then
-		if [ -f $dir_file/tg/tg.py　&& `echo $docker_id|wc -l` == "1" ];then
-			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python tg.py" >>/$dir_file/tg/tg.log
+		if [ -f $dir_file/tg/tg.py ] && [ ! "$docker_id" == "" ];then
+			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py" >>/$dir_file/tg/tg.log
 			cat  /$dir_file/tg/tg.log
 		else
-			mkdir $dir_file/tg
-			docker build -f dockerfile -t tg:0.1 $dir_file/tg
-			docker run -d -i -t -v $dir_file/tg:/usr/share/tg --restart=always tg:0.1
-			sleep 3
-			wget https://raw.githubusercontent.com/ITdesk01/Checkjs/main/tg.py -o $dir_file/tg/tg.py
-			docker_id=$(docker ps | grep "tg" | awk '{print $1}')
-			if [ `echo $tg_api_id |wc -l` == "1" && `echo $tg_api_hash | wc -l` == "1" ];then
-				echo -e "$green请按下面提示输入$white"
-				docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python tg.py"
+			if [ ! -d $dir_file/tg ];then
+				mkdir $dir_file/tg
+			fi
+
+			if [ ! "$tg_api_id" == "" ] && [ ! "$tg_api_hash" == "" ];then
+				echo -e "$green开始安装tg环境，请稍等，请保证你的docker 也能访问google，不然会失败$white"
+				docker build -f dockerfile -t tg:0.1 $dir_file/tg
+				docker run -d -i -t -v $dir_file/tg:/usr/share/tg --restart=always tg:0.1
+				sleep 3
+				cp $dir_file/tg.py $dir_file/tg/tg.py
+				docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
+				clear
+				echo -e "$green>>请按下面提示输入tg手机号码:(+86XXX)$white"
+				docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
+				echo >/$dir_file/tg/tg.log
+				if [[ $? -eq 0 ]]; then
+					echo -e "$green>>安装成功,后面脚本会自己运行的$white"
+				else
+					echo -e "$red>>运行失败：$white请手动输入docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py""
+				fi
 			else
 				echo "tg_api_id或tg_api_hash变量没有填"
+				exit 0
 			fi
 		fi
 	else
-		echo "tg_if变量异常"
+		echo "tg_if变量:$tg_if，无法运行"
 	fi
 
 	#开始检测变量
