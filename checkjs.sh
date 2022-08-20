@@ -1203,7 +1203,7 @@ if [ -z $action1 ]; then
 	menu
 else
 	case "$action1" in
-			update_script|system_variable|menu|that_day_push|help|task_delete|ds_setup)
+			update_script|system_variable|menu|that_day_push|help|task_delete|ds_setup|tg)
 			$action1
 			;;
 			*)
