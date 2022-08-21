@@ -1146,7 +1146,7 @@ tg() {
 
 	if [ "$tg_if" == "yes" ];then
 		if [ -f $dir_file/tg/tg.py ] && [ ! "$docker_id" == "" ];then
-			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py" >>/$dir_file/tg/tg.log
+			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py" >/$dir_file/tg/tg.log
 			cat  /$dir_file/tg/tg.log
 		else
 			if [ ! -d $dir_file/tg ];then
@@ -1183,31 +1183,36 @@ tg() {
 	fi
 
 	#开始检测变量
-	if [ -f /$dir_file/tg/tg.log ];then
-		tg_oldfile="/$dir_file/tg/tg_oldfile.txt"
-		tg_newfile="/$dir_file/tg/tg_newfile.txt"
-		tg_add="/$dir_file/tg/tg_add.txt"
+	if [ -f $dir_file/tg/tg.log ];then
+		tg_oldfile="$dir_file/tg/tg_oldfile.txt"
+		tg_newfile="$dir_file/tg/tg_newfile.txt"
+		tg_add="$dir_file/tg/tg_add.txt"
 		#首次运行需要创建oldfile
-		if [ -f "/$dir_file/$tg_oldfile" ]; then
+		if [ -f "$tg_oldfile" ];then
 			echo ""
 		else
-			cat /$dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_oldfile
+			echo "没有发现ｏｌｄｆｉｌｅ"
+			cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_oldfile
 		fi
+
 		#.*表示多个任意字符
 		#新文件与旧文件对比
-		cat /$dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_newfile
+		cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_newfile
+
 		grep -vwf $tg_oldfile $tg_newfile > $tg_add
 
-		if [ $(cat $tg_add | wc -l) = "0" ]; then
+		if [ $(cat $tg_add | wc -l) = "0" ];then
 			Add_if="0"
 		else
+			cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_oldfile
+			ListJs_add="$tg_add"
 			Add=$(sed "s/$/$wrap$wrap_tab/" $ListJs_add | sed ':t;N;s/\n//;b t' )
 			Add_if="1"
-			ListJs_add="$tg_add"
 			echo >/$dir_file/tg/tg_del.txt
 			ListJs_drop="0"
 			sendMessage
 		fi
+
 	else
 		echo ""
 	fi
