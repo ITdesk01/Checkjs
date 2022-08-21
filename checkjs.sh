@@ -1155,19 +1155,23 @@ tg() {
 
 			if [ ! "$tg_api_id" == "" ] && [ ! "$tg_api_hash" == "" ];then
 				echo -e "$green开始安装tg环境，请稍等，请保证你的docker 也能访问google，不然会失败$white"
-				docker build -f dockerfile -t tg:0.1 $dir_file/tg
+				docker build -f $dir_file/dockerfile -t tg:0.1 .
 				docker run -d -i -t -v $dir_file/tg:/usr/share/tg --restart=always tg:0.1
 				sleep 3
 				cp $dir_file/tg.py $dir_file/tg/tg.py
 				docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
 				clear
-				echo -e "$green>>请按下面提示输入tg手机号码:(+86XXX)$white"
-				docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
-				echo >/$dir_file/tg/tg.log
-				if [[ $? -eq 0 ]]; then
-					echo -e "$green>>安装成功,后面脚本会自己运行的$white"
+				if [ -z $docker_id ];then
+					echo "没有找到docker_id，容器没有运行成功"
 				else
-					echo -e "$red>>运行失败：$white请手动输入docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py""
+					echo -e "$green>>请按下面提示输入tg手机号码:(+86XXX)$white"
+					docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
+					if [[ $? -eq 0 ]]; then
+						echo -e "$green>>安装成功,后面脚本会自己运行的$white"
+						echo >/$dir_file/tg/tg.log
+					else
+						echo -e "$red>>运行失败：$white请手动输入docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id "&& "export API_HASH=$tg_api_hash "&& python3 tg.py"""
+					fi
 				fi
 			else
 				echo "tg_api_id或tg_api_hash变量没有填"
@@ -1187,11 +1191,11 @@ tg() {
 		if [ -f "/$dir_file/$tg_oldfile" ]; then
 			echo ""
 		else
-			cat /$dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort > $tg_oldfile
+			cat /$dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_oldfile
 		fi
 		#.*表示多个任意字符
 		#新文件与旧文件对比
-		cat /$dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort > $tg_newfile
+		cat /$dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_newfile
 		grep -vwf $tg_oldfile $tg_newfile > $tg_add
 
 		if [ $(cat $tg_add | wc -l) = "0" ]; then
