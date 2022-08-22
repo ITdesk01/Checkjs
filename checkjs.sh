@@ -867,7 +867,7 @@ description_if() {
 }
 
 task() {
-	cron_version="2.7"
+	cron_version="2.9"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -1157,6 +1157,7 @@ do
 	fi
 done
 source /etc/profile
+clear
 
 }
 
@@ -1197,7 +1198,7 @@ EOF
 				script_dir=$(cat $dir_file/config.txt | grep -v "#" | grep "script_dir"  | awk -F "=" '{print $2}' | sed "s/\"//g")
 
 				cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sed "s/\"//g" | sed "s/'//g" | sort -u >/tmp/tg_purify.log
-				grep_keywords=$(cat $dir_file/variable_name.txt |awk '{print $1}' | sed "s/$/|/g"| sed ':t;N;s/\n//;b t' | sed "s/|$//")
+				grep_keywords=$(cat $dir_file/variable_name.txt|sed "s/#/\n#/g"| grep -v "#"|awk '{print $1}' |sed '/^$/d'| sed "s/$/|/g"| sed ':t;N;s/\n//;b t'| sed "s/|$//")
 
 				extract_log=$(grep -E "$grep_keywords" /tmp/tg_purify.log)
 
@@ -1218,7 +1219,6 @@ EOF
 				if [ $(cat $tg_add | wc -l) = "0" ];then
 					Add_if="0"
 				else
-					echo "$extract_log" > $tg_oldfile
 					for i in `cat $tg_add|sed "s/#/\n#/g"| grep -v "#"`
 					do
 						variable_script_name=$(echo "$i"| awk -F "=" '{print $1}')
@@ -1280,6 +1280,7 @@ EOF
 							sendMessage
 						fi
 					done
+					echo "$extract_log" > $tg_oldfile
 					#休息60秒以后重新执行
 					#sleep 60
 					#tg
