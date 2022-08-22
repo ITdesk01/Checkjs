@@ -1218,6 +1218,7 @@ EOF
 
 				if [ $(cat $tg_add | wc -l) = "0" ];then
 					Add_if="0"
+					echo "当前时间`date`"
 					echo -e "$green暂时未发现新变量，暂时不做推送$white"
 				else
 					for i in `cat $tg_add|sed "s/#/\n#/g"| grep -v "#"`
@@ -1256,12 +1257,14 @@ EOF
 							case "$variable_script_name" in
 							LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId)
 								export $i
-								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1　
+								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
+								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 							;;
 							M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_UR)
 								export $i
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
+								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log &
 							;;
 							*)
@@ -1313,6 +1316,7 @@ EOF
 					if [[ $? -eq 0 ]]; then
 						echo -e "$green>>安装成功,后面脚本会自己运行的$white"
 						echo >/$dir_file/tg/tg.log
+						tg
 					else
 						echo -e "$red>>运行失败：$white请手动输入docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id "&& "export API_HASH=$tg_api_hash "&& python3 tg.py"""
 					fi
