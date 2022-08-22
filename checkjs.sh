@@ -1048,7 +1048,7 @@ run_script() {
 				$node ${script_dir}/${i} >>/tmp/run_script.log &
 				sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
 			done
-		elif [ `echo ${script_ifname} | grep -o "|" |sort -u | wc -l` == "1" ];then
+		elif [ `echo ${script_ifname} | grep -o "," |sort -u | wc -l` == "1" ];then
 			url=$(echo $url_test | sed "s/README.md//g")
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
@@ -1063,7 +1063,19 @@ run_script() {
 				fi
 			done
 		else
-			echo "未能识别script_ifname的字符：$script_ifname"
+			url=$(echo $url_test | sed "s/README.md//g")
+			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
+			do
+				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
+					auto_run="(个别自动运行)"
+					cp ${File_path}/${i} ${script_dir}/${i}
+					echo "${i}(个别自动运行),当前时间`date`" >>/tmp/run_script.log
+					$node ${script_dir}/${i} >>/tmp/run_script.log &
+					sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
+				else
+					echo
+				fi
+			done
 		fi
 
 }
@@ -1132,7 +1144,8 @@ for i in `cat /tmp/opencard_variable.txt | grep -v "#"`
 do
 	opencard_variable_if=$(grep "$i" /etc/profile | wc -l )
 	if [ "$opencard_variable_if" == "1" ];then
-		echo "开卡变量：$i，已经存在"
+		echo ""
+		#echo "开卡变量：$i，已经存在"
 	elif [ "$opencard_variable_if" -gt "1" ];then
 		echo "检测到开卡变量：$i，重复，先删除后添加"
 		sed -i "/$i/d" /etc/profile
