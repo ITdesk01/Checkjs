@@ -15,6 +15,7 @@ done
 dir_file="$( cd -P "$( dirname "$Source"  )" && pwd  )"
 
 node="/usr/bin/node"
+python3="/usr/bin/python3"
 
 ListJs_add="ListJs_add.txt"
 ListJs_drop="ListJs_drop.txt"
@@ -610,17 +611,22 @@ sendMessage() {
 			content=$(echo "#### 新增脚本有:$wrap$wrap_tab$Add#### 下载链接:$new_add#### 删除脚本有:$wrap$wrap_tab$Delete" | sed "s/$wrap_tab####/####/g")
 		fi
 	elif [ $Add_if = "1" ]; then 
-		num="新增$cat_add脚本"
-		if [ "$cat_add" == "1" ];then
-			content="#### 新增脚本有:$wrap$wrap_tab$Add#### 下载链接:${url}$Add "
+		if [ "$tg_script_run" == "1" ];then
+			num="tg频道新增１变量"
+			content="#### 新增变量有:$wrap$wrap_tab$Add"
 		else
-			for i in `echo "$Add"| sed "s/$wrap$wrap_tab/ /g"`
-			do
-				echo "$wrap$wrap_tab${url}${i}$wrap$wrap_tab" >>/tmp/down_url.txt
-			done
+			num="新增$cat_add脚本"
+			if [ "$cat_add" == "1" ];then
+				content="#### 新增脚本有:$wrap$wrap_tab$Add#### 下载链接:${url}$Add "
+			else
+				for i in `echo "$Add"| sed "s/$wrap$wrap_tab/ /g"`
+				do
+					echo "$wrap$wrap_tab${url}${i}$wrap$wrap_tab" >>/tmp/down_url.txt
+				done
 
-			new_add=$(cat /tmp/down_url.txt |sed ':t;N;s/\n//;b t')
-			content="#### 新增脚本有:$wrap$wrap_tab$Add#### 下载链接:$new_add "
+				new_add=$(cat /tmp/down_url.txt |sed ':t;N;s/\n//;b t')
+				content="#### 新增脚本有:$wrap$wrap_tab$Add#### 下载链接:$new_add "
+			fi
 		fi
 	elif [ $Delete_if = "1" ]; then 
 		num="删除$cat_delete脚本"
@@ -799,6 +805,7 @@ update_script() {
 
 	#删掉当天的日志文件
 	rm -rf /tmp/run_script.log
+	rm -rf /tmp/tg_run_script.log
 }
 
 
@@ -1078,7 +1085,7 @@ cat > $dir_file/config.txt <<EOF
 script_if="no"
 
 #脚本名判断(* 代表无论新增什么脚本都跑，你可以这里填关键字用，隔开，如填opencard,gua  这样脚本含有这两个字符的就会开始跑)
-script_ifname="opencard,gua"
+script_ifname="jd_opencard"
 
 #脚本下载到那个路径并执行
 script_dir="/usr/share/jd_openwrt_script/JD_Script/js"
@@ -1181,41 +1188,96 @@ tg() {
 	else
 		echo "tg_if变量:$tg_if，无法运行"
 	fi
+set -x
+cat > $dir_file/variable_name.txt <<EOF
+DPLHTY			jd_opencardDPLHTY.js
+M_WX_ADD_CART_URL	jd_wx_addCart.js
+M_WX_LUCK_DRAW_UR	jd_luck_draw.js		#L="活动链接"
+jd_cjhy_activityId	jd_cjzdgf.js
+jd_zdjr_activityId	jd_zdjr.js
+EOF
 
 	#开始检测变量
 	if [ -f $dir_file/tg/tg.log ];then
 		tg_oldfile="$dir_file/tg/tg_oldfile.txt"
 		tg_newfile="$dir_file/tg/tg_newfile.txt"
 		tg_add="$dir_file/tg/tg_add.txt"
+		script_dir=$(cat $dir_file/config.txt | grep -v "#" | grep "script_dir"  | awk -F "=" '{print $2}' | sed "s/\"//g")
+
+		cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sed "s/\"//g" | sed "s/'//g" | sort -u >/tmp/tg_purify.log
+		grep_keywords=$(cat $dir_file/variable_name.txt |awk '{print $1}' | sed "s/$/|/g"| sed ':t;N;s/\n//;b t' | sed "s/|$//")
+
+		extract_log=$(grep -E "$grep_keywords" /tmp/tg_purify.log)
+
 		#首次运行需要创建oldfile
 		if [ -f "$tg_oldfile" ];then
 			echo ""
 		else
 			echo "没有发现ｏｌｄｆｉｌｅ"
-			cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_oldfile
+			echo "$extract_log" > $tg_oldfile
 		fi
 
 		#.*表示多个任意字符
 		#新文件与旧文件对比
-		cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_newfile
+		echo "$extract_log" > $tg_newfile
 
 		grep -vwf $tg_oldfile $tg_newfile > $tg_add
 
 		if [ $(cat $tg_add | wc -l) = "0" ];then
 			Add_if="0"
 		else
-			cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sort -u > $tg_oldfile
-			ListJs_add="$tg_add"
-			Add=$(sed "s/$/$wrap$wrap_tab/" $ListJs_add | sed ':t;N;s/\n//;b t' )
-			Add_if="1"
-			echo >/$dir_file/tg/tg_del.txt
-			ListJs_drop="0"
-			sendMessage
+			echo "$extract_log" > $tg_oldfile
+			for i in `cat $tg_add`
+			do
+				variable_script_name=$(echo "$i"| awk -F "=" '{print $1}')
+				variable_script_num=$(echo "$i"| awk -F "=" '{print $2}')
+
+				js_name=$(grep $variable_script_name $dir_file/tg/variable_name.txt)
+				js_name1=$(echo "$js_name" | awk '{print $2}')
+				if [ -z "$variable_script_num" ];then
+					echo "$variable_script_name值：为空不操作"
+				elif [ "$variable_script_num" == "xxxxxxx" ];then
+					echo "$variable_script_name值：为xxxxxxx不操作"
+				else
+					#常规变量
+					export jd_cjhy_activityUrl="https://cjhydz-isv.isvjcloud.com"
+					export jd_zdjr_activityUrl="https://lzkjdz-isv.isvjcloud.com"
+					export LUCK_DRAW_NUM=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)
+
+					case "$variable_script_name" in
+					DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|M_WX_LUCK_DRAW_UR)
+						export $i
+						cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1　>>/tmp/tg_run_script.log
+						$node ${script_dir}/$js_name1 &
+					;;
+					M_WX_ADD_CART_URL)
+						export $i
+						cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1 >>/tmp/tg_run_script.log
+						$node ${script_dir}/$js_name1 &
+					;;
+					*)
+						echo "暂不支持"
+					;;
+					esac
+					sleep 3 && ps -ww | grep "${js_name1}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
+					ListJs_add="$i"
+					Add=$(echo "$ListJs_add$wrap$wrap_tab")
+					Add_if="1"
+					echo >/$dir_file/tg/tg_del.txt
+					ListJs_drop="0"
+					tg_script_run="1"
+					sendMessage
+				fi
+			done
+			#休息60秒以后重新执行
+			sleep 60
+			tg
 		fi
 
 	else
 		echo ""
 	fi
+
 }
 
 
@@ -1230,7 +1292,7 @@ else
 			*)
 			help
 			;;
-esac
+	esac
 fi
 
 
