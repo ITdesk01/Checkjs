@@ -642,7 +642,11 @@ sendMessage() {
 	else
 		echo -e "$green[$Script_name] 新增$cat_add脚本,删除$cat_delete脚本，已推送到你的接收设备$white"
 		echo "**********************************************"
-		run_script_if
+		if [ "$tg_script_run" == "1" ];then
+			echo ""
+		else
+			run_script_if
+		fi
 
 		run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
 		if [ -z "$run_script_ps_num"];then
@@ -655,6 +659,7 @@ sendMessage() {
 		weixin_content=$(echo "$weixin_content_sort<br><b>$by" | sed "s/https\:<hr\\/><\\/b>/https:/g" | sed "s/#### /<br><b>/g")
 		weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
 		title="${Script_name}${num}${auto_run}${ps_num}"
+		read a
 		push_menu
 	fi 
 	
@@ -863,7 +868,7 @@ description_if() {
 }
 
 task() {
-	cron_version="2.6"
+	cron_version="2.7"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -879,6 +884,7 @@ cat >>/etc/crontabs/root <<EOF
 #**********这里是Checkjs的定时任务$cron_version版本**********#102#
 */5 * * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
 45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1 #102#
+*/1 * * * * $dir_file/checkjs.sh tg >/tmp/checkjs_tg.log 2>&1 #102#
 ###################请将其他定时任务放到底下#########102#
 EOF
 /etc/init.d/cron restart
@@ -1143,6 +1149,14 @@ source /etc/profile
 }
 
 tg() {
+cat > $dir_file/variable_name.txt <<EOF
+DPLHTY			jd_opencardDPLHTY.js
+M_WX_ADD_CART_URL	jd_wx_addCart.js
+M_WX_LUCK_DRAW_UR	jd_luck_draw.js		#L="活动链接"
+jd_cjhy_activityId	jd_cjzdgf.js
+jd_zdjr_activityId	jd_zdjr.js
+EOF
+
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
 	tg_api_id=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_id" | awk -F "=" '{print $2}' | sed "s/\"//g")
 	tg_api_hash=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_hash" | awk -F "=" '{print $2}' | sed "s/\"//g")
@@ -1155,6 +1169,91 @@ tg() {
 		if [ -f $dir_file/tg/tg.py ] && [ ! "$docker_id" == "" ];then
 			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py" >/$dir_file/tg/tg.log
 			cat  /$dir_file/tg/tg.log
+
+			#开始检测变量
+			if [ -f $dir_file/tg/tg.log ];then
+				tg_oldfile="$dir_file/tg/tg_oldfile.txt"
+				tg_newfile="$dir_file/tg/tg_newfile.txt"
+				tg_add="$dir_file/tg/tg_add.txt"
+				script_dir=$(cat $dir_file/config.txt | grep -v "#" | grep "script_dir"  | awk -F "=" '{print $2}' | sed "s/\"//g")
+
+				cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sed "s/\"//g" | sed "s/'//g" | sort -u >/tmp/tg_purify.log
+				grep_keywords=$(cat $dir_file/variable_name.txt |awk '{print $1}' | sed "s/$/|/g"| sed ':t;N;s/\n//;b t' | sed "s/|$//")
+
+				extract_log=$(grep -E "$grep_keywords" /tmp/tg_purify.log)
+
+				#首次运行需要创建oldfile
+				if [ -f "$tg_oldfile" ];then
+					echo ""
+				else
+					echo "没有发现ｏｌｄｆｉｌｅ"
+					echo "$extract_log" > $tg_oldfile
+				fi
+
+				#.*表示多个任意字符
+				#新文件与旧文件对比
+				echo "$extract_log" > $tg_newfile
+
+				grep -vwf $tg_oldfile $tg_newfile > $tg_add
+
+				if [ $(cat $tg_add | wc -l) = "0" ];then
+					Add_if="0"
+				else
+					echo "$extract_log" > $tg_oldfile
+					for i in `cat $tg_add`
+					do
+						variable_script_name=$(echo "$i"| awk -F "=" '{print $1}')
+						variable_script_num=$(echo "$i"| awk -F "=" '{print $2}')
+
+						js_name=$(grep $variable_script_name $dir_file/tg/variable_name.txt)
+						js_name1=$(echo "$js_name" | awk '{print $2}')
+						if [ -z "$variable_script_num" ];then
+							echo "$variable_script_name值：为空不操作"
+						elif [ `echo $variable_script_num| grep "xxxx" | wc -l` == "1" ];then
+							echo "$variable_script_name值：为$variable_script_num不操作"
+						else
+							#常规变量
+							export jd_cjhy_activityUrl="https://cjhydz-isv.isvjcloud.com"
+							export jd_zdjr_activityUrl="https://lzkjdz-isv.isvjcloud.com"
+							export LUCK_DRAW_NUM=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)
+
+							case "$variable_script_name" in
+							DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|M_WX_LUCK_DRAW_UR)
+								export $i
+								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1　
+								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
+							;;
+							M_WX_ADD_CART_URL)
+								export $i
+								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
+								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log &
+							;;
+							*)
+								echo "暂不支持"
+							;;
+							esac
+							set -x
+							sleep 3 && ps -ww | grep "${js_name1}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >/tmp/run_script_ps.log
+							ListJs_add="$i"
+							echo "$ListJs_add$wrap$wrap_tab$wrap$wrap_tab运行日志可以查询:/tmp/tg_run_script.log$wrap$wrap_tab" >/tmp/tg_tmp.txt
+							Add=$(cat /tmp/tg_tmp.txt)
+
+							Add_if="1"
+							echo >/$dir_file/tg/tg_del.txt
+							ListJs_drop="/$dir_file/tg/tg_del.txt"
+
+							tg_script_run="1"
+							sendMessage
+						fi
+					done
+					#休息60秒以后重新执行
+					#sleep 60
+					#tg
+				fi
+
+			else
+				echo -e "$green暂时未发现新变量，暂时不做推送$white"
+			fi
 		else
 			if [ ! -d $dir_file/tg ];then
 				mkdir $dir_file/tg
@@ -1188,95 +1287,8 @@ tg() {
 	else
 		echo "tg_if变量:$tg_if，无法运行"
 	fi
-set -x
-cat > $dir_file/variable_name.txt <<EOF
-DPLHTY			jd_opencardDPLHTY.js
-M_WX_ADD_CART_URL	jd_wx_addCart.js
-M_WX_LUCK_DRAW_UR	jd_luck_draw.js		#L="活动链接"
-jd_cjhy_activityId	jd_cjzdgf.js
-jd_zdjr_activityId	jd_zdjr.js
-EOF
 
-	#开始检测变量
-	if [ -f $dir_file/tg/tg.log ];then
-		tg_oldfile="$dir_file/tg/tg_oldfile.txt"
-		tg_newfile="$dir_file/tg/tg_newfile.txt"
-		tg_add="$dir_file/tg/tg_add.txt"
-		script_dir=$(cat $dir_file/config.txt | grep -v "#" | grep "script_dir"  | awk -F "=" '{print $2}' | sed "s/\"//g")
 
-		cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sed "s/\"//g" | sed "s/'//g" | sort -u >/tmp/tg_purify.log
-		grep_keywords=$(cat $dir_file/variable_name.txt |awk '{print $1}' | sed "s/$/|/g"| sed ':t;N;s/\n//;b t' | sed "s/|$//")
-
-		extract_log=$(grep -E "$grep_keywords" /tmp/tg_purify.log)
-
-		#首次运行需要创建oldfile
-		if [ -f "$tg_oldfile" ];then
-			echo ""
-		else
-			echo "没有发现ｏｌｄｆｉｌｅ"
-			echo "$extract_log" > $tg_oldfile
-		fi
-
-		#.*表示多个任意字符
-		#新文件与旧文件对比
-		echo "$extract_log" > $tg_newfile
-
-		grep -vwf $tg_oldfile $tg_newfile > $tg_add
-
-		if [ $(cat $tg_add | wc -l) = "0" ];then
-			Add_if="0"
-		else
-			echo "$extract_log" > $tg_oldfile
-			for i in `cat $tg_add`
-			do
-				variable_script_name=$(echo "$i"| awk -F "=" '{print $1}')
-				variable_script_num=$(echo "$i"| awk -F "=" '{print $2}')
-
-				js_name=$(grep $variable_script_name $dir_file/tg/variable_name.txt)
-				js_name1=$(echo "$js_name" | awk '{print $2}')
-				if [ -z "$variable_script_num" ];then
-					echo "$variable_script_name值：为空不操作"
-				elif [ "$variable_script_num" == "xxxxxxx" ];then
-					echo "$variable_script_name值：为xxxxxxx不操作"
-				else
-					#常规变量
-					export jd_cjhy_activityUrl="https://cjhydz-isv.isvjcloud.com"
-					export jd_zdjr_activityUrl="https://lzkjdz-isv.isvjcloud.com"
-					export LUCK_DRAW_NUM=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)
-
-					case "$variable_script_name" in
-					DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|M_WX_LUCK_DRAW_UR)
-						export $i
-						cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1　>>/tmp/tg_run_script.log
-						$node ${script_dir}/$js_name1 &
-					;;
-					M_WX_ADD_CART_URL)
-						export $i
-						cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1 >>/tmp/tg_run_script.log
-						$node ${script_dir}/$js_name1 &
-					;;
-					*)
-						echo "暂不支持"
-					;;
-					esac
-					sleep 3 && ps -ww | grep "${js_name1}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
-					ListJs_add="$i"
-					Add=$(echo "$ListJs_add$wrap$wrap_tab")
-					Add_if="1"
-					echo >/$dir_file/tg/tg_del.txt
-					ListJs_drop="0"
-					tg_script_run="1"
-					sendMessage
-				fi
-			done
-			#休息60秒以后重新执行
-			sleep 60
-			tg
-		fi
-
-	else
-		echo ""
-	fi
 
 }
 
