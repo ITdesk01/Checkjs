@@ -1162,7 +1162,6 @@ clear
 }
 
 tg() {
-set -x
 cat > $dir_file/variable_name.txt <<EOF
 #yyds
 M_WX_ADD_CART_URL		jd_wx_addCart.js
