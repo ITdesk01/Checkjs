@@ -659,7 +659,6 @@ sendMessage() {
 		weixin_content=$(echo "$weixin_content_sort<br><b>$by" | sed "s/https\:<hr\\/><\\/b>/https:/g" | sed "s/#### /<br><b>/g")
 		weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
 		title="${Script_name}${num}${auto_run}${ps_num}"
-		read a
 		push_menu
 	fi 
 	
@@ -1150,11 +1149,18 @@ source /etc/profile
 
 tg() {
 cat > $dir_file/variable_name.txt <<EOF
-DPLHTY			jd_opencardDPLHTY.js
-M_WX_ADD_CART_URL	jd_wx_addCart.js
-M_WX_LUCK_DRAW_UR	jd_luck_draw.js		#L="活动链接"
-jd_cjhy_activityId	jd_cjzdgf.js
-jd_zdjr_activityId	jd_zdjr.js
+#yyds
+M_WX_ADD_CART_URL		jd_wx_addCart.js
+M_WX_LUCK_DRAW_UR		jd_luck_draw.js		#L="活动链接"
+
+#KingRan
+LUCK_DRAW_URL			jd_luck_draw.js
+DPLHTY				jd_opencardDPLHTY.js
+jd_cjhy_activityId		jd_cjzdgf.js
+jd_zdjr_activityId		jd_zdjr.js
+jd_wxShareActivity_activityId	jd_wxShareActivity.js
+jd_wxgame_activityId		jd_wxgame.js
+jd_drawCenter_activityId	jd_drawCenter.js
 EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
@@ -1200,7 +1206,7 @@ EOF
 					Add_if="0"
 				else
 					echo "$extract_log" > $tg_oldfile
-					for i in `cat $tg_add`
+					for i in `cat $tg_add|sed "s/#/\n#/g"| grep -v "#"`
 					do
 						variable_script_name=$(echo "$i"| awk -F "=" '{print $1}')
 						variable_script_num=$(echo "$i"| awk -F "=" '{print $2}')
@@ -1215,15 +1221,31 @@ EOF
 							#常规变量
 							export jd_cjhy_activityUrl="https://cjhydz-isv.isvjcloud.com"
 							export jd_zdjr_activityUrl="https://lzkjdz-isv.isvjcloud.com"
-							export LUCK_DRAW_NUM=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)
+							#脚本名：jd_luck_draw.js
+							#LUCK_DRAW_URL // 活动链接
+							#LUCK_DRAW_OPENCARD // 是否开卡，默认不开卡
+							export LUCK_DRAW_NUM=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l) #运行账号数量，默认运行前7
+							export LUCK_DRAW_NOTIFY="true" #是否推送通知，默认不推送
+
+							#脚本名：jd_wxShareActivity.js
+							#jd_wxShareActivity_activityId // 活动id
+							export jd_wxShareActivity_helpnum="10" #// 需要助力的账号数量
+
+							#脚本名：jd_wxgame.js
+							#jd_wxgame_activityId // 活动id
+							export jd_wxgame_addCart="true" #// 是否做加购任务，默认不做
+
+							#脚本名：jd_drawCenter.js
+							#jd_drawCenter_activityId // 活动id
+							export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 
 							case "$variable_script_name" in
-							DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|M_WX_LUCK_DRAW_UR)
+							LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1　
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 							;;
-							M_WX_ADD_CART_URL)
+							M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_UR)
 								export $i
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log &
@@ -1232,7 +1254,6 @@ EOF
 								echo "暂不支持"
 							;;
 							esac
-							set -x
 							sleep 3 && ps -ww | grep "${js_name1}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >/tmp/run_script_ps.log
 							ListJs_add="$i"
 							echo "$ListJs_add$wrap$wrap_tab$wrap$wrap_tab运行日志可以查询:/tmp/tg_run_script.log$wrap$wrap_tab" >/tmp/tg_tmp.txt
