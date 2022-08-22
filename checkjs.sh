@@ -1162,6 +1162,7 @@ clear
 }
 
 tg() {
+set -x
 cat > $dir_file/variable_name.txt <<EOF
 #yyds
 M_WX_ADD_CART_URL		jd_wx_addCart.js
@@ -1218,6 +1219,7 @@ EOF
 
 				if [ $(cat $tg_add | wc -l) = "0" ];then
 					Add_if="0"
+					echo -e "$green暂时未发现新变量，暂时不做推送$white"
 				else
 					for i in `cat $tg_add|sed "s/#/\n#/g"| grep -v "#"`
 					do
@@ -1280,14 +1282,16 @@ EOF
 							sendMessage
 						fi
 					done
+
 					echo "$extract_log" > $tg_oldfile
+
 					#休息60秒以后重新执行
 					#sleep 60
 					#tg
 				fi
 
 			else
-				echo -e "$green暂时未发现新变量，暂时不做推送$white"
+				echo ""
 			fi
 		else
 			if [ ! -d $dir_file/tg ];then
