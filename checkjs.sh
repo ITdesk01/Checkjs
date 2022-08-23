@@ -1201,6 +1201,8 @@ EOF
 
 				extract_log=$(grep -E "$grep_keywords" /tmp/tg_purify.log)
 
+				echo -e "\n$yellow本次变量有以下$white"
+				echo -e "$extract_log\n"
 				#首次运行需要创建oldfile
 				if [ -f "$tg_oldfile" ];then
 					echo ""
