@@ -20,6 +20,7 @@ else:
 	print ('请设置API_HASH值，export API_HASH="xxx"\n获取地址参考https://www.jianshu.com/p/3d047c7516cf')
 	sys.exit(0)
 
+Note=open('tg.log',mode='w')
 name = 'test'
 channel = ['KingRan521', 'fdd_JSB']
 
@@ -30,5 +31,7 @@ with TelegramClient(name, api_id, api_hash) as client:
 		channel_id= client.get_peer_id(i)
 		print ('当前监控频道:',i)
 		print ('当前监控频道ID:',channel_id)
-		msg = client.get_messages(channel_id,limit=20)
+		msg = client.get_messages(channel_id,limit=10)
 		print (msg)
+		Note.write(str(msg))
+		print ('\n\n文件写入到tg.log')

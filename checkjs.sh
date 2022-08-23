@@ -1187,7 +1187,7 @@ EOF
 
 	if [ "$tg_if" == "yes" ];then
 		if [ -f $dir_file/tg/tg.py ] && [ ! "$docker_id" == "" ];then
-			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py" >/$dir_file/tg/tg.log
+			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
 			cat  /$dir_file/tg/tg.log
 
 			#开始检测变量
@@ -1259,12 +1259,14 @@ EOF
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
+								echo "开始运行${script_dir}/$js_name1"
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 							;;
 							M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_UR)
 								export $i
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
+								echo "开始运行${script_dir}/$js_name1"
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log &
 							;;
 							*)
