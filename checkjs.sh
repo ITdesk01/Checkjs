@@ -1200,7 +1200,7 @@ EOF
 				cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sed "s/\"//g" | sed "s/'//g" | sort -u >/tmp/tg_purify.log
 				grep_keywords=$(cat $dir_file/variable_name.txt|sed "s/#/\n#/g"| grep -v "#"|awk '{print $1}' |sed '/^$/d'| sed "s/$/|/g"| sed ':t;N;s/\n//;b t'| sed "s/|$//")
 
-				extract_log=$(grep -E "$grep_keywords" /tmp/tg_purify.log)
+				extract_log=$(grep -Eo "$grep_keywords" /tmp/tg_purify.log)
 
 				echo -e "\n$yellow本次变量有以下$white"
 				echo -e "$extract_log\n"
