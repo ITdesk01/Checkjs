@@ -1187,6 +1187,7 @@ EOF
 
 	if [ "$tg_if" == "yes" ];then
 		if [ -f $dir_file/tg/tg.py ] && [ ! "$docker_id" == "" ];then
+			cp $dir_file/tg.py $dir_file/tg/tg.py
 			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
 
 			#开始检测变量
