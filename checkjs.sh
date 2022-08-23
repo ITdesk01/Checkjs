@@ -1165,7 +1165,6 @@ tg() {
 cat > $dir_file/variable_name.txt <<EOF
 #yyds
 M_WX_ADD_CART_URL		jd_wx_addCart.js
-M_WX_LUCK_DRAW_UR		jd_luck_draw.js		#L="活动链接"
 
 #KingRan
 LUCK_DRAW_URL			jd_luck_draw.js
@@ -1175,6 +1174,7 @@ jd_zdjr_activityId		jd_zdjr.js
 jd_wxShareActivity_activityId	jd_wxShareActivity.js
 jd_wxgame_activityId		jd_wxgame.js
 jd_drawCenter_activityId	jd_drawCenter.js
+M_WX_LUCK_DRAW_URL		jd_luck_draw.js		#L="活动链接"
 EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
@@ -1257,30 +1257,32 @@ EOF
 							export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 
 							case "$variable_script_name" in
-							LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId)
+							LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|M_WX_LUCK_DRAW_URL)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								echo "开始运行${script_dir}/$js_name1"
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
+								Add_if="1"
 							;;
-							M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_UR)
+							M_WX_ADD_CART_URL)
 								export $i
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								echo "开始运行${script_dir}/$js_name1"
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log &
+								Add_if="1"
 							;;
 							*)
 								echo "暂不支持"
+								Add_if="0"
 							;;
 							esac
 							sleep 3 && ps -ww | grep "${js_name1}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >/tmp/run_script_ps.log
-							ListJs_add="$i"
-							echo "$ListJs_add$wrap$wrap_tab$wrap$wrap_tab运行日志可以查询:/tmp/tg_run_script.log$wrap$wrap_tab" >/tmp/tg_tmp.txt
+							echo "$i$wrap$wrap_tab$wrap$wrap_tab运行日志可以查询:/tmp/tg_run_script.log$wrap$wrap_tab" >/tmp/tg_tmp.txt
+							ListJs_add="/tmp/tg_tmp.txt"
 							Add=$(cat /tmp/tg_tmp.txt)
 
-							Add_if="1"
 							echo >/$dir_file/tg/tg_del.txt
 							ListJs_drop="/$dir_file/tg/tg_del.txt"
 
