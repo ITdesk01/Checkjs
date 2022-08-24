@@ -1307,8 +1307,8 @@ EOF
 								Add_if="1"
 							;;
 							*)
-								echo "暂不支持"
-								Add_if="0"
+								i="$i暂不支持这个变量"
+								Add_if="1"
 							;;
 							esac
 							sleep 3 && ps -ww | grep "${js_name1}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >/tmp/run_script_ps.log
