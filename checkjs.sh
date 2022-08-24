@@ -871,7 +871,7 @@ description_if() {
 }
 
 task() {
-	cron_version="3.0"
+	cron_version="3.1"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -887,6 +887,7 @@ cat >>/etc/crontabs/root <<EOF
 #**********这里是Checkjs的定时任务$cron_version版本**********#102#
 */5 * * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
 45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1 #102#
+45 23 * * * $dir_file/checkjs.sh rm_log 2>&1 #102#
 ###################请将其他定时任务放到底下#########102#
 EOF
 /etc/init.d/cron restart
@@ -1175,6 +1176,7 @@ cat > $dir_file/tg/variable_name.txt <<EOF
 #yyds
 M_WX_ADD_CART_URL		jd_wx_addCart.js
 M_WX_LUCK_DRAW_URL		jd_wx_luckDraw.js		#L="活动链接"
+SHOP_VENDER_ID			jd_card.js
 
 #KingRan
 LUCK_DRAW_URL			jd_luck_draw.js
@@ -1185,6 +1187,9 @@ jd_wxShareActivity_activityId	jd_wxShareActivity.js
 jd_wxgame_activityId		jd_wxgame.js
 jd_drawCenter_activityId	jd_drawCenter.js
 JD_Lottery			jd_lottery.js
+PKC_TXGZYL			jd_txgzyl.js
+VENDER_ID			jd_OpenCard_Force.js
+M_FOLLOW_SHOP_ARGV		jd_follow.js
 EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
@@ -1283,7 +1288,7 @@ EOF
 							export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 
 							case "$variable_script_name" in
-							LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
+							M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
@@ -1292,7 +1297,7 @@ EOF
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 								Add_if="1"
 							;;
-							M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
+							SHOP_VENDER_ID|M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
 								export $i
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
