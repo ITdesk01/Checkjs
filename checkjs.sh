@@ -867,7 +867,7 @@ description_if() {
 }
 
 task() {
-	cron_version="2.9"
+	cron_version="3.0"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -883,7 +883,6 @@ cat >>/etc/crontabs/root <<EOF
 #**********这里是Checkjs的定时任务$cron_version版本**********#102#
 */5 * * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
 45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1 #102#
-*/1 * * * * $dir_file/checkjs.sh tg >/tmp/checkjs_tg.log 2>&1 #102#
 ###################请将其他定时任务放到底下#########102#
 EOF
 /etc/init.d/cron restart
@@ -1053,13 +1052,16 @@ run_script() {
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
 				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
-					auto_run="(个别自动运行)"
-					cp ${File_path}/${i} ${script_dir}/${i}
-					echo "${i}(个别自动运行),当前时间`date`" >>/tmp/run_script.log
-					$node ${script_dir}/${i} >>/tmp/run_script.log &
-					sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
-				else
-					echo
+					ps_gua=$(ps -ww | grep "jd_opencard" | grep -v grep | wc -l)
+					if [ "$ps_gua" -gt "1" ] && [ `echo "${script_ifname}" | grep -o "gua_opencard"` == "gua_opencard" ];then
+						auto_run="(KR的脚本已经在跑，gua先不跑)"
+					else
+						auto_run="(个别自动运行)"
+						cp ${File_path}/${i} ${script_dir}/${i}
+						echo "${i}(个别自动运行),当前时间`date`" >>/tmp/run_script.log
+						$node ${script_dir}/${i} >>/tmp/run_script.log &
+						sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
+					fi
 				fi
 			done
 		else
@@ -1067,13 +1069,16 @@ run_script() {
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
 				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
-					auto_run="(个别自动运行)"
-					cp ${File_path}/${i} ${script_dir}/${i}
-					echo "${i}(个别自动运行),当前时间`date`" >>/tmp/run_script.log
-					$node ${script_dir}/${i} >>/tmp/run_script.log &
-					sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
-				else
-					echo
+					ps_gua=$(ps -ww | grep "jd_opencard" | grep -v grep | wc -l)
+					if [ "$ps_gua" -gt "1" ] && [ `echo "${script_ifname}" | grep -o "gua_opencard"` == "gua_opencard" ];then
+						auto_run="(KR的脚本已经在跑，gua先不跑)"
+					else
+						auto_run="(个别自动运行)"
+						cp ${File_path}/${i} ${script_dir}/${i}
+						echo "${i}(个别自动运行),当前时间`date`" >>/tmp/run_script.log
+						$node ${script_dir}/${i} >>/tmp/run_script.log &
+						sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
+					fi
 				fi
 			done
 		fi
@@ -1102,7 +1107,7 @@ cat > $dir_file/config.txt <<EOF
 script_if="no"
 
 #脚本名判断(* 代表无论新增什么脚本都跑，你可以这里填关键字用，隔开，如填opencard,gua  这样脚本含有这两个字符的就会开始跑)
-script_ifname="jd_opencard"
+script_ifname="gua_opencard,jd_opencard"
 
 #脚本下载到那个路径并执行
 script_dir="/usr/share/jd_openwrt_script/JD_Script/js"
@@ -1165,6 +1170,7 @@ tg() {
 cat > $dir_file/variable_name.txt <<EOF
 #yyds
 M_WX_ADD_CART_URL		jd_wx_addCart.js
+M_WX_LUCK_DRAW_URL		jd_wx_luckDraw.js		#L="活动链接"
 
 #KingRan
 LUCK_DRAW_URL			jd_luck_draw.js
@@ -1174,7 +1180,6 @@ jd_zdjr_activityId		jd_zdjr.js
 jd_wxShareActivity_activityId	jd_wxShareActivity.js
 jd_wxgame_activityId		jd_wxgame.js
 jd_drawCenter_activityId	jd_drawCenter.js
-M_WX_LUCK_DRAW_URL		jd_luck_draw.js		#L="活动链接"
 EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
@@ -1272,19 +1277,21 @@ EOF
 							export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 
 							case "$variable_script_name" in
-							LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|M_WX_LUCK_DRAW_URL)
+							LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								echo "开始运行${script_dir}/$js_name1"
+								echo "变量为$i"
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 								Add_if="1"
 							;;
-							M_WX_ADD_CART_URL)
+							M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
 								export $i
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								echo "开始运行${script_dir}/$js_name1"
+								echo "变量为$i"
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log &
 								Add_if="1"
 							;;
@@ -1305,7 +1312,13 @@ EOF
 							sendMessage
 						fi
 					done
-
+					cron_tg=$(cat /etc/crontabs/root | grep "#tg0.1#" | wc -l)
+					if [ "$cron_tg" == "0"  ];then
+						sed -i '/checkjs.sh tg/d' /etc/crontabs/root >/dev/null 2>&1
+						echo "*/1 * * * * $dir_file/checkjs.sh tg >/tmp/checkjs_tg.log 2>&1 #tg0.1#" >>/etc/crontabs/root
+					else
+						echo ""
+					fi
 					echo "$extract_log" > $tg_oldfile
 
 				fi
