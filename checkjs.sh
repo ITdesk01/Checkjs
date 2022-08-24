@@ -1188,8 +1188,12 @@ EOF
 	if [ "$tg_if" == "yes" ];then
 		if [ -f $dir_file/tg/tg.py ] && [ ! "$docker_id" == "" ];then
 			cp $dir_file/tg.py $dir_file/tg/tg.py
-			docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
-
+			docker exec $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
+			if [[ $? -eq 0 ]]; then
+				echo -e "${green}tg.py运行成功$white"
+			else
+				echo -e "${red}tg.py运行失败$white"
+			fi
 			#开始检测变量
 			if [ -f $dir_file/tg/tg.log ];then
 				tg_oldfile="$dir_file/tg/tg_oldfile.txt"
@@ -1208,7 +1212,7 @@ EOF
 				if [ -f "$tg_oldfile" ];then
 					echo ""
 				else
-					echo "没有发现ｏｌｄｆｉｌｅ"
+					echo "没有发现tg_oldfile"
 					echo "$extract_log" > $tg_oldfile
 				fi
 
@@ -1217,6 +1221,17 @@ EOF
 				echo "$extract_log" > $tg_newfile
 
 				grep -vwf $tg_oldfile $tg_newfile > $tg_add
+				if [[ $? -eq 0 ]]; then
+					echo -e "${green}grep　tg_add运行成功$white"
+					echo "此时tg_oldfile变量数：`cat $tg_oldfile| wc -l`"
+					echo "此时tg_newfile变量数：`cat $tg_newfile| wc -l`"
+					echo "此时tg_add变量数：`cat $tg_add| wc -l`"
+				else
+					echo -e "${red}grep　tg_add运行失败$white"
+					echo "此时tg_oldfile变量数：`cat $tg_oldfile| wc -l`"
+					echo "此时tg_newfile变量数：`cat $tg_newfile| wc -l`"
+					echo "此时tg_add变量数：`cat $tg_add| wc -l`"
+				fi
 
 				if [ $(cat $tg_add | wc -l) = "0" ];then
 					Add_if="0"
@@ -1293,13 +1308,7 @@ EOF
 
 					echo "$extract_log" > $tg_oldfile
 
-					#休息60秒以后重新执行
-					#sleep 60
-					#tg
 				fi
-
-			else
-				echo ""
 			fi
 		else
 			if [ ! -d $dir_file/tg ];then
