@@ -800,16 +800,20 @@ fi
 
 }
 
+rm_log(){
+	#删掉当天的日志文件
+	for i in `ls /tmp/ | grep -E "log$|txt$" | grep -E "tg|checkjs"`
+	do
+		rm -rf /tmp/$i
+	done
+
+}
 
 update_script() {
 	echo -e "$green 开始更新checkjs，当前时间：$white`date "+%Y-%m-%d %H:%M"`"
 	cd $dir_file
 	branch="main"
 	git_pull
-
-	#删掉当天的日志文件
-	rm -rf /tmp/run_script.log
-	rm -rf /tmp/tg_run_script.log
 }
 
 
@@ -1369,7 +1373,7 @@ if [ -z $action1 ]; then
 	menu
 else
 	case "$action1" in
-			update_script|system_variable|menu|that_day_push|help|task_delete|ds_setup|tg)
+			update_script|system_variable|menu|that_day_push|help|task_delete|ds_setup|tg|rm_log)
 			$action1
 			;;
 			*)
