@@ -1180,6 +1180,7 @@ jd_zdjr_activityId		jd_zdjr.js
 jd_wxShareActivity_activityId	jd_wxShareActivity.js
 jd_wxgame_activityId		jd_wxgame.js
 jd_drawCenter_activityId	jd_drawCenter.js
+JD_Lottery			jd_lottery.js
 EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
