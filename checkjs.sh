@@ -1167,7 +1167,7 @@ clear
 }
 
 tg() {
-cat > $dir_file/variable_name.txt <<EOF
+cat > $dir_file/tg/variable_name.txt <<EOF
 #yyds
 M_WX_ADD_CART_URL		jd_wx_addCart.js
 M_WX_LUCK_DRAW_URL		jd_wx_luckDraw.js		#L="活动链接"
@@ -1251,6 +1251,7 @@ EOF
 
 						js_name=$(grep $variable_script_name $dir_file/tg/variable_name.txt)
 						js_name1=$(echo "$js_name" | awk '{print $2}')
+
 						if [ -z "$variable_script_num" ];then
 							echo "$variable_script_name值：为空不操作"
 						elif [ `echo $variable_script_num| grep "xxxx" | wc -l` == "1" ];then
