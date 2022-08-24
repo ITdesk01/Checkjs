@@ -1312,6 +1312,8 @@ EOF
 							sendMessage
 						fi
 					done
+					echo "$extract_log" > $tg_oldfile
+				fi
 					cron_tg=$(cat /etc/crontabs/root | grep "#tg0.1#" | wc -l)
 					if [ "$cron_tg" == "0"  ];then
 						sed -i '/checkjs.sh tg/d' /etc/crontabs/root >/dev/null 2>&1
@@ -1319,9 +1321,6 @@ EOF
 					else
 						echo ""
 					fi
-					echo "$extract_log" > $tg_oldfile
-
-				fi
 			fi
 		else
 			if [ ! -d $dir_file/tg ];then
