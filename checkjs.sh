@@ -1058,7 +1058,7 @@ run_script() {
 			do
 				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
 					ps_gua=$(ps -ww | grep "gua_opencard" | grep -v grep | wc -l)
-					ps_kr=$(ps -ww | grep "jd_opencard" | grep -v grep | wc -l))
+					ps_kr=$(ps -ww | grep "jd_opencard" | grep -v grep | wc -l)
 					if [ "$ps_gua" -gt "1" ] && [ `echo "${script_ifname}" | grep -o "jd_opencard"` == "jd_opencard" ];then
 						auto_run="(gua的脚本已经在跑，kr先不跑)"
 					elif [ "$ps_kr" -gt "1" ] && [ `echo "${script_ifname}" | grep -o "gua_opencard"` == "gua_opencard" ];then
