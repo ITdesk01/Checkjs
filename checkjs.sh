@@ -1193,6 +1193,7 @@ cat > $dir_file/tg/variable_name.txt <<EOF
 M_WX_ADD_CART_URL		jd_wx_addCart.js
 M_WX_LUCK_DRAW_URL		jd_wx_luckDraw.js		#L="活动链接"
 SHOP_VENDER_ID			jd_card.js
+WXGAME_ACT_ID			jd_dadoudou.js
 
 #KingRan
 LUCK_DRAW_URL			jd_luck_draw.js
@@ -1208,6 +1209,11 @@ VENDER_ID			jd_OpenCard_Force.js
 M_FOLLOW_SHOP_ARGV		jd_follow.js
 yhyactivityId			jd_yqhy.py
 jd_wdz_activityId		jd_wdz.js
+computer_activityId		jd_computer.js
+comm_activityIDList		jd_joyjd_open.js
+jd_mhurlList			jd_mhtask.js
+wish_appIdArrList		jd_wish.js
+VENDER_ID			jd_OpenCard_Force.js
 EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
@@ -1306,7 +1312,7 @@ EOF
 							export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 
 							case "$variable_script_name" in
-							jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
+							VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
@@ -1324,7 +1330,7 @@ EOF
 								$python3 ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 								Add_if="1"
 							;;
-							SHOP_VENDER_ID|M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
+							WXGAME_ACT_ID|SHOP_VENDER_ID|M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
 								export $i
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
