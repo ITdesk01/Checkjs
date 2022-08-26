@@ -650,7 +650,7 @@ sendMessage() {
 
 		run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
 		if [ -z "$run_script_ps_num"];then
-			ps_num=""
+			ps_num="进程：没有发现，请手动跑测试"
 		else
 			ps_num="进程：$run_script_ps_num"
 		fi
