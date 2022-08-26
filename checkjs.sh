@@ -1065,8 +1065,10 @@ run_script() {
 
 					if [ "$ps_gua" -ge "1" ] && [ "$grep_kr" == "jd_opencard" ];then
 						auto_run="(gua的脚本已经在跑，kr的$i先不跑)"
+						echo "没有进程"　>/tmp/run_script_ps.log
 					elif [ "$ps_kr" -ge "1" ] && [ "$grep_gua" == "gua_opencard" ];then
 						auto_run="(kr的脚本已经在跑，gua的$i先不跑)"
+						echo "没有进程"　>/tmp/run_script_ps.log
 					else
 						auto_run="(个别自动运行)"
 						cp ${File_path}/${i} ${script_dir}/${i}
