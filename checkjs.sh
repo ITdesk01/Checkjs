@@ -1040,6 +1040,7 @@ run_script() {
 		rm -rf /tmp/run_script_ps.log
 		#复制依赖文件
 		cp -r $checkjs_file/KingRan_Script/function $script_dir
+		cp $checkjs_file/KingRan_Script/JS_USER_AGENTS.js $script_dir
 
 		if [ "$script_ifname" == "" ];then
 			echo "script_ifname为空"
