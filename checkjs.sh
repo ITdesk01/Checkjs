@@ -1206,6 +1206,8 @@ JD_Lottery			jd_lottery.js
 PKC_TXGZYL			jd_txgzyl.js
 VENDER_ID			jd_OpenCard_Force.js
 M_FOLLOW_SHOP_ARGV		jd_follow.js
+yhyactivityId			jd_yqhy.py
+jd_wdz_activityId		jd_wdz.js
 EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
@@ -1233,7 +1235,7 @@ EOF
 				script_dir=$(cat $dir_file/config.txt | grep -v "#" | grep "script_dir"  | awk -F "=" '{print $2}' | sed "s/\"//g")
 
 				cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sed "s/\"//g" | sed "s/'//g" | sort -u >/tmp/tg_purify.log
-				grep_keywords=$(cat $dir_file/variable_name.txt|sed "s/#/\n#/g"| grep -v "#"|awk '{print $1}' |sed '/^$/d'| sed "s/$/|/g"| sed ':t;N;s/\n//;b t'| sed "s/|$//")
+				grep_keywords=$(cat $dir_file/tg/variable_name.txt|sed "s/#/\n#/g"| grep -v "#"|awk '{print $1}' |sed '/^$/d'| sed "s/$/|/g"| sed ':t;N;s/\n//;b t'| sed "s/|$//")
 
 				extract_log=$(grep -E "$grep_keywords" /tmp/tg_purify.log)
 
@@ -1304,13 +1306,22 @@ EOF
 							export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 
 							case "$variable_script_name" in
-							M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
+							jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								echo "开始运行${script_dir}/$js_name1"
 								echo "变量为$i"
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
+								Add_if="1"
+							;;
+							yhyactivityId)
+								export $i
+								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
+								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
+								echo "开始运行${script_dir}/$js_name1"
+								echo "变量为$i"
+								$python3 ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 								Add_if="1"
 							;;
 							SHOP_VENDER_ID|M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
