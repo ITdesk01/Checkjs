@@ -1052,17 +1052,21 @@ run_script() {
 				$node ${script_dir}/${i} >>/tmp/run_script.log &
 				sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
 			done
-		elif [ `echo ${script_ifname} | grep -o "," |sort -u | wc -l` == "1" ];then
+		elif [ `echo ${script_ifname} | grep -o "|" |sort -u | wc -l` == "1" ];then
 			url=$(echo $url_test | sed "s/README.md//g")
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
 				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
 					ps_gua=$(ps -ww | grep "gua_opencard" | grep -v grep | wc -l)
 					ps_kr=$(ps -ww | grep "jd_opencard" | grep -v grep | wc -l)
-					if [ "$ps_gua" -gt "1" ] && [ `echo "${script_ifname}" | grep -o "jd_opencard"` == "jd_opencard" ];then
-						auto_run="(gua的脚本已经在跑，kr先不跑)"
-					elif [ "$ps_kr" -gt "1" ] && [ `echo "${script_ifname}" | grep -o "gua_opencard"` == "gua_opencard" ];then
-						auto_run="(kr的脚本已经在跑，gua先不跑)"
+
+					grep_gua=$(echo $i | grep -o "gua_opencard")
+					grep_kr=$(echo $i | grep -o "jd_opencard")
+
+					if [ "$ps_gua" -ge "1" ] && [ "$grep_kr" == "jd_opencard" ];then
+						auto_run="(gua的脚本已经在跑，kr的$i先不跑)"
+					elif [ "$ps_kr" -ge "1" ] && [ "$grep_gua" == "gua_opencard" ];then
+						auto_run="(kr的脚本已经在跑，gua的$i先不跑)"
 					else
 						auto_run="(个别自动运行)"
 						cp ${File_path}/${i} ${script_dir}/${i}
@@ -1077,9 +1081,16 @@ run_script() {
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
 				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
-					ps_gua=$(ps -ww | grep "jd_opencard" | grep -v grep | wc -l)
-					if [ "$ps_gua" -gt "1" ] && [ `echo "${script_ifname}" | grep -o "gua_opencard"` == "gua_opencard" ];then
-						auto_run="(KR的脚本已经在跑，gua先不跑)"
+					ps_gua=$(ps -ww | grep "gua_opencard" | grep -v grep | wc -l)
+					ps_kr=$(ps -ww | grep "jd_opencard" | grep -v grep | wc -l)
+
+					grep_gua=$(echo $i | grep -o "gua_opencard")
+					grep_kr=$(echo $i | grep -o "jd_opencard")
+
+					if [ "$ps_gua" -ge "1" ] && [ "$grep_kr" == "jd_opencard" ];then
+						auto_run="(gua的脚本已经在跑，kr的$i先不跑)"
+					elif [ "$ps_kr" -ge "1" ] && [ "$grep_gua" == "gua_opencard" ];then
+						auto_run="(kr的脚本已经在跑，gua的$i先不跑)"
 					else
 						auto_run="(个别自动运行)"
 						cp ${File_path}/${i} ${script_dir}/${i}
