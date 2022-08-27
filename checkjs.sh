@@ -1197,6 +1197,7 @@ SHOP_VENDER_ID			jd_card.js
 WXGAME_ACT_ID			jd_dadoudou.js
 jd_cjhy_wxCollectionActivityId	jd_cjhy_wxCollectionActivity.js
 ACTIVITY_ID			jd_wxCollectionActivity2.js
+prodevactCode			jd_prodev.js
 
 #KingRan
 LUCK_DRAW_URL			jd_luck_draw.js
@@ -1341,7 +1342,7 @@ EOF
 								$python3 ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 								Add_if="1"
 							;;
-							ACTIVITY_ID|jd_cjhy_wxCollectionActivityId|WXGAME_ACT_ID|SHOP_VENDER_ID|M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
+							prodevactCode|ACTIVITY_ID|jd_cjhy_wxCollectionActivityId|WXGAME_ACT_ID|SHOP_VENDER_ID|M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
 								export $i
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
