@@ -648,12 +648,6 @@ sendMessage() {
 			run_script_if
 		fi
 
-		run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
-		if [ -z "$run_script_ps_num"];then
-			ps_num="进程：没有发现，请手动跑测试"
-		else
-			ps_num="进程：$run_script_ps_num"
-		fi
 		server_content=$(echo "$content${by}" | sed "s/$wrap_tab####/####/g" )
 		weixin_content_sort=$(echo  "$content" |sed "s/####/<hr\/><b>/g" |sed "s/$wrap$wrap_tab/<br>/g" |sed "s/$wrap/<br>/g" |sed "s/:/:<hr\/><\/b>/g"  )
 		weixin_content=$(echo "$weixin_content_sort<br><b>$by" | sed "s/https\:<hr\\/><\\/b>/https:/g" | sed "s/#### /<br><b>/g")
@@ -1105,6 +1099,12 @@ run_script() {
 			done
 		fi
 
+		run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
+		if [ -z "$run_script_ps_num"];then
+			ps_num="进程：没有发现，请手动跑测试"
+		else
+			ps_num="进程：$run_script_ps_num"
+		fi
 }
 
 checkjs_config_if() {
@@ -1363,7 +1363,13 @@ EOF
 
 							echo >/$dir_file/tg/tg_del.txt
 							ListJs_drop="/$dir_file/tg/tg_del.txt"
+							run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
 
+							if [ -z "$run_script_ps_num"];then
+								ps_num="进程：没有发现，请手动跑测试"
+							else
+								ps_num="进程：$run_script_ps_num"
+							fi
 							tg_script_run="1"
 							sendMessage
 						fi
