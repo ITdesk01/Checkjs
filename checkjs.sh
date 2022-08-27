@@ -1108,7 +1108,7 @@ run_script() {
 }
 
 checkjs_config_if() {
-	checkjs_config_version="1.2"
+	checkjs_config_version="1.3"
 	if [ ! -f $dir_file/config.txt ];then
 		checkjs_config
 	fi
@@ -1141,10 +1141,10 @@ script_date="*"
 #tg监控频道变量(也可以用export tg_if="yes"写到全局变量)
 tg_if="no"
 
-#tg_api(必填，不然无法启动监控，获取地址参考https://www.jianshu.com/p/3d047c7516cf')
+#tg_api(必填，不然无法启动监控，获取地址参考https://www.jianshu.com/p/3d047c7516cf')(也可以用export tg_api_id=""写到全局变量)
 tg_api_id=""
 
-#tg_hash(必填，不然无法启动监控，获取地址参考https://www.jianshu.com/p/3d047c7516cf')
+#tg_hash(必填，不然无法启动监控，获取地址参考https://www.jianshu.com/p/3d047c7516cf')(也可以用export tg_api_hash=""写到全局变量)
 tg_api_hash=""
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1220,11 +1220,17 @@ SHARE_ACTIVITY_ID		jd_share.js
 EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
-	tg_api_id=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_id" | awk -F "=" '{print $2}' | sed "s/\"//g")
-	tg_api_hash=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_hash" | awk -F "=" '{print $2}' | sed "s/\"//g")
 
 	if [ -z "$tg_if" ];then
 		tg_if=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_if" | awk -F "=" '{print $2}' | sed "s/\"//g")
+	fi
+
+	if [ -z "$tg_api_id" ];then
+		tg_api_id=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_id" | awk -F "=" '{print $2}' | sed "s/\"//g")
+	fi
+
+	if [ -z "$tg_api_hash" ];then
+		tg_api_hash=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_hash" | awk -F "=" '{print $2}' | sed "s/\"//g")
 	fi
 
 	if [ "$tg_if" == "yes" ];then
