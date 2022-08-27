@@ -1108,7 +1108,7 @@ run_script() {
 }
 
 checkjs_config_if() {
-	checkjs_config_version="1.1"
+	checkjs_config_version="1.2"
 	if [ ! -f $dir_file/config.txt ];then
 		checkjs_config
 	fi
