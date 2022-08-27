@@ -1216,7 +1216,7 @@ jd_mhurlList			jd_mhtask.js
 wish_appIdArrList		jd_wish.js
 VENDER_ID			jd_OpenCard_Force.js
 jd_wxSecond_activityId		jd_wxSecond.js
-SHARE_ACTIVITY_ID		jd_wxShareActivity.js
+SHARE_ACTIVITY_ID		jd_share.js
 EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
@@ -1315,7 +1315,7 @@ EOF
 							export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 
 							case "$variable_script_name" in
-							SHARE_ACTIVITY_ID|jd_wxSecond_activityId|VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
+							jd_wxSecond_activityId|VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
@@ -1336,6 +1336,15 @@ EOF
 							WXGAME_ACT_ID|SHOP_VENDER_ID|M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
 								export $i
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
+								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
+								echo "开始运行${script_dir}/$js_name1"
+								echo "变量为$i"
+								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log &
+								Add_if="1"
+							;;
+							SHARE_ACTIVITY_ID)
+								export $i
+								cp $dir_file/js/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								echo "开始运行${script_dir}/$js_name1"
 								echo "变量为$i"
