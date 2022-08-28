@@ -1041,6 +1041,12 @@ run_script() {
 				echo "${i}(全部自动运行),当前时间`date`" >>/tmp/run_script.log
 				$node ${script_dir}/${i} >>/tmp/run_script.log &
 				sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
+				run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
+				if [ -z "$run_script_ps_num"];then
+					ps_num="进程：没有发现，请手动跑测试"
+				else
+					ps_num="进程：$run_script_ps_num"
+				fi
 			done
 		elif [ `echo ${script_ifname} | grep -o "|" |sort -u | wc -l` == "1" ];then
 			url=$(echo $url_test | sed "s/README.md//g")
@@ -1065,6 +1071,12 @@ run_script() {
 						echo "${i}(个别自动运行),当前时间`date`" >>/tmp/run_script.log
 						$node ${script_dir}/${i} >>/tmp/run_script.log &
 						sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
+						run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
+						if [ -z "$run_script_ps_num"];then
+							ps_num="进程：没有发现，请手动跑测试"
+						else
+							ps_num="进程：$run_script_ps_num"
+						fi
 					fi
 				fi
 			done
@@ -1089,17 +1101,17 @@ run_script() {
 						echo "${i}(个别自动运行),当前时间`date`" >>/tmp/run_script.log
 						$node ${script_dir}/${i} >>/tmp/run_script.log &
 						sleep 3 && ps -ww | grep "${i}" |grep -v grep | awk '{print $1}' |sed "s/$/,/g" >>/tmp/run_script_ps.log
+						run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
+						if [ -z "$run_script_ps_num"];then
+							ps_num="进程：没有发现，请手动跑测试"
+						else
+							ps_num="进程：$run_script_ps_num"
+						fi
 					fi
 				fi
 			done
 		fi
 
-		run_script_ps_num=$(cat /tmp/run_script_ps.log |sed ':t;N;s/\n//;b t')
-		if [ -z "$run_script_ps_num"];then
-			ps_num="进程：没有发现，请手动跑测试"
-		else
-			ps_num="进程：$run_script_ps_num"
-		fi
 }
 
 checkjs_config_if() {
@@ -1474,7 +1486,7 @@ echo "-----------------------------变量获取---------------------------------
 	else
 		echo "tg_api_hash:$tg_api_hash"
 	fi
-echo "---------------------------------------------------------------------\n\n"
+echo "---------------------------------------------------------------------/n/n"
 #-------------------------------------------------------------------------------------------------------------------------------------------#
 
 
