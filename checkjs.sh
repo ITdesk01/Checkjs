@@ -865,7 +865,7 @@ description_if() {
 }
 
 task() {
-	cron_version="3.1"
+	cron_version="3.2"
 	if [ `grep -o "Checkjs的定时任务$cron_version" $cron_file |wc -l` == "0" ]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -879,7 +879,7 @@ task() {
 task_add() {
 cat >>/etc/crontabs/root <<EOF
 #**********这里是Checkjs的定时任务$cron_version版本**********#102#
-*/5 * * * * $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
+*/5 * * * * source /etc/profile && $dir_file/checkjs.sh >/tmp/checkjs.log 2>&1 #102#
 45 21 * * * $dir_file/checkjs.sh update_script  >/tmp/checkjs_update_script.log 2>&1 #102#
 45 23 * * * $dir_file/checkjs.sh rm_log 2>&1 #102#
 ###################请将其他定时任务放到底下#########102#
@@ -1368,10 +1368,10 @@ EOF
 					done
 					echo "$extract_log" > $tg_oldfile
 				fi
-					cron_tg=$(cat /etc/crontabs/root | grep "#tg0.1#" | wc -l)
+					cron_tg=$(cat /etc/crontabs/root | grep "#tg0.2#" | wc -l)
 					if [ "$cron_tg" == "0"  ];then
 						sed -i '/checkjs.sh tg/d' /etc/crontabs/root >/dev/null 2>&1
-						echo "*/1 * * * * $dir_file/checkjs.sh tg >/tmp/checkjs_tg.log 2>&1 #tg0.1#" >>/etc/crontabs/root
+						echo "*/1 * * * * source /etc/profile && $dir_file/checkjs.sh tg >/tmp/checkjs_tg.log 2>&1 #tg0.2#" >>/etc/crontabs/root
 					else
 						echo ""
 					fi
