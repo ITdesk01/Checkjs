@@ -987,11 +987,6 @@ help() {
 
 #判断是否自动运行新增脚本
 run_script_if() {
-	script_if=$(cat $dir_file/config.txt | grep -v "#" | grep "script_if="  | awk -F "=" '{print $2}' | sed "s/\"//g")
-	script_ifname=$(cat $dir_file/config.txt | grep -v "#" | grep "script_ifname" | awk -F "=" '{print $2}' | sed "s/\"//g" | sed "s/,/|/g")
-	script_dir=$(cat $dir_file/config.txt | grep -v "#" | grep "script_dir"  | awk -F "=" '{print $2}' | sed "s/\"//g")
-	script_date=$(cat $dir_file/config.txt | grep -v "#" | grep "script_date" | awk -F "=" '{print $2}' | sed "s/\"//g")
-
 	if [ "$script_if" == "no" ];then
 		echo ""
 	else
@@ -1224,18 +1219,6 @@ EOF
 
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
 
-	if [ -z "$tg_if" ];then
-		tg_if=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_if" | awk -F "=" '{print $2}' | sed "s/\"//g")
-	fi
-
-	if [ -z "$tg_api_id" ];then
-		tg_api_id=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_id" | awk -F "=" '{print $2}' | sed "s/\"//g")
-	fi
-
-	if [ -z "$tg_api_hash" ];then
-		tg_api_hash=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_hash" | awk -F "=" '{print $2}' | sed "s/\"//g")
-	fi
-
 	if [ "$tg_if" == "yes" ];then
 		if [ -f $dir_file/tg/tg.py ] && [ ! "$docker_id" == "" ];then
 			cp $dir_file/tg.py $dir_file/tg/tg.py
@@ -1431,6 +1414,66 @@ EOF
 
 
 }
+
+#---------------------------------------------监控变量----------------------------------------------------------------------------------------#
+#开卡部分
+	if [ -z "$script_if" ];then
+		script_if=$(cat $dir_file/config.txt | grep -v "#" | grep "script_if="  | awk -F "=" '{print $2}' | sed "s/\"//g")
+		echo -e "${yellow}script_if系统变量找不到，查找config文件$white"
+		echo "script_if:$script_if"
+	else
+		echo "script_if:$script_if"
+	fi
+
+	if [ -z "$script_ifname" ];then
+		script_ifname=$(cat $dir_file/config.txt | grep -v "#" | grep "script_ifname" | awk -F "=" '{print $2}' | sed "s/\"//g" | sed "s/,/|/g")
+		echo -e "${yellow}script_ifname系统变量找不到，查找config文件$white"
+		echo "script_ifname:$script_ifname"
+	else
+		echo "script_ifname:$script_ifname"
+	fi
+
+	if [ -z "$script_dir" ];then
+		script_dir=$(cat $dir_file/config.txt | grep -v "#" | grep "script_dir"  | awk -F "=" '{print $2}' | sed "s/\"//g")
+		echo -e "${yellow}script_dir系统变量找不到，查找config文件$white"
+		echo "script_dir:$script_dir"
+	else
+		echo "script_dir:$script_dir"
+	fi
+
+	if [ -z "$script_date" ];then
+		script_date=$(cat $dir_file/config.txt | grep -v "#" | grep "script_date" | awk -F "=" '{print $2}' | sed "s/\"//g")
+		echo -e "${yellow}script_date系统变量找不到，查找config文件$white"
+		echo "script_date:$script_date"
+	else
+		echo "script_date:$script_date"
+	fi
+
+#tg部分
+	if [ -z "$tg_if" ];then
+		tg_if=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_if" | awk -F "=" '{print $2}' | sed "s/\"//g")
+		echo -e "${yellow}tg_if系统变量找不到，查找config文件$white"
+		echo "tg_if:$tg_if"
+	else
+		echo "tg_if:$tg_if"
+	fi
+
+	if [ -z "$tg_api_id" ];then
+		tg_api_id=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_id" | awk -F "=" '{print $2}' | sed "s/\"//g")
+		echo -e "${yellow}tg_api_id系统变量找不到，查找config文件$white"
+		echo "tg_api_id:$tg_api_id"
+	else
+		echo "tg_api_id:$tg_api_id"
+	fi
+
+	if [ -z "$tg_api_hash" ];then
+		tg_api_hash=$(cat $dir_file/config.txt | grep -v "#" | grep "tg_api_hash" | awk -F "=" '{print $2}' | sed "s/\"//g")
+		echo -e "${yellow}tg_api_hash系统变量找不到，查找config文件$white"
+		echo "tg_api_hash:$tg_api_hash"
+	else
+		echo "tg_api_hash:$tg_api_hash"
+	fi
+#-------------------------------------------------------------------------------------------------------------------------------------------#
 
 
 action1="$1"
