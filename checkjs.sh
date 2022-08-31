@@ -1239,6 +1239,7 @@ EOF
 				echo -e "${green}tg.py运行成功$white"
 			else
 				echo -e "${red}tg.py运行失败$white"
+				exit 0
 			fi
 			#开始检测变量
 			if [ -f $dir_file/tg/tg.log ];then
