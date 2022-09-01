@@ -1229,6 +1229,37 @@ jd_wxSecond_activityId		jd_wxSecond.js
 SHARE_ACTIVITY_ID		jd_share.js
 EOF
 
+#常规变量
+#jd_cjhy_wxCollectionActivity.js
+export jd_cjhy_wxCollectionActivity_num=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)   #执行前多少个号  不设置则默认执行前10个
+
+#jd_opencardDPLHTY.js
+export opencard_toShop="true"
+export opencard_draw="6" #次数
+export opencard_shop="6" #次数
+
+#jd_wxShareActivity.js
+export OWN_COOKIE_NUM=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)
+
+export jd_cjhy_activityUrl="https://cjhydz-isv.isvjcloud.com"
+export jd_zdjr_activityUrl="https://lzkjdz-isv.isvjcloud.com"
+#脚本名：jd_luck_draw.js
+#LUCK_DRAW_URL // 活动链接
+export LUCK_DRAW_OPENCARD="true"	#是否开卡，默认不开卡
+export LUCK_DRAW_NUM=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l) #运行账号数量，默认运行前7
+export LUCK_DRAW_NOTIFY="true" #是否推送通知，默认不推送
+
+#脚本名：jd_wxShareActivity.js
+#jd_wxShareActivity_activityId // 活动id
+export jd_wxShareActivity_helpnum=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l) #// 需要助力的账号数量
+#脚本名：jd_wxgame.js
+#jd_wxgame_activityId // 活动id
+export jd_wxgame_addCart="true" #// 是否做加购任务，默认不做
+
+#脚本名：jd_drawCenter.js
+#jd_drawCenter_activityId // 活动id
+export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
+
 	docker_id=$(docker ps | grep "tg:0.1" | awk '{print $1}')
 
 	if [ "$tg_if" == "yes" ];then
@@ -1298,27 +1329,6 @@ EOF
 						elif [ `echo $variable_script_num| grep "xxxx" | wc -l` == "1" ];then
 							echo "$variable_script_name值：为$variable_script_num不操作"
 						else
-							#常规变量
-							export jd_cjhy_activityUrl="https://cjhydz-isv.isvjcloud.com"
-							export jd_zdjr_activityUrl="https://lzkjdz-isv.isvjcloud.com"
-							#脚本名：jd_luck_draw.js
-							#LUCK_DRAW_URL // 活动链接
-							#LUCK_DRAW_OPENCARD // 是否开卡，默认不开卡
-							export LUCK_DRAW_NUM=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l) #运行账号数量，默认运行前7
-							export LUCK_DRAW_NOTIFY="true" #是否推送通知，默认不推送
-
-							#脚本名：jd_wxShareActivity.js
-							#jd_wxShareActivity_activityId // 活动id
-							export jd_wxShareActivity_helpnum="10" #// 需要助力的账号数量
-
-							#脚本名：jd_wxgame.js
-							#jd_wxgame_activityId // 活动id
-							export jd_wxgame_addCart="true" #// 是否做加购任务，默认不做
-
-							#脚本名：jd_drawCenter.js
-							#jd_drawCenter_activityId // 活动id
-							export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
-
 							case "$variable_script_name" in
 							jd_wxSecond_activityId|VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
 								export $i
