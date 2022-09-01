@@ -1350,6 +1350,7 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 							;;
 							prodevactCode|ACTIVITY_ID|jd_cjhy_wxCollectionActivityId|WXGAME_ACT_ID|SHOP_VENDER_ID|M_WX_ADD_CART_URL|M_WX_LUCK_DRAW_URL)
 								export $i
+								cp $dir_file/yyds_Script/magic.js ${script_dir}/magic.js
 								cp $dir_file/yyds_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								echo "开始运行${script_dir}/$js_name1"
