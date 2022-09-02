@@ -1264,6 +1264,14 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 
 	if [ "$tg_if" == "yes" ];then
 		if [ -f $dir_file/tg/tg.py ] && [ ! "$docker_id" == "" ];then
+			#检测网络
+			network_if=$(docker exec $docker_id /bin/bash -c "curl -I -m 2 -s -w "%{http_code}\n" -o /dev/null   www.google.com")
+			if [ "$network_if" == "200"];then
+				echo -e "$green你docker可以连接google，欢迎使用$white"
+			else
+				echo -e "$red你docker无法连接google,不做其他操作$white"
+					exit 0
+			fi
 			cp $dir_file/tg.py $dir_file/tg/tg.py
 			docker exec $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
 			if [[ $? -eq 0 ]]; then
