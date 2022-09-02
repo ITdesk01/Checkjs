@@ -49,11 +49,10 @@ sys_if() {
 	#检测网络
 	network_if=$(curl -I -m 2 -s -w "%{http_code}\n" -o /dev/null   www.google.com)
 	if [ "$network_if" == "200"];then
-		echo 
+		echo "你docker可以连接google，欢迎使用"
 	else
-		echo "网络异常：$network_if"
-		exit 0
-	fi	
+		echo "你docker无法连接google"
+	fi
 
 
 }
