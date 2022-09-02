@@ -1264,18 +1264,8 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 
 	if [ "$tg_if" == "yes" ];then
 		if [ -f $dir_file/tg/tg.py ] && [ ! "$docker_id" == "" ];then
-			#检测网络
-			network_if=$(docker exec $docker_id /bin/bash -c "curl -I -m 2 -s -w "%{http_code}\n" -o /dev/null   www.google.com")
-			if [ "$network_if" == "200" ];then
-				echo -e "$green你docker可以连接google，欢迎使用$white"
-			else
-				echo -e "$red你docker无法连接google,不做其他操作$white"
-				echo "你可以手动进入容器测试，看下容器是否能够ping 通google"
-				echo "进入容器命令：docker exec -it $docker_id /bin/bash"
-				exit 0
-			fi
 			cp $dir_file/tg.py $dir_file/tg/tg.py
-			docker exec $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
+			docker exec $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3.7 tg.py"
 			if [[ $? -eq 0 ]]; then
 				echo -e "${green}tg.py运行成功$white"
 			else
@@ -1436,19 +1426,9 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 				if [ -z $docker_id ];then
 					echo "没有找到docker_id，容器没有运行成功"
 				else
-					#检测网络
-					#docker exec -it $docker_id /bin/bash -c "if [[ `curl -I -m 2 -s -w "%{http_code}\n" -o /dev/null   www.google.com` == "200" ]];then echo "你docker可以连接google，欢迎使用" ;else echo "你docker无法连接google";fi"
-					network_if=$(docker exec $docker_id /bin/bash -c "curl -I -m 2 -s -w "%{http_code}\n" -o /dev/null   www.google.com")
-					if [ "$network_if" == "200" ];then
-						echo -e "$green你docker可以连接google，欢迎使用$white"
-					else
-						echo -e "$red你docker无法连接google,不做其他操作$white"
-						echo "你可以手动进入容器测试，看下容器是否能够ping 通google"
-						echo "进入容器命令：docker exec -it $docker_id /bin/bash"
-						exit 0
-					fi
+					clear
 					echo -e "$green>>请按下面提示输入tg手机号码:(+86XXX)$white"
-					docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
+					docker exec -it $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3.7 tg.py"
 					if [[ $? -eq 0 ]]; then
 						echo -e "$green>>安装成功,后面脚本会自己运行的$white"
 						echo >/$dir_file/tg/tg.log
