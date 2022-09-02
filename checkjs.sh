@@ -1270,7 +1270,9 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 				echo -e "$green你docker可以连接google，欢迎使用$white"
 			else
 				echo -e "$red你docker无法连接google,不做其他操作$white"
-					exit 0
+				echo "你可以手动进入容器测试，看下容器是否能够ping 通google"
+				echo "进入容器命令：docker-it exec $docker_id /bin/bash"
+				exit 0
 			fi
 			cp $dir_file/tg.py $dir_file/tg/tg.py
 			docker exec $docker_id /bin/bash -c "export API_ID=$tg_api_id && export API_HASH=$tg_api_hash && python3 tg.py"
@@ -1441,6 +1443,8 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 						echo -e "$green你docker可以连接google，欢迎使用$white"
 					else
 						echo -e "$red你docker无法连接google,不做其他操作$white"
+						echo "你可以手动进入容器测试，看下容器是否能够ping 通google"
+						echo "进入容器命令：docker-it exec $docker_id /bin/bash"
 						exit 0
 					fi
 					echo -e "$green>>请按下面提示输入tg手机号码:(+86XXX)$white"
