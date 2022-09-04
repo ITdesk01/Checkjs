@@ -1198,38 +1198,50 @@ clear
 tg() {
 cat > $dir_file/tg/variable_name.txt <<EOF
 #yyds
-M_WX_ADD_CART_URL		jd_wx_addCart.js
-SHOP_VENDER_ID			jd_card.js
-WXGAME_ACT_ID			jd_dadoudou.js
-jd_cjhy_wxCollectionActivityId	jd_cjhy_wxCollectionActivity.js
-ACTIVITY_ID			jd_wxCollectionActivity2.js
-prodevactCode			jd_prodev.js
+M_WX_ADD_CART_URL			jd_wx_addCart.js
+SHOP_VENDER_ID				jd_card.js
+WXGAME_ACT_ID				jd_dadoudou.js
+jd_cjhy_wxCollectionActivityId		jd_cjhy_wxCollectionActivity.js
+ACTIVITY_ID				jd_wxCollectionActivity2.js
+prodevactCode				jd_prodev.js
 
 #KingRan
-M_WX_LUCK_DRAW_URL		jd_luck_draw.js
-LUCK_DRAW_URL			jd_luck_draw.js
-DPLHTY				jd_opencardDPLHTY.js
-jd_cjhy_activityId		jd_cjzdgf.js
-jd_zdjr_activityId		jd_zdjr.js
-jd_wxShareActivity_activityId	jd_wxShareActivity.js
-jd_wxgame_activityId		jd_wxgame.js
-jd_drawCenter_activityId	jd_drawCenter.js
-JD_Lottery			jd_lottery.js
-PKC_TXGZYL			jd_txgzyl.js
-VENDER_ID			jd_OpenCard_Force.js
-M_FOLLOW_SHOP_ARGV		jd_follow.js
-yhyactivityId			jd_yqhy.py
-jd_wdz_activityId		jd_wdz.js
-computer_activityId		jd_computer.js
-comm_activityIDList		jd_joyjd_open.js
-jd_mhurlList			jd_mhtask.js
-wish_appIdArrList		jd_wish.js
-VENDER_ID			jd_OpenCard_Force.js
-jd_wxSecond_activityId		jd_wxSecond.js
-SHARE_ACTIVITY_ID		jd_share.js
+jd_cjwxShopFollowActivity_activityId	jd_cjwxShopFollowActivity.js
+jd_wxKnowledgeActivity_activityId	jd_wxKnowledgeActivity.js
+jd_cjwxKnowledgeActivity_activityId	jd_cjwxKnowledgeActivity.js
+M_WX_LUCK_DRAW_URL			jd_luck_draw.js
+LUCK_DRAW_URL				jd_luck_draw.js
+DPLHTY					jd_opencardDPLHTY.js
+jd_cjhy_activityId			jd_cjzdgf.js
+jd_zdjr_activityId			jd_zdjr.js
+jd_wxShareActivity_activityId		jd_wxShareActivity.js
+jd_wxgame_activityId			jd_wxgame.js
+jd_drawCenter_activityId		jd_drawCenter.js
+JD_Lottery				jd_lottery.js
+PKC_TXGZYL				jd_txgzyl.js
+VENDER_ID				jd_OpenCard_Force.js
+M_FOLLOW_SHOP_ARGV			jd_follow.js
+yhyactivityId				jd_yqhy.py
+jd_wdz_activityId			jd_wdz.js
+computer_activityId			jd_computer.js
+comm_activityIDList			jd_joyjd_open.js
+jd_mhurlList				jd_mhtask.js
+wish_appIdArrList			jd_wish.js
+VENDER_ID				jd_OpenCard_Force.js
+jd_wxSecond_activityId			jd_wxSecond.js
+SHARE_ACTIVITY_ID			jd_share.js
 EOF
 
 #常规变量
+#jd_cjwxShopFollowActivity.js
+export jd_cjwxShopFollowActivity_num=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)  #运行账号数量，默认运行前7
+
+#jd_wxKnowledgeActivity.js
+export jd_wxKnowledgeActivity_num=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)  #运行账号数量，默认运行前7
+
+#jd_cjwxKnowledgeActivity.js
+export jd_cjwxKnowledgeActivity_num=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)
+
 #jd_cjhy_wxCollectionActivity.js
 export jd_cjhy_wxCollectionActivity_num=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)   #执行前多少个号  不设置则默认执行前10个
 
@@ -1330,7 +1342,7 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 							echo "$variable_script_name值：为$variable_script_num不操作"
 						else
 							case "$variable_script_name" in
-							jd_wxSecond_activityId|VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
+							jd_cjwxShopFollowActivity_activityId|jd_wxKnowledgeActivity_activityId|jd_cjwxKnowledgeActivity_activityId|jd_wxSecond_activityId|VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
