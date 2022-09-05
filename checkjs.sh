@@ -1206,6 +1206,8 @@ ACTIVITY_ID				jd_wxCollectionActivity2.js
 prodevactCode				jd_prodev.js
 
 #KingRan
+jd_completeInfoActivity_activityId	jd_completeInfoActivity.js
+jd_completeInfoActivity_venderId	jd_completeInfoActivity.js
 jd_wxBuildActivity_activityId		jd_wxBuildActivity.js
 jd_cjwxShopFollowActivity_activityId	jd_cjwxShopFollowActivity.js
 jd_wxKnowledgeActivity_activityId	jd_wxKnowledgeActivity.js
@@ -1350,6 +1352,19 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 								echo "开始运行${script_dir}/$js_name1"
 								echo "变量为$i"
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
+								Add_if="1"
+							;;
+							jd_completeInfoActivity_activityId)
+								export $i
+								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
+								num=$(cat $tg_newfile | grep "jd_completeInfoActivity_venderId" |sed -n "1p")
+								export jd_completeInfoActivity_activityUrl="https://cjhydz-isv.isvjcloud.com"
+								export jd_completeInfoActivity_venderId="$num"
+
+								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
+								echo "开始运行${script_dir}/$js_name1"
+								echo "变量为$i"
+								$python3 ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 								Add_if="1"
 							;;
 							yhyactivityId)
