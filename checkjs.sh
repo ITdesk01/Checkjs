@@ -1447,6 +1447,7 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 			fi
 
 			if [ ! "$tg_api_id" == "" ] && [ ! "$tg_api_hash" == "" ];then
+				# python3.7 -m pip install telethon
 				echo -e "$green开始安装tg环境，请稍等，请保证你的docker 也能访问google，不然会失败$white"
 				docker run -d -i -t -v $dir_file/tg:/usr/share/tg --restart=always itdeskzhang/tg:0.1
 
