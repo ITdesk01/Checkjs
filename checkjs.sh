@@ -1236,6 +1236,9 @@ SHARE_ACTIVITY_ID			jd_share.js
 EOF
 
 #常规变量
+#jd_wxBuildActivity.js
+export jd_wxBuildActivity_openCard="true" #自动入会
+
 #jd_cjwxShopFollowActivity.js
 export jd_cjwxShopFollowActivity_num=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)  #运行账号数量，默认运行前7
 
