@@ -1298,8 +1298,8 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 				tg_add="$dir_file/tg/tg_add.txt"
 				script_dir=$(cat $dir_file/config.txt | grep -v "#" | grep "script_dir"  | awk -F "=" '{print $2}' | sed "s/\"//g")
 
-				cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sed "s/\"//g" | sed "s/'//g" | sort -u >/tmp/tg_purify.log
-				grep_keywords=$(cat $dir_file/tg/variable_name.txt|sed "s/#/\n#/g"| grep -v "#"|awk '{print $1}' |sed '/^$/d'| sed "s/$/|/g"| sed ':t;N;s/\n//;b t'| sed "s/|$//" |grep -v "=活动")
+				cat $dir_file/tg/tg.log | sed "s/,/\n/g"| sed "s/\\\n/\n/g" | grep "export"| sed 's/[[:space:]]//g' |awk -F "export" '{print $2}' | sed "s/\"//g" | sed "s/'//g" |grep -v "=活动" | sort -u >/tmp/tg_purify.log
+				grep_keywords=$(cat $dir_file/tg/variable_name.txt|sed "s/#/\n#/g"| grep -v "#"|awk '{print $1}' |sed '/^$/d'| sed "s/$/|/g"| sed ':t;N;s/\n//;b t'| sed "s/|$//")
 
 				extract_log=$(grep -E "$grep_keywords" /tmp/tg_purify.log)
 
