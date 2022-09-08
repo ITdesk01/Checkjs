@@ -1366,6 +1366,10 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 							;;
 							yhyauthorCode)
 								export $i
+								export yhyactivityId="dVF7gQUVKyUcuSsVhuya5d2XD4F"
+								#export yhypin="" #被助力的号，自己填
+								
+								cat ${script_dir}/jdCookie.js |grep "pin=" | grep -v "正确格式为" | awk -F "," '{print $1}' | sed "s/'//g" | sed 's/[[:space:]]//g' >${script_dir}/cklist1.txt
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								echo "开始运行${script_dir}/$js_name1"
