@@ -1031,9 +1031,9 @@ run_script() {
 		cp -r $checkjs_file/KingRan_Script/function $script_dir
 		cp $checkjs_file/KingRan_Script/JS_USER_AGENTS.js $script_dir
 
-		if [ "$script_ifname" == "" ];then
+		if [ "$script_ifname1" == "" ];then
 			echo "script_ifname为空"
-		elif [ "$script_ifname" == "*" ];then
+		elif [ "$script_ifname1" == "*" ];then
 			auto_run="(全部自动运行)"
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
@@ -1048,11 +1048,11 @@ run_script() {
 					ps_num="进程：$run_script_ps_num"
 				fi
 			done
-		elif [ `echo ${script_ifname} | grep -o "|" |sort -u | wc -l` == "1" ];then
+		elif [ `echo ${script_ifname1} | grep -o "|" |sort -u | wc -l` == "1" ];then
 			url=$(echo $url_test | sed "s/README.md//g")
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
-				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
+				if [ `echo $i | grep -E "${script_ifname1}" |wc -l` == "1" ];then
 					ps_gua=$(ps -ww | grep "gua_opencard" | grep -v grep | wc -l)
 					ps_kr=$(ps -ww | grep "jd_opencard" | grep -v grep | wc -l)
 
@@ -1084,7 +1084,7 @@ run_script() {
 			url=$(echo $url_test | sed "s/README.md//g")
 			for i in `echo $Add |sed "s/$wrap//g" | sed "s/$wrap_tab//g"`
 			do
-				if [ `echo $i | grep -E "${script_ifname}" |wc -l` == "1" ];then
+				if [ `echo $i | grep -E "${script_ifname1}" |wc -l` == "1" ];then
 					ps_gua=$(ps -ww | grep "gua_opencard" | grep -v grep | wc -l)
 					ps_kr=$(ps -ww | grep "jd_opencard" | grep -v grep | wc -l)
 
@@ -1507,11 +1507,12 @@ echo "-----------------------------变量获取---------------------------------
 	fi
 
 	if [ -z "$script_ifname" ];then
-		script_ifname=$(cat $dir_file/config.txt | grep -v "#" | grep "script_ifname" | awk -F "=" '{print $2}' | sed "s/\"//g" | sed "s/,/|/g")
+		script_ifname1=$(cat $dir_file/config.txt | grep -v "#" | grep "script_ifname" | awk -F "=" '{print $2}' | sed "s/\"//g")
 		echo -e "${yellow}script_ifname系统变量找不到，查找config文件$white"
-		echo "script_ifname:$script_ifname"
+		echo "script_ifname:$script_ifname1"
 	else
-		echo "script_ifname:$script_ifname"
+		script_ifname1=$(echo $script_ifname |sed "s/,/|/g")
+		echo "script_ifname:$script_ifname1"
 	fi
 
 	if [ -z "$script_dir" ];then
