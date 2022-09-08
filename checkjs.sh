@@ -1206,6 +1206,7 @@ ACTIVITY_ID				jd_wxCollectionActivity2.js
 prodevactCode				jd_prodev.js
 
 #KingRan
+yhyauthorCode				jd_yqhy.py
 jd_wxCollectionActivity_activityUrl	jd_wxCollectionActivity.js
 jd_categoryUnion_activityId		jd_categoryUnion.js
 jd_completeInfoActivity_activityId	jd_completeInfoActivity.js
@@ -1361,6 +1362,15 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 								echo "开始运行${script_dir}/$js_name1"
 								echo "变量为$i"
 								$node ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
+								Add_if="1"
+							;;
+							yhyauthorCode)
+								export $i
+								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
+								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
+								echo "开始运行${script_dir}/$js_name1"
+								echo "变量为$i"
+								$python3 ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 								Add_if="1"
 							;;
 							jd_categoryUnion_activityId)
