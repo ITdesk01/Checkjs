@@ -1374,7 +1374,7 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
 								echo "开始运行${script_dir}/$js_name1"
 								echo "变量为$i"
-								$python3 ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
+								source /etc/profile && $python3 ${script_dir}/$js_name1 >>/tmp/tg_run_script.log  &
 								Add_if="1"
 							;;
 							jd_categoryUnion_activityId)
