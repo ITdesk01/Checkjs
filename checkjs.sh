@@ -1347,7 +1347,7 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 						variable_script_num=$(echo "$i"| awk -F "=" '{print $2}')
 
 						js_name=$(grep $variable_script_name $dir_file/tg/variable_name.txt)
-						js_name1=$(echo "$js_name" | awk '{print $2}')
+						js_name1=$(echo "$js_name" | awk '{print $2}' | sort -u)
 
 						if [ -z "$variable_script_num" ];then
 							echo "$variable_script_name值：为空不操作"
