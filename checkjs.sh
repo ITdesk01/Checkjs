@@ -1206,6 +1206,7 @@ ACTIVITY_ID				jd_wxCollectionActivity2.js
 prodevactCode				jd_prodev.js
 
 #KingRan
+jd_wxKnowledgeActivity_activityUrl	jd_wxKnowledgeActivity.js
 jd_daily_activityId			jd_daily.js
 jd_cjdaily_activityId			jd_cjdaily.js
 yhyauthorCode				jd_yqhy.py
@@ -1241,6 +1242,10 @@ SHARE_ACTIVITY_ID			jd_share.js
 EOF
 
 #常规变量
+#jd_wxKnowledgeActivity.js
+export jd_wxKnowledgeActivity_openCard="true" #是否开卡，默认不开卡
+export jd_wxKnowledgeActivity_num=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)  #运行账号数量，默认运行前7
+
 #jd_wxCollectionActivity.js
 export jd_wxCollectionActivity_openCard="true" #是否开卡，默认不开卡
 export jd_wxCollectionActivity_num=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)  #运行账号数量，默认运行前7
