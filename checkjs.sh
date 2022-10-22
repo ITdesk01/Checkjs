@@ -1206,6 +1206,7 @@ ACTIVITY_ID				jd_wxCollectionActivity2.js
 prodevactCode				jd_prodev.js
 
 #KingRan
+jd_wxSecond_activityId			jd_wxSecond.js
 jd_collect_shop_activityUrl		jd_txzj_collect_shop.js
 jd_collect_item_activityUrl		jd_txzj_collect_item.js
 jd_wxKnowledgeActivity_activityUrl	jd_wxKnowledgeActivity.js
@@ -1244,6 +1245,9 @@ SHARE_ACTIVITY_ID			jd_share.js
 EOF
 
 #常规变量
+#jd_wxSecond.js
+export jd_wxSecond_addCart="true" #是否做加购任务，默认不做
+
 #jd_wxKnowledgeActivity.js
 export jd_wxKnowledgeActivity_openCard="true" #是否开卡，默认不开卡
 export jd_wxKnowledgeActivity_num=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)  #运行账号数量，默认运行前7
@@ -1364,7 +1368,7 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 							echo "$variable_script_name值：为$variable_script_num不操作"
 						else
 							case "$variable_script_name" in
-							jd_collect_shop_activityUrl|jd_collect_item_activityUrl|jd_wxKnowledgeActivity_activityUrl|jd_daily_activityId|jd_cjdaily_activityId|jd_wxCollectionActivity_activityUrl|jd_wxBuildActivity_activityId|jd_cjwxShopFollowActivity_activityId|jd_wxKnowledgeActivity_activityId|jd_cjwxKnowledgeActivity_activityId|jd_wxSecond_activityId|VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
+							jd_wxSecond_activityId|jd_collect_shop_activityUrl|jd_collect_item_activityUrl|jd_wxKnowledgeActivity_activityUrl|jd_daily_activityId|jd_cjdaily_activityId|jd_wxCollectionActivity_activityUrl|jd_wxBuildActivity_activityId|jd_cjwxShopFollowActivity_activityId|jd_wxKnowledgeActivity_activityId|jd_cjwxKnowledgeActivity_activityId|jd_wxSecond_activityId|VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
