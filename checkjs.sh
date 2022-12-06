@@ -1345,7 +1345,7 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 					echo "此时tg_newfile变量数：`cat $tg_newfile| wc -l`"
 					echo "此时tg_add变量数：`cat $tg_add| wc -l`"
 				else
-					echo -e "${red}grep　tg_add运行失败$white"
+					echo -e "${red}grep　tg_add运行失败$green(tg_oldfile与tg_newfile相等时忽略。不等于时手动运行测试)$white"
 					echo "此时tg_oldfile变量数：`cat $tg_oldfile| wc -l`"
 					echo "此时tg_newfile变量数：`cat $tg_newfile| wc -l`"
 					echo "此时tg_add变量数：`cat $tg_add| wc -l`"
