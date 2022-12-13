@@ -1206,6 +1206,7 @@ ACTIVITY_ID				jd_wxCollectionActivity2.js
 prodevactCode				jd_prodev.js
 
 #KingRan
+yhyauthorCode				jd_prodev.py
 jd_teamFLP_activityId			jd_teamFLP.js
 jd_showInviteJoin_activityUrl		jd_jinggeng_showInviteJoin.js
 jd_lzkj_loreal_invite_url		jd_lzkj_loreal_invite.js
@@ -1215,7 +1216,6 @@ jd_collect_item_activityUrl		jd_txzj_collect_item.js
 jd_wxKnowledgeActivity_activityUrl	jd_wxKnowledgeActivity.js
 jd_daily_activityId			jd_daily.js
 jd_cjdaily_activityId			jd_cjdaily.js
-yhyauthorCode				jd_yqhy.py
 jd_wxCollectionActivity_activityUrl	jd_wxCollectionActivity.js
 jd_categoryUnion_activityId		jd_categoryUnion.js
 jd_completeInfoActivity_activityId	jd_completeInfoActivity.js
@@ -1384,8 +1384,8 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 								if [ -z "$yhypin" ];then
 									echo "${script_dir}/$js_name1的yhypin值为空，不运行运行，当前时间`date`\n export yhypin="" #被助力的号，自己填到全局变量" >>/tmp/tg_run_script.log
 								else
-									export $i
-									export yhyactivityId="dVF7gQUVKyUcuSsVhuya5d2XD4F"
+									export yhyauthorCode="$i"
+									#export yhyactivityId="dVF7gQUVKyUcuSsVhuya5d2XD4F"
 									#export yhypin="" #被助力的号，自己填
 
 									cat ${script_dir}/jdCookie.js |grep "pin=" | grep -v "正确格式为" | awk -F "," '{print $1}' | sed "s/'//g" | sed 's/[[:space:]]//g' >${script_dir}/cklist1.txt
