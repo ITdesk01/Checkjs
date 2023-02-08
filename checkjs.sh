@@ -934,13 +934,13 @@ menu() {
 	echo -e "$yellow 检测脚本是否最新:$white $Script_status "
 	echo "**********************************************"
 	echo > $dir_file/git_log/${current_time}.log
-	smiek2221_Script
 	KingRan_Script
-	curtinlv_script
-	ccwav
 	yyds_Script
-	JDWXX_Script
 	Github_6dylan6_Script
+	smiek2221_Script
+	ccwav
+	curtinlv_script
+	JDWXX_Script
 	cdle_carry_Script
 	X1a0He
 	zero205_Script
