@@ -1054,12 +1054,13 @@ run_script_if() {
 				echo -e "${yellow}》》当前时间：$current_time点，不符合你的设置，不自动运行脚本${white}"
 				auto_run="(有合适脚本,但时间不符合不跑)"
 			fi
-		elif [ "$action2_if" == "2" ];then
-			echo "这是在比较之前仓库，不做任何操作"
-			auto_run="(这是在比较之前仓库，不做任何操作)"
 		else
 			echo -e "script_date的字符：$script_date,进入下级判断"
-			run_script
+			if [ "$action2_if" == "2" ];then
+				echo "不做任何操作"
+			else
+				run_script
+			fi
 		fi
 	fi
 }
