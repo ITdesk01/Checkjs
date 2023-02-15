@@ -479,6 +479,7 @@ tongyong_config() {
 		fi
 		sendMessage
 		That_day
+		git pull
 	else
 		num="1"
 		eeror_num="1"
@@ -1031,7 +1032,11 @@ run_script_if() {
 		if [ "$script_date" == "" ];then
 			echo -e "${yellow}script_date为空${white}"
 		elif [ "$script_date" == "*" ];then
-			run_script
+			if [ "$action1" == "time" ];then
+				echo "不做任何操作"
+			else
+				run_script
+			fi
 		elif [ `echo "$script_date" | grep -o "-"` == "-" ];then
 			script_date_min=$(echo "$script_date" | awk -F "-" '{print $1}')
 			script_date_max=$(echo "$script_date" | awk -F "-" '{print $2}')
@@ -1056,7 +1061,7 @@ run_script_if() {
 			fi
 		else
 			echo -e "script_date的字符：$script_date,进入下级判断"
-			if [ "$action2_if" == "2" ];then
+			if [ "$action1" == "time" ];then
 				echo "不做任何操作"
 			else
 				run_script
