@@ -468,6 +468,7 @@ tongyong_config() {
 			git reset --hard $old_git_commit
 			ls ./ | grep -E 'js$|py$' | sort > $Oldfile
 			action2_num="($action2到今天的仓库变化)"
+			git pull
 		else
 			init_data
 		fi
@@ -479,7 +480,6 @@ tongyong_config() {
 		fi
 		sendMessage
 		That_day
-		git pull
 	else
 		num="1"
 		eeror_num="1"
