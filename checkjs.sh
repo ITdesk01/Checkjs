@@ -942,24 +942,24 @@ time(){
 
 script() {
 	KingRan_Script
-	yyds_Script
+	JDHelloWorld
 	Github_6dylan6_Script
 	smiek2221_Script
-	ccwav
 	curtinlv_script
+	ccwav
 	JDWXX_Script
 	cdle_carry_Script
 	X1a0He
 	zero205_Script
 	Ariszy_Script
 	yuannian1112
-	JDHelloWorld
 	Aaron_Script
 	nianyuguai
 	fangpidedongsun
 	yangtingxiao
 	ZCY01_Script
-	hundun
+	#yyds_Script
+	#hundun
 	ZhiYi_Script
 }
 
