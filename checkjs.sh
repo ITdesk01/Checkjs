@@ -457,6 +457,7 @@ tongyong_config() {
 			old_git_commit=$(git log --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
 			git reset --hard $old_git_commit
 			ls ./ | grep -E 'js$|py$' | sort > $Oldfile
+			action2_num="($action2到今天的仓库变化)"
 		else
 			echo "输入的日期不合规。例子输入2023-02-14获取2023-02-14当天的仓库变化"
 		fi
@@ -657,7 +658,7 @@ sendMessage() {
 		weixin_content_sort=$(echo  "$content" |sed "s/####/<hr\/><b>/g" |sed "s/$wrap$wrap_tab/<br>/g" |sed "s/$wrap/<br>/g" |sed "s/:/:<hr\/><\/b>/g"  )
 		weixin_content=$(echo "$weixin_content_sort<br><b>$by" | sed "s/https\:<hr\\/><\\/b>/https:/g" | sed "s/#### /<br><b>/g")
 		weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
-		title="${Script_name}${num}${auto_run}${ps_num}"
+		title="${Script_name}${num}${auto_run}${ps_num}${action2_num}"
 		push_menu
 	fi 
 	
