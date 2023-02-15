@@ -453,6 +453,7 @@ tongyong_config() {
 	wget_test=$( cat /tmp/wget_test.log | grep -o "200 OK")
 	if [ "$wget_test" == "200 OK" ];then
 		cd $File_path
+		git pull
 		if [ "$action2_if" == "2" ] && [ "$action3_if" == "2" ];then
 			old_git_commit=$(git log --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
 			git reset --hard $old_git_commit
@@ -468,7 +469,6 @@ tongyong_config() {
 			ls ./ | grep -E 'js$|py$' | sort > $Oldfile
 			action2_num="($action2到今天的仓库变化)"
 		else
-			git pull
 			init_data
 		fi
 
