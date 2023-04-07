@@ -22,7 +22,7 @@ else:
 
 Note=open('tg.log',mode='w')
 name = 'test'
-channel = ['KingRan521', 'fdd_JSB', 'wondertemple']
+channel = ['KingRan521', 'fdd_JSB', 'wondertemple' , 'LH_notify']
 
 
 with TelegramClient(name, api_id, api_hash) as client:
