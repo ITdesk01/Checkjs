@@ -456,15 +456,57 @@ tongyong_config() {
 		git pull
 		if [ "$action2_if" == "2" ] && [ "$action3_if" == "2" ];then
 			old_git_commit=$(git log --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
+			if [ -z $old_git_commit ];then
+				#提取日期
+				action2_y=$(echo $action2 | awk -F "\-" '{print $1}')
+				action2_m=$(echo $action2 | awk -F "\-" '{print $2}')
+				action2_d=$(echo $action2 | awk -F "\-" '{print $3}')
+
+				num="1"
+				while [[ ${num} -gt 0 ]]; do
+					#判断日期是否大于31
+					if [ "$action2_d" -ge "31" ];then
+						#判断月份是否大于12
+						if [ "$action2_m" -ge "12" ];then
+							#判断年是否大于2023
+							if [ "$action2_y" -ge "2023" ];then
+								echo "已经大于2023年，跳过"
+								num=$(expr $num - 1)
+							fi
+						else
+							$action2_m="01"
+							action2="${action2_y}-${action2_m}-${action2_d}"
+							old_git_commit=$(git log  branch_name --author="$branch" --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
+							if [ -z $old_git_commit ];then
+								echo ""
+							else
+								num=$(expr $num - 1)
+							fi
+						fi
+					else
+						action2_d=$(($action2_d + 1))
+						action2="${action2_y}-${action2_m}-${action2_d}"
+						old_git_commit=$(git log branch_name --author="$branch" --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
+						if [ -z $old_git_commit ];then
+							echo ""
+						else
+							num=$(expr $num - 1)
+						fi
+					fi
+				done
+			else
+				echo ""
+			fi
+
 			git reset --hard $old_git_commit
 			ls ./ | grep -E 'js$|py$' | sort > $Oldfile
 
 			git pull
-			old_git_commit1=$(git log --format=format:"%h" --since="$action3 00:00:00" --before="$action3 23:59:59" -1)
+			old_git_commit1=$(git log branch_name --author="$branch" --format=format:"%h" --since="$action3 00:00:00" --before="$action3 23:59:59" -1)
 			git reset --hard $old_git_commit1
 			action2_num="($action2到$action3的仓库变化)"
 		elif [ "$action2_if" == "2" ];then
-			old_git_commit=$(git log --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
+			old_git_commit=$(git log branch_name --author="$branch" --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
 			git reset --hard $old_git_commit
 			ls ./ | grep -E 'js$|py$' | sort > $Oldfile
 			action2_num="($action2到今天的仓库变化)"
@@ -957,7 +999,7 @@ script() {
 	curtinlv_script
 	ccwav
 	JDWXX_Script
-	cdle_carry_Script
+	#cdle_carry_Script
 	X1a0He
 	zero205_Script
 	Ariszy_Script
@@ -1251,6 +1293,8 @@ ACTIVITY_ID				jd_wxCollectionActivity2.js
 prodevactCode				jd_prodev.js
 
 #KingRan
+JD_Lottery_cart				jd_lottery_cart.js
+opencard_id				jd_opencardJBK.js
 jd_sevenDay_activityUrl			jd_sevenDayjk.js
 jd_lzkj_loreal_cart_url			jd_lzkj_loreal_cart.js
 jd_lzkj_loreal_draw_url			jd_lzkj_loreal_draw.js
@@ -1298,6 +1342,11 @@ SHARE_ACTIVITY_ID			jd_share.js
 EOF
 
 #常规变量
+#jd_opencardJBK.js
+export opencard_open="true"	#开启开卡
+export opencard_addCart="true"	#开启加购
+export opencard_draw="3"	#抽奖次数
+
 #jd_sevenDayjk.js
 export COOKIE_NUM=$(cat $openwrt_script_config/jdCookie.js | grep "pt_key" | grep -v "pt_key=xxx" |wc -l)
 
@@ -1424,7 +1473,7 @@ export jd_drawCenter_addCart="true" #// 是否做加购任务，默认不做
 							echo "$variable_script_name值：为$variable_script_num不操作"
 						else
 							case "$variable_script_name" in
-							jd_sevenDay_activityUrl|jd_lzkj_loreal_cart_url|jd_lzkj_loreal_draw_url|jd_lzkj_loreal_followShop_url|jd_zsz_activityId|jd_teamFLP_activityId|jd_showInviteJoin_activityUrl|jd_lzkj_loreal_invite_url|jd_wxSecond_activityId|jd_collect_shop_activityUrl|jd_collect_item_activityUrl|jd_wxKnowledgeActivity_activityUrl|jd_daily_activityId|jd_cjdaily_activityId|jd_wxCollectionActivity_activityUrl|jd_wxBuildActivity_activityId|jd_cjwxShopFollowActivity_activityId|jd_wxKnowledgeActivity_activityId|jd_cjwxKnowledgeActivity_activityId|jd_wxSecond_activityId|VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
+							JD_Lottery_cart|opencard_id|jd_sevenDay_activityUrl|jd_lzkj_loreal_cart_url|jd_lzkj_loreal_draw_url|jd_lzkj_loreal_followShop_url|jd_zsz_activityId|jd_teamFLP_activityId|jd_showInviteJoin_activityUrl|jd_lzkj_loreal_invite_url|jd_wxSecond_activityId|jd_collect_shop_activityUrl|jd_collect_item_activityUrl|jd_wxKnowledgeActivity_activityUrl|jd_daily_activityId|jd_cjdaily_activityId|jd_wxCollectionActivity_activityUrl|jd_wxBuildActivity_activityId|jd_cjwxShopFollowActivity_activityId|jd_wxKnowledgeActivity_activityId|jd_cjwxKnowledgeActivity_activityId|jd_wxSecond_activityId|VENDER_ID|wish_appIdArrList|jd_mhurlList|comm_activityIDList|computer_activityId|jd_wdz_activityId|M_FOLLOW_SHOP_ARGV|VENDER_ID|PKC_TXGZYL|LUCK_DRAW_URL|DPLHTY|jd_cjhy_activityId|jd_zdjr_activityId|jd_wxShareActivity_activityId|jd_wxgame_activityId|jd_drawCenter_activityId|JD_Lottery)
 								export $i
 								cp $dir_file/KingRan_Script/$js_name1 ${script_dir}/$js_name1
 								echo "${script_dir}/$js_name1运行，当前时间`date`" >>/tmp/tg_run_script.log
