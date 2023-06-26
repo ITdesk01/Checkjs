@@ -456,55 +456,18 @@ tongyong_config() {
 		git pull
 		if [ "$action2_if" == "2" ] && [ "$action3_if" == "2" ];then
 			old_git_commit=$(git log --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
-			if [ -z $old_git_commit ];then
-				#提取日期
-				action2_y=$(echo $action2 | awk -F "\-" '{print $1}')
-				action2_m=$(echo $action2 | awk -F "\-" '{print $2}')
-				action2_d=$(echo $action2 | awk -F "\-" '{print $3}')
-
-				num="1"
-				while [[ ${num} -gt 0 ]]; do
-					#判断日期是否大于31
-					if [ "$action2_d" -ge "31" ];then
-						#判断月份是否大于12
-						if [ "$action2_m" -ge "12" ];then
-							#判断年是否大于2023
-							if [ "$action2_y" -ge "2023" ];then
-								echo "已经大于2023年，跳过"
-								num=$(expr $num - 1)
-							fi
-						else
-							$action2_m="01"
-							action2="${action2_y}-${action2_m}-${action2_d}"
-							old_git_commit=$(git log  branch_name --author="$branch" --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
-							if [ -z $old_git_commit ];then
-								echo ""
-							else
-								num=$(expr $num - 1)
-							fi
-						fi
-					else
-						action2_d=$(($action2_d + 1))
-						action2="${action2_y}-${action2_m}-${action2_d}"
-						old_git_commit=$(git log branch_name --author="$branch" --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
-						if [ -z $old_git_commit ];then
-							echo ""
-						else
-							num=$(expr $num - 1)
-						fi
-					fi
-				done
+			if [ -z "$old_git_commit" ];then
+				echo -e "${yellow}$Script_name $action2仓库没有记录，不进行对比${white}"
+    				sleep 2
 			else
-				echo ""
+				git reset --hard $old_git_commit
+				ls ./ | grep -E 'js$|py$' | sort > $Oldfile
+
+				git pull
+				old_git_commit1=$(git log branch_name --author="$branch" --format=format:"%h" --since="$action3 00:00:00" --before="$action3 23:59:59" -1)
+				git reset --hard $old_git_commit1
+				action2_num="($action2到$action3的仓库变化)"
 			fi
-
-			git reset --hard $old_git_commit
-			ls ./ | grep -E 'js$|py$' | sort > $Oldfile
-
-			git pull
-			old_git_commit1=$(git log branch_name --author="$branch" --format=format:"%h" --since="$action3 00:00:00" --before="$action3 23:59:59" -1)
-			git reset --hard $old_git_commit1
-			action2_num="($action2到$action3的仓库变化)"
 		elif [ "$action2_if" == "2" ];then
 			old_git_commit=$(git log branch_name --author="$branch" --format=format:"%h" --since="$action2 00:00:00" --before="$action2 23:59:59" -1)
 			git reset --hard $old_git_commit
@@ -1293,6 +1256,12 @@ ACTIVITY_ID				jd_wxCollectionActivity2.js
 prodevactCode				jd_prodev.js
 
 #KingRan
+
+jd_lzkj_loreal_upperSign_url		jd_lzkj_loreal_upperSign.js
+jd_lzkj_loreal_sign_url			jd_lzkj_loreal_sign.js
+jd_lzkj_loreal_lkFollowShop_url		jd_lzkj_loreal_lkFollowShop.js
+jd_lzkj_loreal_followGoods_url		jd_lzkj_loreal_followGoods.js
+jd_lzkj_loreal_daySign_url		jd_lzkj_loreal_daySign.js
 JD_Lottery_cart				jd_lottery_cart.js
 opencard_id				jd_opencardJBK.js
 jd_sevenDay_activityUrl			jd_sevenDayjk.js
@@ -1719,7 +1688,6 @@ else
 			;;
 	esac
 fi
-
 
 
 
